@@ -100,7 +100,7 @@ function getNewCustomerScenario(lang: Lang): ScenarioConfig {
       isNewDriver: true,
     },
     allQuotes: buildTopQuoteSummary(all),
-    allInsurerKnowledge: getInsurerKnowledge(),
+    allInsurerKnowledge: getInsurerKnowledge(lang),
     marketStats,
     dataComplete: true,
   };
