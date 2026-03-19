@@ -6,7 +6,7 @@ interface StickyNavProps {
   extraTopOffset?: number;
 }
 
-const StickyNav = ({ onOpenOverlay, hasAnnouncementBar }: StickyNavProps) => {
+const StickyNav = ({ onOpenOverlay, hasAnnouncementBar, extraTopOffset = 0 }: StickyNavProps) => {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
