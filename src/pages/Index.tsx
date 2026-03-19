@@ -75,7 +75,7 @@ const Index = () => {
 
   const handleQuoteSelect = useCallback((insurerName: string) => {
     const id = genId();
-    setMessages((prev) => [...prev, { id, role: 'user', parts: [{ type: 'text', content: `Ezt választom: ${insurerName}` }] }]);
+    setMessages((prev) => [...prev, { id, role: 'user', parts: [{ type: 'text', content: `I choose: ${insurerName}` }] }]);
     advanceTurn();
   }, [advanceTurn]);
 
