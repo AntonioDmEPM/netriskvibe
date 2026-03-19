@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from "react";
-import { Menu, Sparkles, X } from "lucide-react";
+import { Menu, Sparkles, ChevronDown } from "lucide-react";
 import AdvisorSidebar from "@/components/advisor/AdvisorSidebar";
 import ChatMessage, { type Message } from "@/components/advisor/ChatMessage";
 import ChatInput from "@/components/advisor/ChatInput";
@@ -8,6 +8,8 @@ import { getFlow, genId, type Flow } from "@/lib/flows";
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
+const SCROLL_THRESHOLD = 150;
+
 const Index = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
@@ -15,15 +17,46 @@ const Index = () => {
   const [activeDemo, setActiveDemo] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [lastMsgId, setLastMsgId] = useState<string | null>(null);
+  const [showNewMsg, setShowNewMsg] = useState(false);
 
   const flowRef = useRef<Flow | null>(null);
   const turnRef = useRef(0);
   const versionRef = useRef(0);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const isNearBottomRef = useRef(true);
 
-  useEffect(() => {
+  const checkNearBottom = useCallback(() => {
+    const el = scrollContainerRef.current;
+    if (!el) return true;
+    return el.scrollHeight - el.scrollTop - el.clientHeight < SCROLL_THRESHOLD;
+  }, []);
+
+  const scrollToBottom = useCallback(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, isTyping]);
+    setShowNewMsg(false);
+  }, []);
+
+  // Track scroll position
+  useEffect(() => {
+    const el = scrollContainerRef.current;
+    if (!el) return;
+    const onScroll = () => {
+      isNearBottomRef.current = checkNearBottom();
+      if (isNearBottomRef.current) setShowNewMsg(false);
+    };
+    el.addEventListener("scroll", onScroll, { passive: true });
+    return () => el.removeEventListener("scroll", onScroll);
+  }, [checkNearBottom]);
+
+  // Auto-scroll or show "new message" button
+  useEffect(() => {
+    if (isNearBottomRef.current) {
+      scrollToBottom();
+    } else if (messages.length > 0 || isTyping) {
+      setShowNewMsg(true);
+    }
+  }, [messages, isTyping, scrollToBottom]);
 
   const processAgentTurn = useCallback(async (turn: (typeof flowRef.current extends Flow ? Flow[number] : never), version: number) => {
     if (!turn) return;
