@@ -9,7 +9,7 @@ export type MessagePart =
   | { type: 'text'; content: string }
   | { type: 'comparison'; quotes: QuoteData[]; recommended?: number }
   | { type: 'switching'; from?: { name: string; price: number }; to: { name: string; price: number } }
-  | { type: 'timeline'; currentStep: number }
+  | { type: 'timeline'; currentStep: number; steps?: { label: string; sublabel?: string }[]; footnote?: string }
   | { type: 'savings'; oldPrice: number; newPrice: number };
 
 export interface Message {
