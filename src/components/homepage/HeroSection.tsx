@@ -361,7 +361,7 @@ const HeroSection = ({ onStartFlow, isReturning }: HeroSectionProps) => {
                       <div className="flex-1 text-left">
                         <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider mb-1">{t("dashboard.recommended")}</p>
                         <p className="text-lg font-bold text-foreground">Groupama</p>
-                        <p className="text-sm text-primary font-semibold">33 500 Ft/{lang === 'hu' ? 'év' : 'yr'}</p>
+                        <p className="text-sm text-primary font-semibold">33 500 Ft/{t("data.yr")}</p>
                         <span className="inline-block mt-2 text-xs font-semibold bg-primary/10 text-primary px-2.5 py-1 rounded-full">
                           {t("dashboard.savings")}
                         </span>
