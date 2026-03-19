@@ -61,8 +61,8 @@ const translations: Record<string, Record<Lang, string>> = {
   "dashboard.switch": { hu: "Váltás →", en: "Switch →" },
 
   // Hero illustration bubbles
-  "hero.bubble.plate": { hu: ""Rendszámom: ABC-123"", en: ""My plate: ABC-123"" },
-  "hero.bubble.savings": { hu: ""31 200 Ft/év — 15% olcsóbb!"", en: ""31,200 Ft/yr — 15% cheaper!"" },
+  "hero.bubble.plate": { hu: '\u201CRendsz\u00E1mom: ABC-123\u201D', en: '\u201CMy plate: ABC-123\u201D' },
+  "hero.bubble.savings": { hu: '\u201C31 200 Ft/\u00E9v \u2014 15% olcs\u00F3bb!\u201D', en: '\u201C31,200 Ft/yr \u2014 15% cheaper!\u201D' },
 
   // Social proof
   "stats.contracts": { hu: "napi szerződés", en: "daily contracts" },
