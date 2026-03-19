@@ -104,9 +104,10 @@ const ConversationOverlay = ({ flowId, initialMessage, onClose, onTurnChange }: 
 
   const handleQuoteSelect = useCallback((insurerName: string) => {
     const id = genId();
-    setMessages((prev) => [...prev, { id, role: 'user', parts: [{ type: 'text', content: `Ezt választom: ${insurerName}` }] }]);
+    const msg = lang === 'en' ? `I'll pick: ${insurerName}` : `Ezt választom: ${insurerName}`;
+    setMessages((prev) => [...prev, { id, role: 'user', parts: [{ type: 'text', content: msg }] }]);
     advanceTurn();
-  }, [advanceTurn]);
+  }, [advanceTurn, lang]);
 
   const handleSwitchConfirm = useCallback(() => {
     // Trigger confetti
