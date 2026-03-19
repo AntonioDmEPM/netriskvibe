@@ -1,12 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import ScrollReveal from "./ScrollReveal";
-
-const stats = [
-  { target: 2000, prefix: "", suffix: "+", label: "napi szerződés" },
-  { target: 1000000, prefix: "", suffix: "+", label: "visszatérő ügyfél" },
-  { target: 22, prefix: "", suffix: "", label: "biztosító partner" },
-  { target: 30, prefix: "", suffix: " éve", label: "az Önök szolgálatában" },
-];
+import { useI18n } from "@/lib/i18n";
 
 function formatNumber(n: number): string {
   if (n >= 1000000) return (n / 1000000).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " 000 000";
@@ -23,7 +17,7 @@ function useCountUp(target: number, duration: number, trigger: boolean) {
     const step = (now: number) => {
       const elapsed = now - start;
       const progress = Math.min(elapsed / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+      const eased = 1 - Math.pow(1 - progress, 3);
       setValue(Math.round(eased * target));
       if (progress < 1) rafRef.current = requestAnimationFrame(step);
     };
@@ -34,14 +28,30 @@ function useCountUp(target: number, duration: number, trigger: boolean) {
   return value;
 }
 
-const StatItem = ({ stat, triggered }: { stat: typeof stats[0]; triggered: boolean }) => {
+interface StatDef {
+  target: number;
+  prefix: string;
+  suffix: string;
+  labelKey: string;
+}
+
+const stats: StatDef[] = [
+  { target: 2000, prefix: "", suffix: "+", labelKey: "stats.contracts" },
+  { target: 1000000, prefix: "", suffix: "+", labelKey: "stats.customers" },
+  { target: 22, prefix: "", suffix: "", labelKey: "stats.partners" },
+  { target: 30, prefix: "", suffix: "", labelKey: "stats.years.label" },
+];
+
+const StatItem = ({ stat, triggered }: { stat: StatDef; triggered: boolean }) => {
+  const { t } = useI18n();
   const count = useCountUp(stat.target, 1500, triggered);
+  const suffix = stat.labelKey === "stats.years.label" ? t("stats.years.suffix") : stat.suffix;
   return (
     <div className="text-center">
       <p className="text-2xl sm:text-3xl font-extrabold text-primary mb-1">
-        {stat.prefix}{formatNumber(count)}{stat.suffix}
+        {stat.prefix}{formatNumber(count)}{suffix}
       </p>
-      <p className="text-sm text-muted-foreground">{stat.label}</p>
+      <p className="text-sm text-muted-foreground">{t(stat.labelKey)}</p>
     </div>
   );
 };
@@ -72,7 +82,7 @@ const SocialProofBar = () => {
         <ScrollReveal>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
             {stats.map((s) => (
-              <StatItem key={s.label} stat={s} triggered={triggered} />
+              <StatItem key={s.labelKey} stat={s} triggered={triggered} />
             ))}
           </div>
         </ScrollReveal>
