@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { ArrowRight, Car, Home, Plane, Shield } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -13,10 +13,43 @@ const chips = [
   { emoji: "✈️", label: "Utasbiztosítás", flowId: "" },
 ];
 
+const placeholders = [
+  "Írja be a rendszámát, vagy mondja el, miben segíthetek...",
+  "ABC-123",
+  "Mennyibe kerül a kötelező biztosítás?",
+  "Melyik a legjobb biztosító?",
+  "Szeretnék biztosítást váltani",
+];
+
 const HeroSection = ({ onStartFlow, isReturning }: HeroSectionProps) => {
   const [inputValue, setInputValue] = useState("");
   const [returningInput, setReturningInput] = useState("");
+  const [placeholderIdx, setPlaceholderIdx] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Cycle placeholder text
+  useEffect(() => {
+    const startTimer = setTimeout(() => {
+      const interval = setInterval(() => {
+        setPlaceholderIdx((prev) => (prev + 1) % placeholders.length);
+      }, 3000);
+      return () => clearInterval(interval);
+    }, 1500);
+
+    // Also handle cleanup for the initial timeout
+    let interval: ReturnType<typeof setInterval>;
+    const timeout = setTimeout(() => {
+      interval = setInterval(() => {
+        setPlaceholderIdx((prev) => (prev + 1) % placeholders.length);
+      }, 3000);
+    }, 1500);
+
+    return () => {
+      clearTimeout(startTimer);
+      clearTimeout(timeout);
+      if (interval) clearInterval(interval);
+    };
+  }, []);
 
   const handleSend = () => {
     if (!inputValue.trim()) return;
@@ -32,13 +65,11 @@ const HeroSection = ({ onStartFlow, isReturning }: HeroSectionProps) => {
 
   return (
     <section className="relative min-h-[70vh] flex items-center pt-[6.5rem] overflow-hidden">
-      {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-emerald-50/40" />
 
       <div className="relative max-w-6xl mx-auto w-full px-4 sm:px-6 py-12 lg:py-20">
         <AnimatePresence mode="wait">
           {!isReturning ? (
-            /* ========== NEW VISITOR HERO ========== */
             <motion.div
               key="new"
               initial={{ opacity: 0, y: 10 }}
@@ -84,15 +115,33 @@ const HeroSection = ({ onStartFlow, isReturning }: HeroSectionProps) => {
                   transition={{ delay: 0.4 }}
                   className="hero-input-glow flex items-center gap-2 bg-background border-2 border-border rounded-2xl p-2 shadow-lg hover:border-primary/30 transition-colors max-w-xl"
                 >
-                  <input
-                    ref={inputRef}
-                    type="text"
-                    value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
-                    onKeyDown={(e) => { if (e.key === "Enter") handleSend(); }}
-                    placeholder="Írja be a rendszámát, vagy mondja el, miben segíthetek..."
-                    className="flex-1 h-12 px-4 bg-transparent text-foreground placeholder:text-muted-foreground outline-none text-base"
-                  />
+                  <div className="relative flex-1 h-12">
+                    <input
+                      ref={inputRef}
+                      type="text"
+                      value={inputValue}
+                      onChange={(e) => setInputValue(e.target.value)}
+                      onKeyDown={(e) => { if (e.key === "Enter") handleSend(); }}
+                      className="absolute inset-0 w-full h-full px-4 bg-transparent text-foreground outline-none text-base z-10"
+                    />
+                    {/* Animated placeholder */}
+                    {!inputValue && (
+                      <div className="absolute inset-0 flex items-center px-4 pointer-events-none">
+                        <AnimatePresence mode="wait">
+                          <motion.span
+                            key={placeholderIdx}
+                            initial={{ opacity: 0, y: 6 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -6 }}
+                            transition={{ duration: 0.3 }}
+                            className="text-muted-foreground text-base"
+                          >
+                            {placeholders[placeholderIdx]}
+                          </motion.span>
+                        </AnimatePresence>
+                      </div>
+                    )}
+                  </div>
                   <button
                     onClick={handleSend}
                     className="shrink-0 w-12 h-12 rounded-xl bg-primary text-primary-foreground flex items-center justify-center hover:opacity-90 transition-opacity"
@@ -197,7 +246,6 @@ const HeroSection = ({ onStartFlow, isReturning }: HeroSectionProps) => {
                 A Suzuki SX4 S-Cross kötelező biztosítása január 1-jén jár le. Már összehasonlítottam az ajánlatokat — <span className="text-primary font-semibold">6 800 Ft-ot spórolhat évente.</span>
               </motion.p>
 
-              {/* Large CTA */}
               <motion.button
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -209,7 +257,6 @@ const HeroSection = ({ onStartFlow, isReturning }: HeroSectionProps) => {
                 <ArrowRight className="w-5 h-5" />
               </motion.button>
 
-              {/* Secondary input */}
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -235,7 +282,6 @@ const HeroSection = ({ onStartFlow, isReturning }: HeroSectionProps) => {
                 </div>
               </motion.div>
 
-              {/* Insurance Dashboard Card */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -244,7 +290,6 @@ const HeroSection = ({ onStartFlow, isReturning }: HeroSectionProps) => {
                 className="mt-10 w-full max-w-3xl bg-card border border-border rounded-2xl shadow-lg p-5 sm:p-6 cursor-pointer hover:shadow-xl hover:border-primary/20 transition-all"
               >
                 <div className="flex flex-col sm:flex-row items-stretch gap-4 sm:gap-6">
-                  {/* Current policy */}
                   <div className="flex-1 text-left">
                     <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider mb-2">Kötelező biztosítás</p>
                     <p className="text-lg font-bold text-foreground">KÖBE</p>
@@ -253,8 +298,6 @@ const HeroSection = ({ onStartFlow, isReturning }: HeroSectionProps) => {
                       Lejár: jan. 1.
                     </span>
                   </div>
-
-                  {/* Divider */}
                   <div className="hidden sm:flex items-center">
                     <div className="w-px h-full bg-border" />
                     <ArrowRight className="w-5 h-5 text-primary mx-3 shrink-0" />
@@ -263,8 +306,6 @@ const HeroSection = ({ onStartFlow, isReturning }: HeroSectionProps) => {
                   <div className="sm:hidden flex justify-center">
                     <ArrowRight className="w-5 h-5 text-primary rotate-90" />
                   </div>
-
-                  {/* Recommended */}
                   <div className="flex-1 text-left">
                     <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider mb-2">Ajánlott váltás</p>
                     <p className="text-lg font-bold text-foreground">Groupama</p>
@@ -273,8 +314,6 @@ const HeroSection = ({ onStartFlow, isReturning }: HeroSectionProps) => {
                       Megtakarítás: 4 500 Ft
                     </span>
                   </div>
-
-                  {/* CTA */}
                   <div className="flex items-center sm:pl-2">
                     <button className="w-full sm:w-auto px-6 py-3 rounded-xl bg-primary text-primary-foreground font-bold text-sm hover:opacity-90 transition-opacity whitespace-nowrap">
                       Váltás →
