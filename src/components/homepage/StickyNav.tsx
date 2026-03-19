@@ -1,6 +1,11 @@
 import { useState, useEffect } from "react";
 
-const StickyNav = ({ onOpenOverlay }: { onOpenOverlay: () => void }) => {
+interface StickyNavProps {
+  onOpenOverlay: () => void;
+  hasAnnouncementBar?: boolean;
+}
+
+const StickyNav = ({ onOpenOverlay, hasAnnouncementBar }: StickyNavProps) => {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -11,14 +16,14 @@ const StickyNav = ({ onOpenOverlay }: { onOpenOverlay: () => void }) => {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 h-16 flex items-center transition-all duration-300 ${
+      className={`fixed left-0 right-0 z-50 h-16 flex items-center transition-all duration-300 ${
         scrolled
           ? "bg-background/95 backdrop-blur-xl shadow-sm border-b border-border"
           : "bg-transparent"
       }`}
+      style={{ top: hasAnnouncementBar ? '2.25rem' : 0 }}
     >
       <div className="max-w-6xl mx-auto w-full px-4 sm:px-6 flex items-center justify-between">
-        {/* Logo */}
         <div className="flex items-center gap-2">
           <span className="font-extrabold text-lg text-primary">netrisk.hu</span>
           <span className="text-[10px] font-bold bg-primary text-primary-foreground px-2 py-0.5 rounded-full">
@@ -26,7 +31,6 @@ const StickyNav = ({ onOpenOverlay }: { onOpenOverlay: () => void }) => {
           </span>
         </div>
 
-        {/* Center nav links — hidden on mobile */}
         <div className="hidden md:flex items-center gap-8 text-sm font-medium text-muted-foreground">
           <span className="hover:text-foreground transition-colors cursor-pointer">Biztosítás</span>
           <span className="hover:text-foreground transition-colors cursor-pointer">Bank</span>
@@ -34,7 +38,6 @@ const StickyNav = ({ onOpenOverlay }: { onOpenOverlay: () => void }) => {
           <span className="hover:text-foreground transition-colors cursor-pointer">Rólunk</span>
         </div>
 
-        {/* Right side */}
         <div className="flex items-center gap-3">
           <span className="hidden sm:inline text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer">
             Bejelentkezés
