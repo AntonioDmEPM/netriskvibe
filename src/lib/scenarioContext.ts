@@ -96,7 +96,7 @@ function getNewCustomerScenario(lang: Lang): ScenarioConfig {
       bonusCategory: profileB.bonus,
       region: profileB.region,
       location: profileB.location,
-      paymentMethod: profileB.paymentMethod,
+      paymentMethod: localizeProfileField(profileB.paymentMethod, lang, paymentMethodMap),
       isNewDriver: true,
     },
     allQuotes: buildTopQuoteSummary(all),
