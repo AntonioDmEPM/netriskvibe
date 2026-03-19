@@ -5,6 +5,21 @@ import {
 } from './mockData';
 import type { Lang } from './i18n';
 
+function localizeProfileField(value: string | undefined, lang: Lang, map: Record<string, string>): string | undefined {
+  if (!value || lang === 'hu') return value;
+  return map[value] ?? value;
+}
+
+const paymentMethodMap: Record<string, string> = {
+  'átutalás': 'bank transfer',
+  'bankkártya': 'credit card',
+  'csekk': 'cheque',
+};
+
+const anniversaryDateMap: Record<string, string> = {
+  'január 1.': 'January 1',
+};
+
 export interface ScenarioConfig {
   id: string;
   profile: Profile;
