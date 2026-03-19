@@ -1,22 +1,26 @@
+import { useI18n } from "@/lib/i18n";
+
 interface TimelineCardProps {
   currentStep: number;
   steps?: { label: string; sublabel?: string }[];
   footnote?: string;
 }
 
-const defaultSteps = [
-  { label: "Ma", sublabel: "Kalkuláció" },
-  { label: "Ajánlat kész", sublabel: "Összehasonlítás" },
-  { label: "30 napos határidő", sublabel: "Felmondás" },
-  { label: "Új kötvény indul", sublabel: "Szerződés" },
-];
-
 const TimelineCard = ({ currentStep, steps, footnote }: TimelineCardProps) => {
+  const { t } = useI18n();
+
+  const defaultSteps = [
+    { label: t("timeline.today"), sublabel: t("timeline.calc") },
+    { label: t("timeline.offer"), sublabel: t("timeline.compare") },
+    { label: t("timeline.deadline"), sublabel: t("timeline.cancel") },
+    { label: t("timeline.newstart"), sublabel: t("timeline.contract") },
+  ];
+
   const displaySteps = steps ?? defaultSteps;
 
   return (
     <div className="bg-card border border-border rounded-lg p-4 shadow-sm">
-      <h4 className="text-sm font-semibold text-foreground mb-4">Váltás folyamata</h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4">{t("timeline.title")}</h4>
       <div className="flex items-center">
         {displaySteps.map((step, i) => (
           <div key={i} className="flex items-center flex-1 last:flex-initial">
