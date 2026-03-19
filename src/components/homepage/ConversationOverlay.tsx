@@ -122,7 +122,7 @@ const ConversationOverlay = ({ flowId, initialMessage, onClose, onTurnChange }: 
       setMessages((prev) => [...prev, {
         id,
         role: 'agent',
-        parts: [{ type: 'text', content: 'Köszönöm a bizalmát! A Netrisk csapata hamarosan felveszi Önnel a kapcsolatot emailben. 🎉 Van még kérdése?' }]
+        parts: [{ type: 'text', content: t("switch.thankyou") }]
       }]);
     }, 1500);
 
