@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import ComparisonPanel from "./ComparisonPanel";
 import SwitchingCard from "./SwitchingCard";
 import TimelineCard from "./TimelineCard";
