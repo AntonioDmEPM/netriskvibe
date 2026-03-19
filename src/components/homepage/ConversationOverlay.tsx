@@ -198,7 +198,7 @@ const ConversationOverlay = ({ flowId, initialMessage, onClose, onTurnChange }: 
               </div>
               <div className="flex items-center gap-1.5 ml-4">
                 <div className="w-2 h-2 rounded-full bg-emerald-300 animate-pulse" />
-                <span className="text-xs text-primary-foreground/80">Online</span>
+                <span className="text-xs text-primary-foreground/80">{t("overlay.online")}</span>
               </div>
               <button
                 onClick={handleClose}
