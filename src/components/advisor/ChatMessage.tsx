@@ -77,8 +77,8 @@ const ChatMessage = ({ message, animate, onQuoteSelect, onSwitchConfirm }: ChatM
           message.parts.map((part, i) => {
             if (part.type === 'text') {
               return (
-                <div key={i} className="bg-agent-bubble rounded-2xl rounded-bl-md px-4 py-3 text-sm leading-relaxed text-foreground whitespace-pre-wrap">
-                  {part.content}
+                <div key={i} className="bg-agent-bubble rounded-2xl rounded-bl-md px-4 py-3 text-sm leading-relaxed text-foreground prose prose-sm prose-neutral dark:prose-invert max-w-none">
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>{part.content}</ReactMarkdown>
                 </div>
               );
             }
