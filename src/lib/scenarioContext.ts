@@ -1,6 +1,6 @@
 import {
   profileA, profileB, profileC,
-  getQuotesForProfile, formatPrice,
+  getQuotesForProfile, formatPrice, getInsurerKnowledge, marketStats,
   type QuoteData, type Profile,
 } from './mockData';
 import type { Lang } from './i18n';
