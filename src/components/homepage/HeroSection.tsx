@@ -308,8 +308,8 @@ const HeroSection = ({ onStartFlow, isReturning }: HeroSectionProps) => {
                       <div className="text-left">
                         <div className="flex items-center gap-1.5 mb-1">
                           <CreditCard className="w-3.5 h-3.5 text-muted-foreground" />
-                          <span className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider">
-                            {lang === 'hu' ? 'Éves díj' : 'Annual'}
+                           <span className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider">
+                             {t("data.annual")}
                           </span>
                         </div>
                         <p className="text-sm font-bold text-foreground">{formatPrice(profileA.currentPrice!)} Ft</p>
