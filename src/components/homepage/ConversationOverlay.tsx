@@ -18,7 +18,7 @@ interface ConversationOverlayProps {
 }
 
 const ConversationOverlay = ({ flowId, initialMessage, onClose, onTurnChange }: ConversationOverlayProps) => {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const [messages, setMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   const [inputEnabled, setInputEnabled] = useState(false);
@@ -104,9 +104,10 @@ const ConversationOverlay = ({ flowId, initialMessage, onClose, onTurnChange }: 
 
   const handleQuoteSelect = useCallback((insurerName: string) => {
     const id = genId();
-    setMessages((prev) => [...prev, { id, role: 'user', parts: [{ type: 'text', content: `Ezt választom: ${insurerName}` }] }]);
+    const msg = lang === 'en' ? `I'll pick: ${insurerName}` : `Ezt választom: ${insurerName}`;
+    setMessages((prev) => [...prev, { id, role: 'user', parts: [{ type: 'text', content: msg }] }]);
     advanceTurn();
-  }, [advanceTurn]);
+  }, [advanceTurn, lang]);
 
   const handleSwitchConfirm = useCallback(() => {
     // Trigger confetti
@@ -129,12 +130,13 @@ const ConversationOverlay = ({ flowId, initialMessage, onClose, onTurnChange }: 
     advanceTurn();
   }, [advanceTurn]);
 
-  // Start flow on mount
+  // Start flow on mount (and when language changes)
   useEffect(() => {
     const version = ++versionRef.current;
-    const flow = getFlow(flowId);
+    const flow = getFlow(flowId, lang);
     flowRef.current = flow;
     turnRef.current = 0;
+    setMessages([]);
 
     if (initialMessage && flow.length > 1) {
       const id = genId();
@@ -144,7 +146,7 @@ const ConversationOverlay = ({ flowId, initialMessage, onClose, onTurnChange }: 
     } else {
       processAgentTurn(flow[0], version);
     }
-  }, [flowId, initialMessage, processAgentTurn]);
+  }, [flowId, initialMessage, processAgentTurn, lang]);
 
   // Focus input
   useEffect(() => {

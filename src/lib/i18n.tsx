@@ -176,6 +176,41 @@ const translations: Record<string, Record<Lang, string>> = {
     hu: "Köszönöm a bizalmát! A Netrisk csapata hamarosan felveszi Önnel a kapcsolatot emailben. 🎉 Van még kérdése?",
     en: "Thank you for your trust! The Netrisk team will contact you by email shortly. 🎉 Any other questions?",
   },
+
+  // Quote card
+  "quote.claims": { hu: "Kárrendezés", en: "Claims" },
+  "quote.satisfaction": { hu: "Elégedettség", en: "Satisfaction" },
+  "quote.select": { hu: "Ezt választom →", en: "Select this →" },
+
+  // Comparison panel
+  "comparison.title": { hu: "Javasolt ajánlatok", en: "Recommended offers" },
+
+  // Switching card labels
+  "switch.previous": { hu: "Korábbi", en: "Previous" },
+  "switch.new": { hu: "Új", en: "New" },
+  "switch.savings": { hu: "Megtakarítás", en: "Savings" },
+  "switch.confirmed": { hu: "✓ A Netrisk intézi!", en: "✓ Netrisk handles it!" },
+  "switch.start": { hu: "Váltás indítása →", en: "Start switch →" },
+
+  // Timeline card
+  "timeline.title": { hu: "Váltás folyamata", en: "Switching process" },
+  "timeline.today": { hu: "Ma", en: "Today" },
+  "timeline.calc": { hu: "Kalkuláció", en: "Calculation" },
+  "timeline.offer": { hu: "Ajánlat kész", en: "Offer ready" },
+  "timeline.compare": { hu: "Összehasonlítás", en: "Comparison" },
+  "timeline.deadline": { hu: "30 napos határidő", en: "30-day deadline" },
+  "timeline.cancel": { hu: "Felmondás", en: "Cancellation" },
+  "timeline.newstart": { hu: "Új kötvény indul", en: "New policy starts" },
+  "timeline.contract": { hu: "Szerződés", en: "Contract" },
+
+  // Savings banner
+  "savings.label": { hu: "Megtakarítás", en: "Savings" },
+
+  // Insurance features
+  "feature.fastclaims": { hu: "Gyors kárrendezés", en: "Fast claims" },
+  "feature.online": { hu: "Online ügyintézés", en: "Online service" },
+  "feature.roadside": { hu: "Asszisztencia", en: "Roadside assist" },
+  "feature.highsat": { hu: "Magas elégedettség", en: "High satisfaction" },
 };
 
 const I18nContext = createContext<I18nContextType | null>(null);

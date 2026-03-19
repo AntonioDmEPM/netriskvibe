@@ -1,5 +1,6 @@
 import { formatPrice, type QuoteData } from "@/lib/mockData";
 import { insurers } from "@/lib/mockData";
+import { useI18n } from "@/lib/i18n";
 
 interface QuoteCardProps {
   quote: QuoteData;
@@ -35,6 +36,7 @@ function MiniBar({ label, value, max }: { label: string; value: number; max: num
 }
 
 const QuoteCard = ({ quote, isRecommended, onSelect }: QuoteCardProps) => {
+  const { t } = useI18n();
   const ins = getInsurerData(quote.insurerName);
   const claimsSpeed = ins?.claims_speed ?? 3;
   const satisfaction = ins?.satisfaction ?? 3.5;
@@ -63,17 +65,17 @@ const QuoteCard = ({ quote, isRecommended, onSelect }: QuoteCardProps) => {
       {/* Price */}
       <div className="mb-3">
         <span className="text-2xl font-bold text-foreground">
-          {formatPrice(quote.yearlyPrice)} Ft/év
+          {formatPrice(quote.yearlyPrice)} Ft/{t("quote.claims") === "Claims" ? "yr" : "év"}
         </span>
         <span className="text-sm text-muted-foreground ml-2">
-          {formatPrice(quote.monthlyPrice)} Ft/hó
+          {formatPrice(quote.monthlyPrice)} Ft/{t("quote.claims") === "Claims" ? "mo" : "hó"}
         </span>
       </div>
 
       {/* Mini comparison bars */}
       <div className="space-y-1.5 mb-3">
-        <MiniBar label="Kárrendezés" value={claimsSpeed} max={5} />
-        <MiniBar label="Elégedettség" value={Math.round(satisfaction)} max={5} />
+        <MiniBar label={t("quote.claims")} value={claimsSpeed} max={5} />
+        <MiniBar label={t("quote.satisfaction")} value={Math.round(satisfaction)} max={5} />
       </div>
 
       {/* Feature pills */}
@@ -101,7 +103,7 @@ const QuoteCard = ({ quote, isRecommended, onSelect }: QuoteCardProps) => {
           onClick={() => onSelect(quote.insurerName)}
           className="w-full py-2 rounded-lg border-2 border-primary text-primary font-semibold text-sm hover:bg-primary hover:text-primary-foreground hover:scale-105 transition-all duration-200"
         >
-          Ezt választom →
+          {t("quote.select")}
         </button>
       )}
     </div>
