@@ -5,6 +5,21 @@ import {
 } from './mockData';
 import type { Lang } from './i18n';
 
+function localizeProfileField(value: string | undefined, lang: Lang, map: Record<string, string>): string | undefined {
+  if (!value || lang === 'hu') return value;
+  return map[value] ?? value;
+}
+
+const paymentMethodMap: Record<string, string> = {
+  'átutalás': 'bank transfer',
+  'bankkártya': 'credit card',
+  'csekk': 'cheque',
+};
+
+const anniversaryDateMap: Record<string, string> = {
+  'január 1.': 'January 1',
+};
+
 export interface ScenarioConfig {
   id: string;
   profile: Profile;
@@ -54,13 +69,13 @@ function getReturningScenario(lang: Lang): ScenarioConfig {
       region: profileA.region,
       location: profileA.location,
       paymentFrequency: profileA.payment,
-      paymentMethod: profileA.paymentMethod,
-      anniversaryDate: profileA.anniversaryDate,
+      paymentMethod: localizeProfileField(profileA.paymentMethod, lang, paymentMethodMap),
+      anniversaryDate: localizeProfileField(profileA.anniversaryDate, lang, anniversaryDateMap),
       isReturningCustomer: true,
       yearsAsNetriskCustomer: profileA.yearsAsCustomer,
     },
     allQuotes: buildTopQuoteSummary(all),
-    allInsurerKnowledge: getInsurerKnowledge(),
+    allInsurerKnowledge: getInsurerKnowledge(lang),
     marketStats,
     dataComplete: true,
   };
@@ -81,11 +96,11 @@ function getNewCustomerScenario(lang: Lang): ScenarioConfig {
       bonusCategory: profileB.bonus,
       region: profileB.region,
       location: profileB.location,
-      paymentMethod: profileB.paymentMethod,
+      paymentMethod: localizeProfileField(profileB.paymentMethod, lang, paymentMethodMap),
       isNewDriver: true,
     },
     allQuotes: buildTopQuoteSummary(all),
-    allInsurerKnowledge: getInsurerKnowledge(),
+    allInsurerKnowledge: getInsurerKnowledge(lang),
     marketStats,
     dataComplete: true,
   };
@@ -108,10 +123,10 @@ function getAdvisoryScenario(lang: Lang): ScenarioConfig {
       region: profileC.region,
       location: profileC.location,
       paymentFrequency: profileC.payment,
-      paymentMethod: profileC.paymentMethod,
+      paymentMethod: localizeProfileField(profileC.paymentMethod, lang, paymentMethodMap),
     },
     allQuotes: buildTopQuoteSummary(all),
-    allInsurerKnowledge: getInsurerKnowledge(),
+    allInsurerKnowledge: getInsurerKnowledge(lang),
     marketStats,
     dataComplete: true,
   };

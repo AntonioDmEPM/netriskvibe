@@ -288,7 +288,7 @@ const HeroSection = ({ onStartFlow, isReturning }: HeroSectionProps) => {
                       <p className="text-xs text-muted-foreground">{v.variant} • {v.power_kw} kW • {v.plate}</p>
                     </div>
                     <div className="ml-auto text-right">
-                      <p className="text-xs text-muted-foreground">{lang === 'hu' ? 'Becsült érték' : 'Est. value'}</p>
+                      <p className="text-xs text-muted-foreground">{t("data.estvalue")}</p>
                       <p className="text-sm font-semibold text-foreground">{formatPrice(v.value_huf)} Ft</p>
                     </div>
                   </div>
@@ -299,8 +299,8 @@ const HeroSection = ({ onStartFlow, isReturning }: HeroSectionProps) => {
                       <div className="text-left">
                         <div className="flex items-center gap-1.5 mb-1">
                           <Shield className="w-3.5 h-3.5 text-muted-foreground" />
-                          <span className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider">
-                            {lang === 'hu' ? 'Biztosító' : 'Insurer'}
+                           <span className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider">
+                             {t("data.insurer")}
                           </span>
                         </div>
                         <p className="text-sm font-bold text-foreground">{profileA.currentInsurer}</p>
@@ -308,8 +308,8 @@ const HeroSection = ({ onStartFlow, isReturning }: HeroSectionProps) => {
                       <div className="text-left">
                         <div className="flex items-center gap-1.5 mb-1">
                           <CreditCard className="w-3.5 h-3.5 text-muted-foreground" />
-                          <span className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider">
-                            {lang === 'hu' ? 'Éves díj' : 'Annual'}
+                           <span className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider">
+                             {t("data.annual")}
                           </span>
                         </div>
                         <p className="text-sm font-bold text-foreground">{formatPrice(profileA.currentPrice!)} Ft</p>
@@ -326,8 +326,8 @@ const HeroSection = ({ onStartFlow, isReturning }: HeroSectionProps) => {
                       <div className="text-left">
                         <div className="flex items-center gap-1.5 mb-1">
                           <MapPin className="w-3.5 h-3.5 text-muted-foreground" />
-                          <span className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider">
-                            {lang === 'hu' ? 'Lakhely' : 'Location'}
+                           <span className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider">
+                             {t("data.location")}
                           </span>
                         </div>
                         <p className="text-sm font-bold text-foreground">{profileA.location}</p>
@@ -345,7 +345,7 @@ const HeroSection = ({ onStartFlow, isReturning }: HeroSectionProps) => {
                           <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider">{t("dashboard.kgfb")}</p>
                         </div>
                         <p className="text-lg font-bold text-foreground">{profileA.currentInsurer}</p>
-                        <p className="text-sm text-muted-foreground">{formatPrice(profileA.currentPrice!)} Ft/{lang === 'hu' ? 'év' : 'yr'}</p>
+                        <p className="text-sm text-muted-foreground">{formatPrice(profileA.currentPrice!)} Ft/{t("data.yr")}</p>
                         <span className="inline-block mt-2 text-xs font-semibold bg-destructive/10 text-destructive px-2.5 py-1 rounded-full">
                           {t("dashboard.expires")}
                         </span>
@@ -361,7 +361,7 @@ const HeroSection = ({ onStartFlow, isReturning }: HeroSectionProps) => {
                       <div className="flex-1 text-left">
                         <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider mb-1">{t("dashboard.recommended")}</p>
                         <p className="text-lg font-bold text-foreground">Groupama</p>
-                        <p className="text-sm text-primary font-semibold">33 500 Ft/{lang === 'hu' ? 'év' : 'yr'}</p>
+                        <p className="text-sm text-primary font-semibold">33 500 Ft/{t("data.yr")}</p>
                         <span className="inline-block mt-2 text-xs font-semibold bg-primary/10 text-primary px-2.5 py-1 rounded-full">
                           {t("dashboard.savings")}
                         </span>

@@ -146,7 +146,7 @@ const BeforeAfter = () => {
                   <span className="text-xs font-bold text-foreground">Genertel</span>
                   <span className="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full font-semibold">#1</span>
                 </div>
-                <span className="text-lg font-bold text-primary">12 800 Ft/év</span>
+                <span className="text-lg font-bold text-primary">12 800 Ft/{t("ba.old.time") === "~8 min" ? "yr" : "év"}</span>
               </div>
               <div className="flex items-center justify-between mt-6 pt-4 border-t border-primary/20">
                 <span className="text-sm text-muted-foreground">{t("ba.new.fields")}</span>

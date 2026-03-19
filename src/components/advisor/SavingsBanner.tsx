@@ -8,12 +8,11 @@ interface SavingsBannerProps {
 }
 
 const SavingsBanner = ({ oldPrice, newPrice }: SavingsBannerProps) => {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const savings = oldPrice - newPrice;
   if (savings <= 0) return null;
 
-  const isEn = t("savings.label") === "Savings";
-  const yrLabel = isEn ? "Ft/yr" : "Ft/év";
+  const yrLabel = lang === "en" ? "Ft/yr" : "Ft/év";
 
   return (
     <div className="flex items-center gap-3 bg-emerald-50 border border-emerald-200 rounded-lg px-4 py-3">

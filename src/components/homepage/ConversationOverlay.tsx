@@ -208,7 +208,8 @@ const ConversationOverlay = ({ flowId, initialMessage, onClose, onTurnChange }: 
 
         let historyEntry = textContent;
         if (componentTypes.length > 0) {
-          historyEntry += `\n[Megjelenített UI elemek: ${componentTypes.join(", ")}]`;
+          const uiLabel = lang === "en" ? "Displayed UI elements" : "Megjelenített UI elemek";
+          historyEntry += `\n[${uiLabel}: ${componentTypes.join(", ")}]`;
         }
 
         conversationRef.current.push({ role: "assistant", content: historyEntry });

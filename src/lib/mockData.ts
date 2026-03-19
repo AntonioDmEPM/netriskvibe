@@ -227,7 +227,7 @@ export function getQuotesForProfile(profile: Profile, lang: 'hu' | 'en' = 'hu'):
 }
 
 /** Full insurer knowledge for AI context */
-export function getInsurerKnowledge(): Record<string, any>[] {
+export function getInsurerKnowledge(lang: 'hu' | 'en' = 'hu'): Record<string, any>[] {
   return insurers.map(ins => ({
     id: ins.id,
     name: ins.name,
@@ -237,8 +237,8 @@ export function getInsurerKnowledge(): Record<string, any>[] {
     customer_satisfaction: ins.satisfaction,
     roadside_assistance: ins.roadside,
     market_share_kgfb_pct: ins.market_share_pct,
-    strengths_hu: ins.strengths_hu,
-    weaknesses_hu: ins.weaknesses_hu,
+    strengths: lang === 'en' ? ins.strengths.join('. ') : ins.strengths_hu,
+    weaknesses: lang === 'en' ? ins.weaknesses.join('. ') : ins.weaknesses_hu,
     products: ins.products,
   }));
 }
