@@ -11,63 +11,63 @@ import ComparisonChat from "@/components/ComparisonChat";
 const mockRecommendations: Recommendation[] = [
   {
     id: "1",
-    provider: "Allianz Hungária",
-    monthlyPrice: "12 450 Ft",
-    yearlyPrice: "149 400 Ft",
-    savings: "28 600 Ft/év",
-    badge: "Legjobb ajánlat",
+    provider: "Allianz",
+    monthlyPrice: "$48",
+    yearlyPrice: "$576",
+    savings: "$110/yr",
+    badge: "Best Value",
     badgeType: "best",
-    reason: "Az Ön 2022-es BMW-jéhez és 30 éves korosztályához ez az optimális ár-érték arány. A balesetbiztosítás és az assistance csomag itt a legerősebb.",
+    reason: "For your 2022 BMW and age group, this offers the optimal price-to-coverage ratio. Accident insurance and roadside assistance are the strongest here.",
     highlights: [
-      "0 Ft önrész üvegkár esetén",
-      "24 órás assistance szolgáltatás",
-      "Bérautó biztosítás 5 napig",
-      "Kiegészítő baleset-biztosítás sofőrnek",
+      "$0 deductible on glass damage",
+      "24-hour roadside assistance",
+      "Rental car coverage for up to 5 days",
+      "Supplemental accident insurance for driver",
     ],
     rating: 5,
-    coverage: "Teljes körű KGFB + kiegészítők",
+    coverage: "Full Coverage + Add-ons",
   },
   {
     id: "2",
-    provider: "Generali Biztosító",
-    monthlyPrice: "10 890 Ft",
-    yearlyPrice: "130 680 Ft",
-    savings: "47 320 Ft/év",
-    badge: "Legolcsóbb",
+    provider: "Generali",
+    monthlyPrice: "$42",
+    yearlyPrice: "$504",
+    savings: "$182/yr",
+    badge: "Cheapest",
     badgeType: "cheapest",
-    reason: "Ha az ár a legfontosabb szempont, ez a legjobb választás. Budapesti ingázáshoz elegendő fedezetet nyújt alapcsomag mellett.",
+    reason: "If price is your top priority, this is the best choice. Provides adequate coverage for daily commuting with a basic package.",
     highlights: [
-      "Alap assistance csomag",
-      "Online kárbejelentés",
-      "Havi díjfizetés felár nélkül",
+      "Basic roadside assistance",
+      "Online claims filing",
+      "Monthly payments with no surcharge",
     ],
     rating: 4,
-    coverage: "Alap KGFB csomag",
+    coverage: "Basic Liability Package",
   },
   {
     id: "3",
-    provider: "Magyar Posta Biztosító",
-    monthlyPrice: "11 200 Ft",
-    yearlyPrice: "134 400 Ft",
-    badge: "Népszerű választás",
+    provider: "PostaInsurance",
+    monthlyPrice: "$43",
+    yearlyPrice: "$516",
+    badge: "Most Popular",
     badgeType: "popular",
-    reason: "A legtöbb hasonló profilú ügyfél ezt választotta. Kiegyensúlyozott csomag jó ügyfélszolgálattal és gyors kárrendezéssel.",
+    reason: "Most customers with a similar profile chose this option. A well-balanced package with excellent customer service and fast claims processing.",
     highlights: [
-      "Gyors kárrendezés (átlag 5 munkanap)",
-      "Prémium ügyfélszolgálat",
-      "Kiegészítő jogvédelem",
-      "Partner szerviz hálózat országszerte",
+      "Fast claims processing (avg 5 business days)",
+      "Premium customer support",
+      "Legal protection add-on",
+      "Nationwide partner service network",
     ],
     rating: 4,
-    coverage: "Prémium KGFB csomag",
+    coverage: "Premium Liability Package",
   },
 ];
 
 const thoughtSteps: { text: string; icon: ThoughtStep["icon"] }[] = [
-  { text: "Jármű adatok lekérdezése (2022 BMW)...", icon: "search" },
-  { text: "12 biztosító ajánlatainak elemzése...", icon: "analyze" },
-  { text: "Ár-érték arány összehasonlítás az Ön profiljára...", icon: "compare" },
-  { text: "Fedezeti feltételek ellenőrzése...", icon: "verify" },
+  { text: "Retrieving vehicle data (2022 BMW)...", icon: "search" },
+  { text: "Analyzing quotes from 12 insurers...", icon: "analyze" },
+  { text: "Comparing value-for-money for your profile...", icon: "compare" },
+  { text: "Verifying coverage terms...", icon: "verify" },
 ];
 
 type AppState = "idle" | "thinking" | "results";
@@ -119,12 +119,12 @@ const Index = () => {
                 className="text-center max-w-2xl"
               >
                 <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-foreground leading-tight mb-4">
-                  Biztosítást keres?{" "}
-                  <span className="gradient-text">Kérdezzen!</span>
+                  Looking for insurance?{" "}
+                  <span className="gradient-text">Just ask.</span>
                 </h1>
                 <p className="text-lg sm:text-xl text-muted-foreground leading-relaxed">
-                  Hasonlítson össze biztosításokat egyetlen mondattal — AI ügynökünk
-                  megtalálja a legjobb ajánlatot.
+                  Compare insurance quotes in a single sentence — our AI agent
+                  finds the best deal for you.
                 </p>
               </motion.div>
 
@@ -161,10 +161,10 @@ const Index = () => {
                     <div className="w-2 h-2 rounded-full bg-primary thinking-dot" />
                     <div className="w-2 h-2 rounded-full bg-primary thinking-dot" />
                   </div>
-                  Feldolgozás alatt
+                  Processing
                 </div>
                 <p className="text-sm text-muted-foreground max-w-md">
-                  „{query}"
+                  "{query}"
                 </p>
               </motion.div>
 
@@ -187,14 +187,14 @@ const Index = () => {
                 <div className="flex items-center gap-2 mb-2">
                   <div className="w-2 h-2 rounded-full bg-savings animate-pulse" />
                   <span className="text-sm text-savings font-medium">
-                    3 ajánlat készen áll
+                    3 quotes ready
                   </span>
                 </div>
                 <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-1">
-                  Az Önnek ajánlott biztosítások
+                  Recommended insurance for you
                 </h2>
                 <p className="text-muted-foreground">
-                  „{query}"
+                  "{query}"
                 </p>
 
                 <motion.button
@@ -206,20 +206,17 @@ const Index = () => {
                   className="mt-4 text-sm text-primary hover:underline font-medium"
                   whileHover={{ x: -3 }}
                 >
-                  ← Új keresés
+                  ← New search
                 </motion.button>
               </motion.div>
 
-              {/* Two-column layout: cards + chat */}
               <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-                {/* Results cards */}
                 <div className="lg:col-span-3 space-y-4">
                   {mockRecommendations.map((rec, i) => (
                     <RecommendationCard key={rec.id} recommendation={rec} index={i} />
                   ))}
                 </div>
 
-                {/* Comparison chat */}
                 <div className="lg:col-span-2 lg:sticky lg:top-24 lg:self-start">
                   <ComparisonChat
                     query={query}
@@ -240,7 +237,7 @@ const Index = () => {
                 transition={{ delay: 0.8 }}
                 className="text-center text-xs text-muted-foreground mt-10"
               >
-                Az ajánlatok tájékoztató jellegűek. A végleges díj a részletes adategyeztetés után kerül meghatározásra.
+                Quotes are for informational purposes only. Final pricing will be determined after detailed data verification.
               </motion.p>
             </motion.div>
           )}

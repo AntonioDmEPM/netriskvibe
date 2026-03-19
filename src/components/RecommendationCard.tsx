@@ -82,12 +82,12 @@ const RecommendationCard = ({
             <span className="text-3xl font-bold text-foreground">
               {recommendation.monthlyPrice}
             </span>
-            <span className="text-sm text-muted-foreground ml-1">/ hó</span>
+            <span className="text-sm text-muted-foreground ml-1">/ mo</span>
           </div>
           {recommendation.savings && (
             <span className="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-savings/10 text-savings text-sm font-medium mb-1">
               <TrendingDown className="w-3.5 h-3.5" />
-              {recommendation.savings} megtakarítás
+              {recommendation.savings} saved
             </span>
           )}
         </div>
@@ -103,7 +103,7 @@ const RecommendationCard = ({
           onClick={() => setExpanded(!expanded)}
           className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
         >
-          {expanded ? "Kevesebb részlet" : "Több részlet"}
+          {expanded ? "Show less" : "Show more"}
           {expanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
         </button>
 
@@ -128,7 +128,7 @@ const RecommendationCard = ({
           whileTap={{ scale: 0.98 }}
           className="w-full mt-5 py-3 rounded-xl bg-primary text-primary-foreground font-semibold text-sm tracking-wide transition-all hover:bg-orange-hover"
         >
-          Ajánlat kérése
+          Get Quote
         </motion.button>
       </div>
     </motion.div>

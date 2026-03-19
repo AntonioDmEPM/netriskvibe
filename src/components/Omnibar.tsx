@@ -3,10 +3,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, ArrowRight } from "lucide-react";
 
 const suggestions = [
-  "Kötelező biztosítás a 2023-as Skoda Octaviámra",
-  "Lakásbiztosítás 85m² budapesti lakásra",
-  "Utasbiztosítás 2 hétre Olaszországba",
-  "CASCO a BMW X3-asomra, 2021-es évjárat",
+  "Car insurance for my 2023 Skoda Octavia",
+  "Home insurance for an 85m² apartment in London",
+  "Travel insurance for 2 weeks in Italy, 2 adults + 1 child",
+  "Comprehensive coverage for my 2021 BMW X3",
 ];
 
 interface OmnibarProps {
@@ -55,7 +55,7 @@ const Omnibar = ({ onSubmit, isProcessing }: OmnibarProps) => {
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
             onKeyDown={handleKeyDown}
-            placeholder="Mondja el, milyen biztosítást keres..."
+            placeholder="Tell us what insurance you're looking for..."
             className="flex-1 bg-transparent border-none outline-none resize-none text-foreground placeholder:text-muted-foreground text-base sm:text-lg leading-relaxed min-h-[28px] max-h-[120px]"
             rows={1}
             disabled={isProcessing}

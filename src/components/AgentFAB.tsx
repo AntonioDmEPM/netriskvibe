@@ -16,15 +16,15 @@ const AgentFAB = () => {
             className="absolute bottom-16 right-0 w-80 rounded-2xl bg-card border border-border p-5 shadow-xl"
           >
             <h4 className="font-bold text-foreground mb-2">
-              AI Tanácsadó
+              AI Advisor
             </h4>
             <p className="text-sm text-muted-foreground leading-relaxed mb-3">
-              Mesterséges intelligencia alapú biztosítási tanácsadó vagyok. Kérdezzen bármit a biztosításokról!
+              I'm your AI-powered insurance advisor. Ask me anything about insurance coverage, pricing, or recommendations!
             </p>
             <div className="flex items-center gap-2 p-3 rounded-xl bg-muted">
               <MessageCircle className="w-4 h-4 text-primary" />
               <span className="text-xs text-muted-foreground">
-                Írja be kérdését fent a keresőbe...
+                Type your question in the search bar above...
               </span>
             </div>
           </motion.div>

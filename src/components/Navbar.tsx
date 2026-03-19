@@ -18,13 +18,13 @@ const Navbar = () => {
           </span>
         </div>
         <div className="hidden sm:flex items-center gap-6 text-sm text-muted-foreground">
-          <a href="#" className="hover:text-foreground transition-colors">Hogyan működik</a>
-          <a href="#" className="hover:text-foreground transition-colors">Biztosítások</a>
-          <a href="#" className="hover:text-foreground transition-colors">Rólunk</a>
+          <a href="#" className="hover:text-foreground transition-colors">How it works</a>
+          <a href="#" className="hover:text-foreground transition-colors">Insurance</a>
+          <a href="#" className="hover:text-foreground transition-colors">About</a>
         </div>
         <div className="flex items-center gap-3">
           <button className="px-4 py-2 rounded-xl bg-primary text-primary-foreground text-sm font-semibold hover:bg-orange-hover transition-colors">
-            Belépés
+            Sign In
           </button>
         </div>
       </div>
