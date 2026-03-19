@@ -13,9 +13,10 @@ interface ConversationOverlayProps {
   flowId: string;
   initialMessage?: string;
   onClose: () => void;
+  onTurnChange?: (turnIndex: number) => void;
 }
 
-const ConversationOverlay = ({ flowId, initialMessage, onClose }: ConversationOverlayProps) => {
+const ConversationOverlay = ({ flowId, initialMessage, onClose, onTurnChange }: ConversationOverlayProps) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   const [inputEnabled, setInputEnabled] = useState(false);
@@ -88,8 +89,9 @@ const ConversationOverlay = ({ flowId, initialMessage, onClose }: ConversationOv
     const next = turnRef.current + 1;
     if (next >= flow.length) return;
     turnRef.current = next;
+    onTurnChange?.(next);
     processAgentTurn(flow[next], versionRef.current);
-  }, [processAgentTurn]);
+  }, [processAgentTurn, onTurnChange]);
 
   const handleSend = useCallback((text: string) => {
     if (!flowRef.current || !text.trim()) return;

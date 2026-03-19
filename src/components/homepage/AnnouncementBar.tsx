@@ -1,10 +1,13 @@
+import type { CSSProperties } from "react";
+
 interface AnnouncementBarProps {
   isReturning: boolean;
   onToggle: (val: boolean) => void;
+  style?: CSSProperties;
 }
 
-const AnnouncementBar = ({ isReturning, onToggle }: AnnouncementBarProps) => (
-  <div className="fixed top-0 left-0 right-0 z-[60] h-9 bg-secondary flex items-center justify-center">
+const AnnouncementBar = ({ isReturning, onToggle, style }: AnnouncementBarProps) => (
+  <div className="fixed top-0 left-0 right-0 z-[60] h-9 bg-secondary flex items-center justify-center" style={style}>
     <div className="flex items-center gap-2">
       <span className="text-[10px] text-secondary-foreground/50 uppercase tracking-wider font-medium hidden sm:inline">
         Demo mód:
