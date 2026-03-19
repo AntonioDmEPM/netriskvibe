@@ -123,6 +123,7 @@ const ConversationOverlay = ({ flowId, initialMessage, onClose, onTurnChange }: 
   const [showNewMsg, setShowNewMsg] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   const scenarioRef = useRef<ScenarioConfig | null>(null);
   const turnRef = useRef(0);
