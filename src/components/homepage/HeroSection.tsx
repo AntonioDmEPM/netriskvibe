@@ -299,8 +299,8 @@ const HeroSection = ({ onStartFlow, isReturning }: HeroSectionProps) => {
                       <div className="text-left">
                         <div className="flex items-center gap-1.5 mb-1">
                           <Shield className="w-3.5 h-3.5 text-muted-foreground" />
-                          <span className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider">
-                            {lang === 'hu' ? 'Biztosító' : 'Insurer'}
+                           <span className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider">
+                             {t("data.insurer")}
                           </span>
                         </div>
                         <p className="text-sm font-bold text-foreground">{profileA.currentInsurer}</p>
