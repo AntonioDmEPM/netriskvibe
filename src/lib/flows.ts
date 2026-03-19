@@ -72,7 +72,15 @@ export function getReturningFlow(): Flow {
     {
       messages: [
         {
-          parts: [{ type: 'text', content: 'Done! I\'ve initiated the switching process. I\'ll send the details via email. 📧 I\'ll keep monitoring offers next year too — if a better option comes up, I\'ll let you know. Any other questions?' }],
+          parts: [
+            { type: 'timeline', currentStep: 1, steps: [
+              { label: 'Quote ✓' },
+              { label: 'Switch started ✓' },
+              { label: 'Old policy cancelled' },
+              { label: 'New policy starts Jan 1' },
+            ], footnote: 'Netrisk will notify you via email at every step.' },
+            { type: 'text', content: 'Done! I\'ve initiated the switching process. I\'ll send the details via email. 📧 I\'ll keep monitoring offers next year too — if a better option comes up, I\'ll let you know. Any other questions?' },
+          ],
           delay: 800,
         },
       ],
@@ -144,7 +152,15 @@ export function getNewCustomerFlow(): Flow {
     },
     {
       messages: [{
-        parts: [{ type: 'text', content: 'All done! I\'ve initiated the contract process. I\'ll send the details and next steps via email. 📧 Welcome to UNIQA! Any other questions?' }],
+        parts: [
+          { type: 'timeline', currentStep: 1, steps: [
+            { label: 'Quote ✓' },
+            { label: 'Contract started ✓' },
+            { label: 'Documents signed' },
+            { label: 'Policy active Jan 1' },
+          ], footnote: 'Netrisk will notify you via email at every step.' },
+          { type: 'text', content: 'All done! I\'ve initiated the contract process. I\'ll send the details and next steps via email. 📧 Welcome to UNIQA! Any other questions?' },
+        ],
         delay: 800,
       }],
     },

@@ -9,7 +9,7 @@ export type MessagePart =
   | { type: 'text'; content: string }
   | { type: 'comparison'; quotes: QuoteData[]; recommended?: number }
   | { type: 'switching'; from?: { name: string; price: number }; to: { name: string; price: number } }
-  | { type: 'timeline'; currentStep: number }
+  | { type: 'timeline'; currentStep: number; steps?: { label: string; sublabel?: string }[]; footnote?: string }
   | { type: 'savings'; oldPrice: number; newPrice: number };
 
 export interface Message {
@@ -101,7 +101,7 @@ const ChatMessage = ({ message, animate, onQuoteSelect, onSwitchConfirm }: ChatM
               );
             }
             if (part.type === 'timeline') {
-              return <TimelineCard key={i} currentStep={part.currentStep} />;
+              return <TimelineCard key={i} currentStep={part.currentStep} steps={part.steps} footnote={part.footnote} />;
             }
             if (part.type === 'savings') {
               return <SavingsBanner key={i} oldPrice={part.oldPrice} newPrice={part.newPrice} />;
