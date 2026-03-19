@@ -288,7 +288,7 @@ const HeroSection = ({ onStartFlow, isReturning }: HeroSectionProps) => {
                       <p className="text-xs text-muted-foreground">{v.variant} • {v.power_kw} kW • {v.plate}</p>
                     </div>
                     <div className="ml-auto text-right">
-                      <p className="text-xs text-muted-foreground">{lang === 'hu' ? 'Becsült érték' : 'Est. value'}</p>
+                      <p className="text-xs text-muted-foreground">{t("data.estvalue")}</p>
                       <p className="text-sm font-semibold text-foreground">{formatPrice(v.value_huf)} Ft</p>
                     </div>
                   </div>
