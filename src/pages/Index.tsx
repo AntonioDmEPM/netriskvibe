@@ -6,6 +6,7 @@ import ThoughtLog, { ThoughtStep } from "@/components/ThoughtLog";
 import RecommendationCard, { Recommendation } from "@/components/RecommendationCard";
 import AgentFAB from "@/components/AgentFAB";
 import StatsBar from "@/components/StatsBar";
+import ComparisonChat from "@/components/ComparisonChat";
 
 const mockRecommendations: Recommendation[] = [
   {
@@ -176,7 +177,7 @@ const Index = () => {
               key="results"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="max-w-4xl mx-auto px-4 sm:px-6 pt-24 pb-20"
+              className="max-w-7xl mx-auto px-4 sm:px-6 pt-24 pb-20"
             >
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -209,10 +210,28 @@ const Index = () => {
                 </motion.button>
               </motion.div>
 
-              <div className="space-y-4">
-                {mockRecommendations.map((rec, i) => (
-                  <RecommendationCard key={rec.id} recommendation={rec} index={i} />
-                ))}
+              {/* Two-column layout: cards + chat */}
+              <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+                {/* Results cards */}
+                <div className="lg:col-span-3 space-y-4">
+                  {mockRecommendations.map((rec, i) => (
+                    <RecommendationCard key={rec.id} recommendation={rec} index={i} />
+                  ))}
+                </div>
+
+                {/* Comparison chat */}
+                <div className="lg:col-span-2 lg:sticky lg:top-24 lg:self-start">
+                  <ComparisonChat
+                    query={query}
+                    recommendations={mockRecommendations.map((r) => ({
+                      provider: r.provider,
+                      monthlyPrice: r.monthlyPrice,
+                      coverage: r.coverage,
+                      reason: r.reason,
+                      highlights: r.highlights,
+                    }))}
+                  />
+                </div>
               </div>
 
               <motion.p
@@ -228,7 +247,7 @@ const Index = () => {
         </AnimatePresence>
       </main>
 
-      <AgentFAB />
+      {appState !== "results" && <AgentFAB />}
     </div>
   );
 };
