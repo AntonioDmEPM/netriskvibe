@@ -1,20 +1,24 @@
 interface TimelineCardProps {
   currentStep: number;
+  steps?: { label: string; sublabel?: string }[];
+  footnote?: string;
 }
 
-const steps = [
+const defaultSteps = [
   { label: "Today", sublabel: "Comparison" },
   { label: "Quote ready", sublabel: "Offers" },
   { label: "30-day deadline", sublabel: "Cancellation" },
   { label: "New policy starts", sublabel: "Contract" },
 ];
 
-const TimelineCard = ({ currentStep }: TimelineCardProps) => {
+const TimelineCard = ({ currentStep, steps, footnote }: TimelineCardProps) => {
+  const displaySteps = steps ?? defaultSteps;
+
   return (
     <div className="bg-card border border-border rounded-lg p-4 shadow-sm">
-      <h4 className="text-sm font-semibold text-foreground mb-4">MTPL Switching Timeline</h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4">Switching Timeline</h4>
       <div className="flex items-center">
-        {steps.map((step, i) => (
+        {displaySteps.map((step, i) => (
           <div key={i} className="flex items-center flex-1 last:flex-initial">
             <div className="flex flex-col items-center text-center">
               <div
@@ -24,23 +28,29 @@ const TimelineCard = ({ currentStep }: TimelineCardProps) => {
                     : 'bg-muted text-muted-foreground'
                 }`}
               >
-                {i + 1}
+                {i <= currentStep ? '✓' : i + 1}
               </div>
               <span className={`text-xs font-medium ${i <= currentStep ? 'text-foreground' : 'text-muted-foreground'}`}>
                 {step.label}
               </span>
-              <span className="text-[10px] text-muted-foreground">{step.sublabel}</span>
+              {step.sublabel && (
+                <span className="text-[10px] text-muted-foreground">{step.sublabel}</span>
+              )}
             </div>
-            {i < steps.length - 1 && (
-              <div
-                className={`flex-1 h-0.5 mx-1 ${
-                  i < currentStep ? 'bg-primary' : 'bg-border'
-                }`}
-              />
+            {i < displaySteps.length - 1 && (
+              <div className="flex-1 h-0.5 mx-1 relative overflow-hidden rounded-full">
+                <div className={`absolute inset-0 ${i < currentStep ? 'bg-primary' : 'bg-border'}`} />
+                {i === currentStep && (
+                  <div className="absolute inset-y-0 left-0 w-1/2 bg-primary animate-timeline-progress rounded-full" />
+                )}
+              </div>
             )}
           </div>
         ))}
       </div>
+      {footnote && (
+        <p className="text-xs text-muted-foreground mt-3 text-center">{footnote}</p>
+      )}
     </div>
   );
 };
