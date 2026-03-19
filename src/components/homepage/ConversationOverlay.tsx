@@ -4,13 +4,14 @@ import { motion, AnimatePresence } from "framer-motion";
 import ChatMessage, { type Message, type MessagePart } from "@/components/advisor/ChatMessage";
 import TypingIndicator from "@/components/advisor/TypingIndicator";
 import ConfettiEffect from "@/components/advisor/ConfettiEffect";
-import { genId } from "@/lib/flows";
 import { getScenarioConfig, type ScenarioConfig } from "@/lib/scenarioContext";
 import { useI18n } from "@/lib/i18n";
 import { supabase } from "@/integrations/supabase/client";
+import type { QuoteData } from "@/lib/mockData";
 
-const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 const SCROLL_THRESHOLD = 150;
+let _id = 0;
+function genId() { return `msg-${++_id}-${Date.now()}`; }
 
 interface ConversationOverlayProps {
   flowId: string;
@@ -19,29 +20,98 @@ interface ConversationOverlayProps {
   onTurnChange?: (turnIndex: number) => void;
 }
 
+/**
+ * Call the AI edge function and return structured parts.
+ */
 async function callAI(
   conversationHistory: { role: string; content: string }[],
   scenarioContext: Record<string, any>,
-  stageHint: string,
   lang: string,
-): Promise<string> {
-  const messages = [
-    ...conversationHistory,
-    { role: "user", content: `[STAGE HINT — not a user message, this is internal context]: ${stageHint}` },
-  ];
-
+): Promise<{ parts: any[] }> {
   const { data, error } = await supabase.functions.invoke("chat", {
-    body: { messages, scenarioContext, lang },
+    body: { messages: conversationHistory, scenarioContext, lang },
   });
 
   if (error) {
     console.error("AI chat error:", error);
-    return lang === "en"
+    const fallbackText = lang === "en"
       ? "I'm having trouble connecting right now. Let me try again..."
       : "Jelenleg kapcsolódási problémám van. Próbálom újra...";
+    return { parts: [{ type: "text", content: fallbackText }] };
   }
 
-  return data?.content ?? "...";
+  // The edge function now returns { parts: [...] }
+  if (data?.parts) {
+    return { parts: data.parts };
+  }
+
+  // Legacy fallback: { content: string }
+  if (data?.content) {
+    return { parts: [{ type: "text", content: data.content }] };
+  }
+
+  return { parts: [{ type: "text", content: "..." }] };
+}
+
+/**
+ * Map AI response parts to MessageParts, resolving insurer names to full QuoteData.
+ */
+function mapResponseParts(rawParts: any[], allQuotes: QuoteData[]): MessagePart[] {
+  return rawParts.map((part: any) => {
+    if (part.type === "text") {
+      return { type: "text" as const, content: part.content || "" };
+    }
+
+    if (part.type === "comparison" && part.insurers) {
+      const quotes: QuoteData[] = part.insurers
+        .map((ins: any) => {
+          const found = allQuotes.find(q => q.insurerName === ins.name);
+          if (!found) return null;
+          return {
+            ...found,
+            badge: ins.badge_text
+              ? { text: ins.badge_text, variant: ins.badge_variant || "recommended" }
+              : undefined,
+            assessment: ins.assessment || "",
+          };
+        })
+        .filter(Boolean);
+
+      if (quotes.length === 0) return null;
+      return {
+        type: "comparison" as const,
+        quotes,
+        recommended: part.recommended,
+      };
+    }
+
+    if (part.type === "switching") {
+      return {
+        type: "switching" as const,
+        from: part.from,
+        to: part.to,
+      };
+    }
+
+    if (part.type === "timeline") {
+      return {
+        type: "timeline" as const,
+        currentStep: part.currentStep,
+        steps: part.steps,
+        footnote: part.footnote,
+      };
+    }
+
+    if (part.type === "savings") {
+      return {
+        type: "savings" as const,
+        oldPrice: part.oldPrice,
+        newPrice: part.newPrice,
+      };
+    }
+
+    return null;
+  }).filter(Boolean) as MessagePart[];
 }
 
 const ConversationOverlay = ({ flowId, initialMessage, onClose, onTurnChange }: ConversationOverlayProps) => {
@@ -55,13 +125,14 @@ const ConversationOverlay = ({ flowId, initialMessage, onClose, onTurnChange }: 
   const [showConfetti, setShowConfetti] = useState(false);
 
   const scenarioRef = useRef<ScenarioConfig | null>(null);
-  const stageRef = useRef(0);
+  const turnRef = useRef(0);
   const versionRef = useRef(0);
   const conversationRef = useRef<{ role: string; content: string }[]>([]);
   const bottomRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const isNearBottomRef = useRef(true);
   const inputRef = useRef<HTMLInputElement>(null);
+  const isSendingRef = useRef(false);
 
   const [lastMsgId, setLastMsgId] = useState<string | null>(null);
 
@@ -95,136 +166,136 @@ const ConversationOverlay = ({ flowId, initialMessage, onClose, onTurnChange }: 
     }
   }, [messages, isTyping, scrollToBottom]);
 
-  const processStage = useCallback(async (stageIndex: number, version: number) => {
+  /**
+   * Send the current conversation to the AI and add the response as a message.
+   */
+  const sendToAI = useCallback(async (version: number) => {
     const scenario = scenarioRef.current;
-    if (!scenario || stageIndex >= scenario.stages.length) return;
+    if (!scenario || isSendingRef.current) return;
 
-    const stage = scenario.stages[stageIndex];
+    isSendingRef.current = true;
     setInputEnabled(false);
     setIsTyping(true);
 
     try {
-      // Generate AI text for this stage
-      let aiText = "";
-      if (stage.aiGenerate) {
-        aiText = await callAI(
-          conversationRef.current,
-          scenario.context,
-          stage.aiHint,
-          lang,
-        );
-      }
+      const response = await callAI(
+        conversationRef.current,
+        scenario.context,
+        lang,
+      );
 
       if (versionRef.current !== version) return;
       setIsTyping(false);
 
-      // Build message parts: structured elements first, then AI text
-      const parts: MessagePart[] = [];
+      const mappedParts = mapResponseParts(response.parts, scenario.quotes);
 
-      if (stage.structuredParts) {
-        for (const sp of stage.structuredParts) {
-          parts.push(sp as MessagePart);
-        }
-      }
-
-      if (aiText) {
-        parts.push({ type: "text", content: aiText });
-      }
-
-      if (parts.length > 0) {
+      if (mappedParts.length > 0) {
         const id = genId();
         setLastMsgId(id);
-        setMessages((prev) => [...prev, { id, role: "agent", parts }]);
-        conversationRef.current.push({ role: "assistant", content: aiText });
+        setMessages((prev) => [...prev, { id, role: "agent", parts: mappedParts }]);
+
+        // Add text content to conversation history for AI context
+        const textContent = mappedParts
+          .filter((p): p is MessagePart & { type: "text" } => p.type === "text")
+          .map((p) => p.content)
+          .join("\n");
+
+        // Also note which components were shown
+        const componentTypes = mappedParts
+          .filter((p) => p.type !== "text")
+          .map((p) => p.type);
+
+        let historyEntry = textContent;
+        if (componentTypes.length > 0) {
+          historyEntry += `\n[Megjelenített UI elemek: ${componentTypes.join(", ")}]`;
+        }
+
+        conversationRef.current.push({ role: "assistant", content: historyEntry });
+
+        turnRef.current++;
+        onTurnChange?.(turnRef.current);
       }
     } catch (err) {
-      console.error("Stage processing error:", err);
+      console.error("AI error:", err);
       setIsTyping(false);
 
-      // Fallback text
       const fallbackText = lang === "en"
         ? "Let me help you with your insurance comparison."
         : "Segítek az összehasonlításban.";
-      const parts: MessagePart[] = [];
-      if (stage.structuredParts) {
-        for (const sp of stage.structuredParts) {
-          parts.push(sp as MessagePart);
-        }
-      }
-      parts.push({ type: "text", content: fallbackText });
-      const id = genId();
-      setLastMsgId(id);
-      setMessages((prev) => [...prev, { id, role: "agent", parts }]);
-    }
-
-    if (versionRef.current === version) setInputEnabled(true);
-  }, [lang]);
-
-  const advanceStage = useCallback(() => {
-    const scenario = scenarioRef.current;
-    if (!scenario) return;
-    const next = stageRef.current + 1;
-    if (next >= scenario.stages.length) return;
-    stageRef.current = next;
-    onTurnChange?.(next);
-    processStage(next, versionRef.current);
-  }, [processStage, onTurnChange]);
-
-  const handleSend = useCallback((text: string) => {
-    if (!scenarioRef.current || !text.trim()) return;
-    const id = genId();
-    setMessages((prev) => [...prev, { id, role: "user", parts: [{ type: "text", content: text.trim() }] }]);
-    conversationRef.current.push({ role: "user", content: text.trim() });
-    advanceStage();
-  }, [advanceStage]);
-
-
-  const handleQuoteSelect = useCallback((insurerName: string) => {
-    const id = genId();
-    const msg = lang === "en" ? `I'll pick: ${insurerName}` : `Ezt választom: ${insurerName}`;
-    setMessages((prev) => [...prev, { id, role: "user", parts: [{ type: "text", content: msg }] }]);
-    conversationRef.current.push({ role: "user", content: msg });
-    advanceStage();
-  }, [advanceStage, lang]);
-
-  const handleSwitchConfirm = useCallback(() => {
-    setShowConfetti(true);
-    setTimeout(() => setShowConfetti(false), 3000);
-
-    const version = versionRef.current;
-    setTimeout(() => {
-      if (versionRef.current !== version) return;
       const id = genId();
       setLastMsgId(id);
       setMessages((prev) => [...prev, {
         id,
         role: "agent",
-        parts: [{ type: "text", content: t("switch.thankyou") }],
+        parts: [{ type: "text", content: fallbackText }],
       }]);
-    }, 1500);
+    }
 
-    advanceStage();
-  }, [advanceStage, t]);
+    isSendingRef.current = false;
+    if (versionRef.current === version) setInputEnabled(true);
+  }, [lang, onTurnChange]);
 
-  // Start scenario on mount (and when language changes)
+  /**
+   * Handle user sending a text message.
+   */
+  const handleSend = useCallback((text: string) => {
+    if (!scenarioRef.current || !text.trim() || isSendingRef.current) return;
+    const id = genId();
+    const trimmed = text.trim();
+    setMessages((prev) => [...prev, { id, role: "user", parts: [{ type: "text", content: trimmed }] }]);
+    conversationRef.current.push({ role: "user", content: trimmed });
+    sendToAI(versionRef.current);
+  }, [sendToAI]);
+
+  /**
+   * Handle user selecting a quote from the comparison panel.
+   */
+  const handleQuoteSelect = useCallback((insurerName: string) => {
+    const id = genId();
+    const msg = lang === "en" ? `I'll pick: ${insurerName}` : `Ezt választom: ${insurerName}`;
+    setMessages((prev) => [...prev, { id, role: "user", parts: [{ type: "text", content: msg }] }]);
+    conversationRef.current.push({ role: "user", content: msg });
+    sendToAI(versionRef.current);
+  }, [sendToAI, lang]);
+
+  /**
+   * Handle user confirming a switch.
+   */
+  const handleSwitchConfirm = useCallback(() => {
+    // Show confetti immediately
+    setShowConfetti(true);
+    setTimeout(() => setShowConfetti(false), 3000);
+
+    // Send confirmation message to AI
+    const id = genId();
+    const msg = lang === "en" ? "Yes, let's do it!" : "Igen, megkezdjük a váltást!";
+    setMessages((prev) => [...prev, { id, role: "user", parts: [{ type: "text", content: msg }] }]);
+    conversationRef.current.push({ role: "user", content: msg });
+    sendToAI(versionRef.current);
+  }, [sendToAI, lang]);
+
+  // Initialize conversation on mount (and when flowId/language changes)
   useEffect(() => {
     const version = ++versionRef.current;
     const scenario = getScenarioConfig(flowId, lang);
     scenarioRef.current = scenario;
-    stageRef.current = 0;
+    turnRef.current = 0;
     conversationRef.current = [];
+    isSendingRef.current = false;
     setMessages([]);
 
-    if (initialMessage && scenario.stages.length > 1) {
+    if (initialMessage) {
+      // User provided an initial message (e.g. from omnibar)
       const id = genId();
       setMessages([{ id, role: "user", parts: [{ type: "text", content: initialMessage }] }]);
       conversationRef.current.push({ role: "user", content: initialMessage });
-      stageRef.current = 1;
-      processStage(1, version);
     } else {
-      processStage(0, version);
+      // Send a hidden trigger to get the AI to greet based on scenario context
+      conversationRef.current.push({ role: "user", content: "[CONVERSATION_START]" });
     }
-  }, [flowId, initialMessage, processStage, lang]);
+
+    sendToAI(version);
+  }, [flowId, initialMessage, sendToAI, lang]);
 
   useEffect(() => {
     if (inputEnabled) inputRef.current?.focus();
@@ -341,7 +412,6 @@ const ConversationOverlay = ({ flowId, initialMessage, onClose, onTurnChange }: 
                 >
                   <Send className="w-4 h-4" />
                 </button>
-                
               </div>
               <p className="text-center text-[10px] text-muted-foreground/50 mt-2">{t("overlay.powered")}</p>
             </div>
