@@ -1,6 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from "react";
-import { Maximize2, Minimize2 } from "lucide-react";
-import { X, Send, ChevronDown } from "lucide-react";
+import { X, Send, ChevronDown, Maximize2, Minimize2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import ChatMessage, { type Message, type MessagePart } from "@/components/advisor/ChatMessage";
 import TypingIndicator from "@/components/advisor/TypingIndicator";
