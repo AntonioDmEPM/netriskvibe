@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import ScrollReveal from "./ScrollReveal";
 
 const formFields = [
@@ -15,6 +16,83 @@ const chatMessages = [
   { role: "agent", text: "2015-ös Opel Astra, stimmel? Hol lakik?" },
   { role: "user", text: "Szegeden" },
 ];
+
+const StaggeredFields = () => {
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setVisible(true); observer.unobserve(el); } },
+      { threshold: 0.3 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div ref={ref} className="space-y-3 mb-6">
+      {formFields.map((field, i) => (
+        <div
+          key={field}
+          className="flex items-center gap-3 transition-all duration-500"
+          style={{
+            opacity: visible ? 1 : 0,
+            transform: visible ? "translateY(0)" : "translateY(10px)",
+            transitionDelay: visible ? `${i * 300}ms` : "0ms",
+          }}
+        >
+          <span className="text-xs text-muted-foreground w-28 shrink-0">{field}</span>
+          <div className="flex-1 h-8 bg-muted rounded-md" />
+        </div>
+      ))}
+    </div>
+  );
+};
+
+const StaggeredChat = () => {
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setVisible(true); observer.unobserve(el); } },
+      { threshold: 0.3 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div ref={ref} className="space-y-3 mb-4">
+      {chatMessages.map((msg, i) => (
+        <div
+          key={i}
+          className={`flex transition-all duration-400 ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+          style={{
+            opacity: visible ? 1 : 0,
+            transform: visible ? "translateY(0)" : "translateY(10px)",
+            transitionDelay: visible ? `${i * 150}ms` : "0ms",
+          }}
+        >
+          <div
+            className={`max-w-[80%] px-3 py-2 rounded-xl text-sm ${
+              msg.role === "user"
+                ? "bg-primary text-primary-foreground rounded-br-md"
+                : "bg-muted text-foreground rounded-bl-md"
+            }`}
+          >
+            {msg.text}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
 
 const BeforeAfter = () => (
   <section className="py-16 sm:py-24 bg-background">
@@ -38,17 +116,8 @@ const BeforeAfter = () => (
               </span>
             </div>
 
-            {/* Mock form */}
-            <div className="space-y-3 mb-6">
-              {formFields.map((field) => (
-                <div key={field} className="flex items-center gap-3">
-                  <span className="text-xs text-muted-foreground w-28 shrink-0">{field}</span>
-                  <div className="flex-1 h-8 bg-muted rounded-md" />
-                </div>
-              ))}
-            </div>
+            <StaggeredFields />
 
-            {/* Mock results table */}
             <div className="space-y-2 mb-4 opacity-50">
               {[1, 2, 3].map((r) => (
                 <div key={r} className="flex gap-2">
@@ -75,24 +144,8 @@ const BeforeAfter = () => (
               </span>
             </div>
 
-            {/* Mini chat */}
-            <div className="space-y-3 mb-4">
-              {chatMessages.map((msg, i) => (
-                <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-                  <div
-                    className={`max-w-[80%] px-3 py-2 rounded-xl text-sm ${
-                      msg.role === "user"
-                        ? "bg-primary text-primary-foreground rounded-br-md"
-                        : "bg-muted text-foreground rounded-bl-md"
-                    }`}
-                  >
-                    {msg.text}
-                  </div>
-                </div>
-              ))}
-            </div>
+            <StaggeredChat />
 
-            {/* Mini quote card preview */}
             <div className="border border-primary/20 rounded-lg p-3 bg-emerald-50/50 mb-4">
               <div className="flex items-center justify-between mb-1">
                 <span className="text-xs font-bold text-foreground">Genertel</span>

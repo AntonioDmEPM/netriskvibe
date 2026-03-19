@@ -9,6 +9,7 @@ import TrustPartners from "@/components/homepage/TrustPartners";
 import FooterSection from "@/components/homepage/FooterSection";
 import ConversationOverlay from "@/components/homepage/ConversationOverlay";
 import AnnouncementBar from "@/components/homepage/AnnouncementBar";
+import AdvisorFAB from "@/components/homepage/AdvisorFAB";
 
 const Index = () => {
   const [overlay, setOverlay] = useState<{ flowId: string; initialMessage?: string } | null>(null);
@@ -29,6 +30,8 @@ const Index = () => {
       <BeforeAfter />
       <TrustPartners />
       <FooterSection />
+
+      {!overlay && <AdvisorFAB onClick={() => openOverlay("new")} />}
 
       {overlay && (
         <ConversationOverlay

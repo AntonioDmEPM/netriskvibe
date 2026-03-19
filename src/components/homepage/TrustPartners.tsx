@@ -6,7 +6,7 @@ const partners = [
 ];
 
 const TrustPartners = () => (
-  <section className="py-16 sm:py-24 bg-section-bg">
+  <section className="py-16 sm:py-24 bg-section-bg overflow-hidden">
     <div className="max-w-6xl mx-auto px-4 sm:px-6">
       <ScrollReveal>
         <h2 className="text-2xl sm:text-3xl font-extrabold text-foreground text-center mb-10">
@@ -14,16 +14,31 @@ const TrustPartners = () => (
         </h2>
       </ScrollReveal>
 
+      {/* Marquee */}
       <ScrollReveal delay={100}>
-        <div className="flex flex-wrap justify-center gap-3 mb-10">
-          {partners.map((p) => (
-            <span
-              key={p}
-              className="px-4 py-2 rounded-full bg-background border border-border text-sm font-medium text-muted-foreground"
-            >
-              {p}
-            </span>
-          ))}
+        <div className="relative group mb-10">
+          <div className="flex overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
+            <div className="flex gap-3 animate-marquee group-hover:[animation-play-state:paused]">
+              {[...partners, ...partners].map((p, i) => (
+                <span
+                  key={`${p}-${i}`}
+                  className="px-4 py-2 rounded-full bg-background border border-border text-sm font-medium text-muted-foreground whitespace-nowrap shrink-0"
+                >
+                  {p}
+                </span>
+              ))}
+            </div>
+            <div className="flex gap-3 animate-marquee group-hover:[animation-play-state:paused]" aria-hidden>
+              {[...partners, ...partners].map((p, i) => (
+                <span
+                  key={`dup-${p}-${i}`}
+                  className="px-4 py-2 rounded-full bg-background border border-border text-sm font-medium text-muted-foreground whitespace-nowrap shrink-0"
+                >
+                  {p}
+                </span>
+              ))}
+            </div>
+          </div>
         </div>
       </ScrollReveal>
 

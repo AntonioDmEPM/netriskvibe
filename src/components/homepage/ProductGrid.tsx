@@ -7,12 +7,12 @@ interface ProductGridProps {
 }
 
 const products = [
-  { icon: Car, name: "Kötelező biztosítás (KGFB)", desc: "Kötelező gépjármű felelősségbiztosítás összehasonlítás", color: "text-blue-500 bg-blue-50", flowId: "new" },
-  { icon: Shield, name: "Casco", desc: "Teljes körű gépjármű biztosítás", color: "text-indigo-500 bg-indigo-50", flowId: "" },
-  { icon: Home, name: "Lakásbiztosítás", desc: "Otthona védelme, személyre szabva", color: "text-orange-500 bg-orange-50", flowId: "" },
-  { icon: Plane, name: "Utasbiztosítás", desc: "Utazási biztosítás bárhová a világon", color: "text-teal-500 bg-teal-50", flowId: "" },
-  { icon: Banknote, name: "Személyi kölcsön", desc: "A legjobb hitelajánlatok egy helyen", color: "text-amber-500 bg-amber-50", flowId: "" },
-  { icon: HeartPulse, name: "Egészségpénztár", desc: "Spóroljon az egészségügyi kiadásain", color: "text-rose-500 bg-rose-50", flowId: "" },
+  { icon: Car, name: "Kötelező biztosítás (KGFB)", desc: "Kötelező gépjármű felelősségbiztosítás összehasonlítás", color: "text-blue-500 bg-blue-50", flowId: "new", isMain: true },
+  { icon: Shield, name: "Casco", desc: "Teljes körű gépjármű biztosítás", color: "text-indigo-500 bg-indigo-50", flowId: "", isMain: false },
+  { icon: Home, name: "Lakásbiztosítás", desc: "Otthona védelme, személyre szabva", color: "text-orange-500 bg-orange-50", flowId: "", isMain: false },
+  { icon: Plane, name: "Utasbiztosítás", desc: "Utazási biztosítás bárhová a világon", color: "text-teal-500 bg-teal-50", flowId: "", isMain: false },
+  { icon: Banknote, name: "Személyi kölcsön", desc: "A legjobb hitelajánlatok egy helyen", color: "text-amber-500 bg-amber-50", flowId: "", isMain: false },
+  { icon: HeartPulse, name: "Egészségpénztár", desc: "Spóroljon az egészségügyi kiadásain", color: "text-rose-500 bg-rose-50", flowId: "", isMain: false },
 ];
 
 const ProductGrid = ({ onStartFlow }: ProductGridProps) => {
@@ -31,7 +31,9 @@ const ProductGrid = ({ onStartFlow }: ProductGridProps) => {
           {products.map((p, i) => (
             <ScrollReveal key={p.name} delay={i * 80}>
               <div
-                className="relative bg-card border border-border rounded-xl p-6 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 cursor-pointer group"
+                className={`relative bg-card border rounded-xl p-6 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer group ${
+                  p.isMain ? "border-primary/40 animate-kgfb-pulse" : "border-border"
+                }`}
                 onClick={() => {
                   if (p.flowId) {
                     onStartFlow(p.flowId);
@@ -41,7 +43,7 @@ const ProductGrid = ({ onStartFlow }: ProductGridProps) => {
                   }
                 }}
               >
-                <div className={`w-14 h-14 rounded-2xl ${p.color} flex items-center justify-center mb-4`}>
+                <div className={`w-14 h-14 rounded-2xl ${p.color} flex items-center justify-center mb-4 transition-transform duration-300 group-hover:scale-110`}>
                   <p.icon className="w-7 h-7" />
                 </div>
                 <h3 className="font-bold text-foreground mb-1">{p.name}</h3>
@@ -50,7 +52,6 @@ const ProductGrid = ({ onStartFlow }: ProductGridProps) => {
                   Tanácsadó indítása →
                 </span>
 
-                {/* Tooltip */}
                 {tooltip === p.name && !p.flowId && (
                   <div className="absolute top-2 right-2 bg-foreground text-background text-xs font-medium px-3 py-1.5 rounded-lg animate-fade-in-up">
                     Hamarosan!
