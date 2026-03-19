@@ -345,7 +345,7 @@ const HeroSection = ({ onStartFlow, isReturning }: HeroSectionProps) => {
                           <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider">{t("dashboard.kgfb")}</p>
                         </div>
                         <p className="text-lg font-bold text-foreground">{profileA.currentInsurer}</p>
-                        <p className="text-sm text-muted-foreground">{formatPrice(profileA.currentPrice!)} Ft/{lang === 'hu' ? 'év' : 'yr'}</p>
+                        <p className="text-sm text-muted-foreground">{formatPrice(profileA.currentPrice!)} Ft/{t("data.yr")}</p>
                         <span className="inline-block mt-2 text-xs font-semibold bg-destructive/10 text-destructive px-2.5 py-1 rounded-full">
                           {t("dashboard.expires")}
                         </span>
