@@ -130,7 +130,7 @@ const Index = () => {
           >
             <Menu className="w-5 h-5 text-foreground" />
           </button>
-          <h1 className="font-bold text-foreground">KGFB Tanácsadó</h1>
+          <h1 className="font-bold text-foreground">MTPL Advisor</h1>
           <span className="ml-2 text-[10px] font-medium bg-primary/10 text-primary px-2 py-0.5 rounded-full flex items-center gap-1">
             <Sparkles className="w-3 h-3" />
             AI-powered
