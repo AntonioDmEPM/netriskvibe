@@ -123,7 +123,7 @@ function getAdvisoryScenario(lang: Lang): ScenarioConfig {
       region: profileC.region,
       location: profileC.location,
       paymentFrequency: profileC.payment,
-      paymentMethod: profileC.paymentMethod,
+      paymentMethod: localizeProfileField(profileC.paymentMethod, lang, paymentMethodMap),
     },
     allQuotes: buildTopQuoteSummary(all),
     allInsurerKnowledge: getInsurerKnowledge(),
