@@ -10,7 +10,7 @@ interface SwitchingCardProps {
 }
 
 const SwitchingCard = ({ from, to, onConfirm }: SwitchingCardProps) => {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const [confirmed, setConfirmed] = useState(false);
   const savings = from ? from.price - to.price : 0;
 
@@ -20,8 +20,7 @@ const SwitchingCard = ({ from, to, onConfirm }: SwitchingCardProps) => {
     setTimeout(() => onConfirm?.(), 600);
   };
 
-  const isEn = t("switch.previous") === "Previous";
-  const yrLabel = isEn ? "Ft/yr" : "Ft/év";
+  const yrLabel = lang === "en" ? "Ft/yr" : "Ft/év";
 
   return (
     <div className="bg-card border border-border rounded-lg p-4 shadow-md">

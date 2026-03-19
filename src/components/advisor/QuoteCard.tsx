@@ -65,10 +65,10 @@ const QuoteCard = ({ quote, isRecommended, onSelect }: QuoteCardProps) => {
       {/* Price */}
       <div className="mb-3">
         <span className="text-2xl font-bold text-foreground">
-          {formatPrice(quote.yearlyPrice)} Ft/{t("quote.claims") === "Claims" ? "yr" : "év"}
+          {formatPrice(quote.yearlyPrice)} Ft/{lang === "en" ? "yr" : "év"}
         </span>
         <span className="text-sm text-muted-foreground ml-2">
-          {formatPrice(quote.monthlyPrice)} Ft/{t("quote.claims") === "Claims" ? "mo" : "hó"}
+          {formatPrice(quote.monthlyPrice)} Ft/{lang === "en" ? "mo" : "hó"}
         </span>
       </div>
 
