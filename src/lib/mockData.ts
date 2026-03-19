@@ -152,7 +152,7 @@ export const profileC: Profile = {
   payment: 'annual',
 };
 
-export function getQuotesForProfile(profile: Profile): QuoteData[] {
+export function getQuotesForProfile(profile: Profile, lang: 'hu' | 'en' = 'hu'): QuoteData[] {
   return insurers
     .map((ins) => {
       const yearly = calculatePremium(ins, profile.vehicle, profile.bonus, profile.region, profile.payment);
@@ -161,7 +161,7 @@ export function getQuotesForProfile(profile: Profile): QuoteData[] {
         insurerColor: ins.color,
         yearlyPrice: yearly,
         monthlyPrice: Math.round(yearly / 12),
-        features: getInsuranceFeatures(ins),
+        features: getInsuranceFeatures(ins, lang),
         assessment: '',
         satisfaction: ins.satisfaction,
       };
