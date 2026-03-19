@@ -5,7 +5,6 @@ import ChatMessage, { type Message, type MessagePart } from "@/components/adviso
 import TypingIndicator from "@/components/advisor/TypingIndicator";
 import ConfettiEffect from "@/components/advisor/ConfettiEffect";
 import { genId } from "@/lib/flows";
-import VoiceButton from "@/components/advisor/VoiceButton";
 import { getScenarioConfig, type ScenarioConfig } from "@/lib/scenarioContext";
 import { useI18n } from "@/lib/i18n";
 import { supabase } from "@/integrations/supabase/client";
@@ -179,15 +178,6 @@ const ConversationOverlay = ({ flowId, initialMessage, onClose, onTurnChange }: 
     advanceStage();
   }, [advanceStage]);
 
-  const handleVoiceTranscript = useCallback((text: string, isAgent: boolean) => {
-    const id = genId();
-    if (isAgent) {
-      setLastMsgId(id);
-      setMessages((prev) => [...prev, { id, role: "agent", parts: [{ type: "text", content: text }] }]);
-    } else {
-      setMessages((prev) => [...prev, { id, role: "user", parts: [{ type: "text", content: text }] }]);
-    }
-  }, []);
 
   const handleQuoteSelect = useCallback((insurerName: string) => {
     const id = genId();
@@ -351,7 +341,7 @@ const ConversationOverlay = ({ flowId, initialMessage, onClose, onTurnChange }: 
                 >
                   <Send className="w-4 h-4" />
                 </button>
-                <VoiceButton onTranscript={handleVoiceTranscript} />
+                
               </div>
               <p className="text-center text-[10px] text-muted-foreground/50 mt-2">{t("overlay.powered")}</p>
             </div>
