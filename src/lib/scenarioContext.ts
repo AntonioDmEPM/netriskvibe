@@ -144,9 +144,14 @@ function getNewCustomerScenario(lang: Lang): ScenarioConfig {
   const context = {
     scenario: 'new_customer',
     customer: {
-      vehicle: `${profileB.vehicle.year} ${profileB.vehicle.make} ${profileB.vehicle.model}`,
+      vehicle: `${profileB.vehicle.year} ${profileB.vehicle.make} ${profileB.vehicle.model} ${profileB.vehicle.variant}`,
+      vehiclePlate: profileB.vehicle.plate,
+      vehiclePowerKw: profileB.vehicle.power_kw,
+      vehicleValueHuf: profileB.vehicle.value_huf,
       bonusCategory: profileB.bonus,
       region: profileB.region,
+      location: profileB.location,
+      paymentMethod: profileB.paymentMethod,
       isNewDriver: true,
     },
     topQuotes: top3.map(q => ({
@@ -155,7 +160,12 @@ function getNewCustomerScenario(lang: Lang): ScenarioConfig {
       badge: q.badge?.text,
       features: q.features,
       satisfaction: q.satisfaction,
+      claimsSpeedDays: q.claimsSpeedDays,
+      digitalRating: q.digitalRating,
+      roadsideAssistance: q.roadsideAssistance,
     })),
+    allInsurerKnowledge: getInsurerKnowledge(),
+    marketStats,
     recommendedInsurer: 'UNIQA',
   };
 
