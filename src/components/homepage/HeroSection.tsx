@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from "react";
-import { ArrowRight, Car, Home, Plane, Shield } from "lucide-react";
+import { ArrowRight, Car, Home, Plane, Shield, Calendar, MapPin, Award, CreditCard } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useI18n } from "@/lib/i18n";
+import { profileA, formatPrice } from "@/lib/mockData";
 
 interface HeroSectionProps {
   onStartFlow: (flowId: string, initialMessage?: string) => void;
@@ -9,7 +10,7 @@ interface HeroSectionProps {
 }
 
 const HeroSection = ({ onStartFlow, isReturning }: HeroSectionProps) => {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const [inputValue, setInputValue] = useState("");
   const [returningInput, setReturningInput] = useState("");
   const [placeholderIdx, setPlaceholderIdx] = useState(0);
@@ -50,6 +51,8 @@ const HeroSection = ({ onStartFlow, isReturning }: HeroSectionProps) => {
     onStartFlow("returning", returningInput.trim());
     setReturningInput("");
   };
+
+  const v = profileA.vehicle;
 
   return (
     <section className="relative min-h-[70vh] flex items-center pt-[6.5rem] overflow-hidden">
@@ -267,42 +270,108 @@ const HeroSection = ({ onStartFlow, isReturning }: HeroSectionProps) => {
                 </div>
               </motion.div>
 
+              {/* Client Data & Policy Widget */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 }}
-                onClick={() => onStartFlow("returning")}
-                className="mt-10 w-full max-w-3xl bg-card border border-border rounded-2xl shadow-lg p-5 sm:p-6 cursor-pointer hover:shadow-xl hover:border-primary/20 transition-all"
+                className="mt-10 w-full max-w-3xl"
               >
-                <div className="flex flex-col sm:flex-row items-stretch gap-4 sm:gap-6">
-                  <div className="flex-1 text-left">
-                    <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider mb-2">{t("dashboard.kgfb")}</p>
-                    <p className="text-lg font-bold text-foreground">KÖBE</p>
-                    <p className="text-sm text-muted-foreground">38 000 Ft/év</p>
-                    <span className="inline-block mt-2 text-xs font-semibold bg-destructive/10 text-destructive px-2.5 py-1 rounded-full">
-                      {t("dashboard.expires")}
-                    </span>
+                <div className="bg-card border border-border rounded-2xl shadow-lg overflow-hidden">
+                  {/* Vehicle header */}
+                  <div className="bg-muted/50 px-5 py-3 border-b border-border flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                      <Car className="w-5 h-5 text-primary" />
+                    </div>
+                    <div className="text-left">
+                      <p className="font-bold text-foreground text-sm">{v.year} {v.make} {v.model}</p>
+                      <p className="text-xs text-muted-foreground">{v.variant} • {v.power_kw} kW • {v.plate}</p>
+                    </div>
+                    <div className="ml-auto text-right">
+                      <p className="text-xs text-muted-foreground">{lang === 'hu' ? 'Becsült érték' : 'Est. value'}</p>
+                      <p className="text-sm font-semibold text-foreground">{formatPrice(v.value_huf)} Ft</p>
+                    </div>
                   </div>
-                  <div className="hidden sm:flex items-center">
-                    <div className="w-px h-full bg-border" />
-                    <ArrowRight className="w-5 h-5 text-primary mx-3 shrink-0" />
-                    <div className="w-px h-full bg-border" />
-                  </div>
-                  <div className="sm:hidden flex justify-center">
-                    <ArrowRight className="w-5 h-5 text-primary rotate-90" />
-                  </div>
-                  <div className="flex-1 text-left">
-                    <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider mb-2">{t("dashboard.recommended")}</p>
-                    <p className="text-lg font-bold text-foreground">Groupama</p>
-                    <p className="text-sm text-primary font-semibold">33 500 Ft/év</p>
-                    <span className="inline-block mt-2 text-xs font-semibold bg-primary/10 text-primary px-2.5 py-1 rounded-full">
-                      {t("dashboard.savings")}
-                    </span>
-                  </div>
-                  <div className="flex items-center sm:pl-2">
-                    <button className="w-full sm:w-auto px-6 py-3 rounded-xl bg-primary text-primary-foreground font-bold text-sm hover:opacity-90 transition-opacity whitespace-nowrap">
-                      {t("dashboard.switch")}
-                    </button>
+
+                  {/* Policy details grid */}
+                  <div className="px-5 py-4">
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
+                      <div className="text-left">
+                        <div className="flex items-center gap-1.5 mb-1">
+                          <Shield className="w-3.5 h-3.5 text-muted-foreground" />
+                          <span className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider">
+                            {lang === 'hu' ? 'Biztosító' : 'Insurer'}
+                          </span>
+                        </div>
+                        <p className="text-sm font-bold text-foreground">{profileA.currentInsurer}</p>
+                      </div>
+                      <div className="text-left">
+                        <div className="flex items-center gap-1.5 mb-1">
+                          <CreditCard className="w-3.5 h-3.5 text-muted-foreground" />
+                          <span className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider">
+                            {lang === 'hu' ? 'Éves díj' : 'Annual'}
+                          </span>
+                        </div>
+                        <p className="text-sm font-bold text-foreground">{formatPrice(profileA.currentPrice!)} Ft</p>
+                      </div>
+                      <div className="text-left">
+                        <div className="flex items-center gap-1.5 mb-1">
+                          <Award className="w-3.5 h-3.5 text-muted-foreground" />
+                          <span className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider">
+                            Bonus-malus
+                          </span>
+                        </div>
+                        <p className="text-sm font-bold text-foreground">{profileA.bonus}</p>
+                      </div>
+                      <div className="text-left">
+                        <div className="flex items-center gap-1.5 mb-1">
+                          <MapPin className="w-3.5 h-3.5 text-muted-foreground" />
+                          <span className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider">
+                            {lang === 'hu' ? 'Lakhely' : 'Location'}
+                          </span>
+                        </div>
+                        <p className="text-sm font-bold text-foreground">{profileA.location}</p>
+                      </div>
+                    </div>
+
+                    {/* Expiry + recommendation bar */}
+                    <div
+                      onClick={() => onStartFlow("returning")}
+                      className="flex flex-col sm:flex-row items-stretch gap-4 sm:gap-6 bg-muted/30 rounded-xl p-4 cursor-pointer hover:bg-muted/50 transition-colors border border-border/50"
+                    >
+                      <div className="flex-1 text-left">
+                        <div className="flex items-center gap-2 mb-1">
+                          <Calendar className="w-3.5 h-3.5 text-destructive" />
+                          <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider">{t("dashboard.kgfb")}</p>
+                        </div>
+                        <p className="text-lg font-bold text-foreground">{profileA.currentInsurer}</p>
+                        <p className="text-sm text-muted-foreground">{formatPrice(profileA.currentPrice!)} Ft/{lang === 'hu' ? 'év' : 'yr'}</p>
+                        <span className="inline-block mt-2 text-xs font-semibold bg-destructive/10 text-destructive px-2.5 py-1 rounded-full">
+                          {t("dashboard.expires")}
+                        </span>
+                      </div>
+                      <div className="hidden sm:flex items-center">
+                        <div className="w-px h-full bg-border" />
+                        <ArrowRight className="w-5 h-5 text-primary mx-3 shrink-0" />
+                        <div className="w-px h-full bg-border" />
+                      </div>
+                      <div className="sm:hidden flex justify-center">
+                        <ArrowRight className="w-5 h-5 text-primary rotate-90" />
+                      </div>
+                      <div className="flex-1 text-left">
+                        <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider mb-1">{t("dashboard.recommended")}</p>
+                        <p className="text-lg font-bold text-foreground">Groupama</p>
+                        <p className="text-sm text-primary font-semibold">33 500 Ft/{lang === 'hu' ? 'év' : 'yr'}</p>
+                        <span className="inline-block mt-2 text-xs font-semibold bg-primary/10 text-primary px-2.5 py-1 rounded-full">
+                          {t("dashboard.savings")}
+                        </span>
+                      </div>
+                      <div className="flex items-center sm:pl-2">
+                        <button className="w-full sm:w-auto px-6 py-3 rounded-xl bg-primary text-primary-foreground font-bold text-sm hover:opacity-90 transition-opacity whitespace-nowrap">
+                          {t("dashboard.switch")}
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </motion.div>

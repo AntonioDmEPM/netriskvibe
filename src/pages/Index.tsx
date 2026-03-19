@@ -72,6 +72,7 @@ const Index = () => {
         onOpenOverlay={() => openOverlay("new")}
         hasAnnouncementBar
         extraTopOffset={presenterMode ? 40 : 0}
+        isReturning={isReturning}
       />
       <HeroSection onStartFlow={openOverlay} isReturning={isReturning} />
       <SocialProofBar />

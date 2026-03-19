@@ -1,6 +1,6 @@
 import {
   profileA, profileB, profileC,
-  getQuotesForProfile, formatPrice,
+  getQuotesForProfile, formatPrice, getInsurerKnowledge, marketStats,
   type QuoteData, type Profile,
 } from './mockData';
 import type { Lang } from './i18n';
@@ -62,11 +62,21 @@ function getReturningScenario(lang: Lang): ScenarioConfig {
   const context = {
     scenario: 'returning_customer',
     customer: {
-      vehicle: `${profileA.vehicle.year} ${profileA.vehicle.make} ${profileA.vehicle.model}`,
+      name: 'Kovács Anna',
+      vehicle: `${profileA.vehicle.year} ${profileA.vehicle.make} ${profileA.vehicle.model} ${profileA.vehicle.variant}`,
+      vehiclePlate: profileA.vehicle.plate,
+      vehiclePowerKw: profileA.vehicle.power_kw,
+      vehicleValueHuf: profileA.vehicle.value_huf,
       currentInsurer: profileA.currentInsurer,
       currentPrice: profileA.currentPrice,
       bonusCategory: profileA.bonus,
       region: profileA.region,
+      location: profileA.location,
+      paymentFrequency: profileA.payment,
+      paymentMethod: profileA.paymentMethod,
+      anniversaryDate: profileA.anniversaryDate,
+      isReturningCustomer: true,
+      yearsAsNetriskCustomer: profileA.yearsAsCustomer,
     },
     topQuotes: top3.map(q => ({
       insurer: q.insurerName,
@@ -74,7 +84,12 @@ function getReturningScenario(lang: Lang): ScenarioConfig {
       badge: q.badge?.text,
       features: q.features,
       satisfaction: q.satisfaction,
+      claimsSpeedDays: q.claimsSpeedDays,
+      digitalRating: q.digitalRating,
+      roadsideAssistance: q.roadsideAssistance,
     })),
+    allInsurerKnowledge: getInsurerKnowledge(),
+    marketStats,
     recommendedInsurer: 'Groupama',
     potentialSavings: savings,
   };
@@ -129,9 +144,14 @@ function getNewCustomerScenario(lang: Lang): ScenarioConfig {
   const context = {
     scenario: 'new_customer',
     customer: {
-      vehicle: `${profileB.vehicle.year} ${profileB.vehicle.make} ${profileB.vehicle.model}`,
+      vehicle: `${profileB.vehicle.year} ${profileB.vehicle.make} ${profileB.vehicle.model} ${profileB.vehicle.variant}`,
+      vehiclePlate: profileB.vehicle.plate,
+      vehiclePowerKw: profileB.vehicle.power_kw,
+      vehicleValueHuf: profileB.vehicle.value_huf,
       bonusCategory: profileB.bonus,
       region: profileB.region,
+      location: profileB.location,
+      paymentMethod: profileB.paymentMethod,
       isNewDriver: true,
     },
     topQuotes: top3.map(q => ({
@@ -140,7 +160,12 @@ function getNewCustomerScenario(lang: Lang): ScenarioConfig {
       badge: q.badge?.text,
       features: q.features,
       satisfaction: q.satisfaction,
+      claimsSpeedDays: q.claimsSpeedDays,
+      digitalRating: q.digitalRating,
+      roadsideAssistance: q.roadsideAssistance,
     })),
+    allInsurerKnowledge: getInsurerKnowledge(),
+    marketStats,
     recommendedInsurer: 'UNIQA',
   };
 
@@ -208,9 +233,16 @@ function getAdvisoryScenario(lang: Lang): ScenarioConfig {
   const context = {
     scenario: 'advisory_deep_dive',
     customer: {
-      vehicle: `${profileC.vehicle.year} ${profileC.vehicle.make} ${profileC.vehicle.model}`,
+      vehicle: `${profileC.vehicle.year} ${profileC.vehicle.make} ${profileC.vehicle.model} ${profileC.vehicle.variant}`,
+      vehiclePlate: profileC.vehicle.plate,
+      vehiclePowerKw: profileC.vehicle.power_kw,
+      currentInsurer: profileC.currentInsurer,
+      currentPrice: profileC.currentPrice,
       bonusCategory: profileC.bonus,
       region: profileC.region,
+      location: profileC.location,
+      paymentFrequency: profileC.payment,
+      paymentMethod: profileC.paymentMethod,
     },
     topQuotes: top3.map(q => ({
       insurer: q.insurerName,
@@ -218,7 +250,12 @@ function getAdvisoryScenario(lang: Lang): ScenarioConfig {
       badge: q.badge?.text,
       features: q.features,
       satisfaction: q.satisfaction,
+      claimsSpeedDays: q.claimsSpeedDays,
+      digitalRating: q.digitalRating,
+      roadsideAssistance: q.roadsideAssistance,
     })),
+    allInsurerKnowledge: getInsurerKnowledge(),
+    marketStats,
     priceDifference: diff,
     recommendedInsurer: 'Groupama',
   };
