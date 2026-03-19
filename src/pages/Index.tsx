@@ -171,7 +171,7 @@ const Index = () => {
         </div>
 
         {/* Messages area */}
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto relative" ref={scrollContainerRef}>
           {messages.length === 0 && !isTyping ? (
             /* Welcome screen */
             <div className="flex flex-col items-center justify-center h-full px-6 text-center">
@@ -215,6 +215,17 @@ const Index = () => {
               {isTyping && <TypingIndicator />}
               <div ref={bottomRef} />
             </div>
+          )}
+
+          {/* New message floating button */}
+          {showNewMsg && (
+            <button
+              onClick={scrollToBottom}
+              className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1.5 px-4 py-2 rounded-full bg-primary text-primary-foreground text-xs font-semibold shadow-lg hover:opacity-90 transition-all animate-fade-in z-10"
+            >
+              <ChevronDown className="w-3.5 h-3.5" />
+              New message
+            </button>
           )}
         </div>
 
