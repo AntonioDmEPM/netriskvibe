@@ -350,12 +350,25 @@ const ConversationOverlay = ({ flowId, initialMessage, onClose, onTurnChange }: 
                 <div className="w-2 h-2 rounded-full bg-emerald-300 animate-pulse" />
                 <span className="text-xs text-primary-foreground/80">{t("overlay.online")}</span>
               </div>
-              <button
-                onClick={handleClose}
-                className="ml-auto p-1.5 rounded-lg hover:bg-primary-foreground/10 transition-colors"
-              >
-                <X className="w-5 h-5 text-primary-foreground" />
-              </button>
+              <div className="ml-auto flex items-center gap-1">
+                <button
+                  onClick={() => setIsFullscreen((f) => !f)}
+                  className="p-1.5 rounded-lg hover:bg-primary-foreground/10 transition-colors hidden sm:flex"
+                  aria-label={isFullscreen ? "Exit fullscreen" : "Fullscreen"}
+                >
+                  {isFullscreen ? (
+                    <Minimize2 className="w-4 h-4 text-primary-foreground" />
+                  ) : (
+                    <Maximize2 className="w-4 h-4 text-primary-foreground" />
+                  )}
+                </button>
+                <button
+                  onClick={handleClose}
+                  className="p-1.5 rounded-lg hover:bg-primary-foreground/10 transition-colors"
+                >
+                  <X className="w-5 h-5 text-primary-foreground" />
+                </button>
+              </div>
             </div>
 
             <div className="flex-1 overflow-y-auto relative" ref={scrollContainerRef}>
