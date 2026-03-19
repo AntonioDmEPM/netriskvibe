@@ -92,3 +92,11 @@
 .animate-check-pop {
   animation: check-pop 0.4s ease-out forwards;
 }
+
+@keyframes recommended-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 hsla(153, 100%, 33%, 0.3); }
+  50% { box-shadow: 0 0 0 6px hsla(153, 100%, 33%, 0); }
+}
+.animate-recommended-pulse {
+  animation: recommended-pulse 2s ease-in-out 3;
+}
