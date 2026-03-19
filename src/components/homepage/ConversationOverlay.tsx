@@ -233,7 +233,7 @@ const ConversationOverlay = ({ flowId, initialMessage, onClose, onTurnChange }: 
                   className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1.5 px-4 py-2 rounded-full bg-primary text-primary-foreground text-xs font-semibold shadow-lg hover:opacity-90 transition-all animate-fade-in-up z-10"
                 >
                   <ChevronDown className="w-3.5 h-3.5" />
-                   Új üzenet
+                   {t("overlay.newmsg")}
                 </button>
               )}
             </div>
