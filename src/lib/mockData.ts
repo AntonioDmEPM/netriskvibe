@@ -100,12 +100,12 @@ export function formatPrice(price: number): string {
   return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 }
 
-export function getInsuranceFeatures(insurer: Insurer): string[] {
+export function getInsuranceFeatures(insurer: Insurer, lang: 'hu' | 'en' = 'hu'): string[] {
   const f: string[] = [];
-  if (insurer.claims_speed >= 4) f.push('Gyors kárrendezés');
-  if (insurer.digital_rating >= 4) f.push('Online ügyintézés');
-  if (insurer.roadside) f.push('Asszisztencia');
-  if (insurer.satisfaction >= 4.0) f.push('Magas elégedettség');
+  if (insurer.claims_speed >= 4) f.push(lang === 'en' ? 'Fast claims' : 'Gyors kárrendezés');
+  if (insurer.digital_rating >= 4) f.push(lang === 'en' ? 'Online service' : 'Online ügyintézés');
+  if (insurer.roadside) f.push(lang === 'en' ? 'Roadside assist' : 'Asszisztencia');
+  if (insurer.satisfaction >= 4.0) f.push(lang === 'en' ? 'High satisfaction' : 'Magas elégedettség');
   return f;
 }
 
