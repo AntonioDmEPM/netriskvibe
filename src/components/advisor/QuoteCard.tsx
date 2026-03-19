@@ -36,7 +36,7 @@ function MiniBar({ label, value, max }: { label: string; value: number; max: num
 }
 
 const QuoteCard = ({ quote, isRecommended, onSelect }: QuoteCardProps) => {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const ins = getInsurerData(quote.insurerName);
   const claimsSpeed = ins?.claims_speed ?? 3;
   const satisfaction = ins?.satisfaction ?? 3.5;
