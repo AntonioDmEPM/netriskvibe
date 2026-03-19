@@ -16,7 +16,7 @@ interface ConversationOverlayProps {
   onTurnChange?: (turnIndex: number) => void;
 }
 
-const ConversationOverlay = ({ flowId, initialMessage, onClose }: ConversationOverlayProps) => {
+const ConversationOverlay = ({ flowId, initialMessage, onClose, onTurnChange }: ConversationOverlayProps) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   const [inputEnabled, setInputEnabled] = useState(false);
