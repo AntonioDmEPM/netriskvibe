@@ -73,7 +73,7 @@ const Index = () => {
         hasAnnouncementBar
         extraTopOffset={presenterMode ? 40 : 0}
       />
-      <HeroSection onStartFlow={openOverlay} isReturning={isReturning} extraTopPadding={presenterMode ? 40 : 0} />
+      <HeroSection onStartFlow={openOverlay} isReturning={isReturning} />
       <SocialProofBar />
       <HowItWorks />
       <ProductGrid onStartFlow={openOverlay} />
