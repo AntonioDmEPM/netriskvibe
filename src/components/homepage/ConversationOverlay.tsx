@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from "react";
-import { X, Send, ChevronDown } from "lucide-react";
+import { X, Send, ChevronDown, Maximize2, Minimize2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import ChatMessage, { type Message, type MessagePart } from "@/components/advisor/ChatMessage";
 import TypingIndicator from "@/components/advisor/TypingIndicator";
@@ -123,6 +123,7 @@ const ConversationOverlay = ({ flowId, initialMessage, onClose, onTurnChange }: 
   const [showNewMsg, setShowNewMsg] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   const scenarioRef = useRef<ScenarioConfig | null>(null);
   const turnRef = useRef(0);
@@ -330,7 +331,11 @@ const ConversationOverlay = ({ flowId, initialMessage, onClose, onTurnChange }: 
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: "100%", opacity: 0.5 }}
             transition={{ type: "spring", damping: 28, stiffness: 300, mass: 0.8 }}
-            className="relative w-full sm:max-w-3xl h-[92vh] sm:h-[85vh] bg-background sm:rounded-2xl shadow-2xl flex flex-col overflow-hidden"
+            className={`relative w-full bg-background shadow-2xl flex flex-col overflow-hidden transition-all duration-300 ${
+              isFullscreen
+                ? "h-full max-w-none rounded-none"
+                : "sm:max-w-3xl h-[92vh] sm:h-[85vh] sm:rounded-2xl"
+            }`}
           >
             {showConfetti && <ConfettiEffect />}
 
@@ -345,12 +350,25 @@ const ConversationOverlay = ({ flowId, initialMessage, onClose, onTurnChange }: 
                 <div className="w-2 h-2 rounded-full bg-emerald-300 animate-pulse" />
                 <span className="text-xs text-primary-foreground/80">{t("overlay.online")}</span>
               </div>
-              <button
-                onClick={handleClose}
-                className="ml-auto p-1.5 rounded-lg hover:bg-primary-foreground/10 transition-colors"
-              >
-                <X className="w-5 h-5 text-primary-foreground" />
-              </button>
+              <div className="ml-auto flex items-center gap-1">
+                <button
+                  onClick={() => setIsFullscreen((f) => !f)}
+                  className="p-1.5 rounded-lg hover:bg-primary-foreground/10 transition-colors hidden sm:flex"
+                  aria-label={isFullscreen ? "Exit fullscreen" : "Fullscreen"}
+                >
+                  {isFullscreen ? (
+                    <Minimize2 className="w-4 h-4 text-primary-foreground" />
+                  ) : (
+                    <Maximize2 className="w-4 h-4 text-primary-foreground" />
+                  )}
+                </button>
+                <button
+                  onClick={handleClose}
+                  className="p-1.5 rounded-lg hover:bg-primary-foreground/10 transition-colors"
+                >
+                  <X className="w-5 h-5 text-primary-foreground" />
+                </button>
+              </div>
             </div>
 
             <div className="flex-1 overflow-y-auto relative" ref={scrollContainerRef}>
