@@ -129,8 +129,8 @@ const translations: Record<string, Record<Lang, string>> = {
   // Trust partners
   "trust.title": { hu: "22 biztosító, egy tanácsadó", en: "22 insurers, one advisor" },
   "trust.quote": {
-    hu: "„Tavaly 14 000 Ft-ot spóroltak átlagosan a biztosítót váltó ügyfeleink."",
-    en: '"Last year, our customers saved an average of 14,000 Ft by switching insurers."',
+    hu: '\u201ETavaly 14 000 Ft-ot sp\u00F3roltak \u00E1tlagosan a biztos\u00EDt\u00F3t v\u00E1lt\u00F3 \u00FCgyfeleink.\u201D',
+    en: '\u201CLast year, our customers saved an average of 14,000 Ft by switching insurers.\u201D',
   },
   "trust.source": { hu: "— Netrisk KGFB Index, 2024", en: "— Netrisk KGFB Index, 2024" },
 
