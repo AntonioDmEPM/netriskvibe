@@ -233,9 +233,16 @@ function getAdvisoryScenario(lang: Lang): ScenarioConfig {
   const context = {
     scenario: 'advisory_deep_dive',
     customer: {
-      vehicle: `${profileC.vehicle.year} ${profileC.vehicle.make} ${profileC.vehicle.model}`,
+      vehicle: `${profileC.vehicle.year} ${profileC.vehicle.make} ${profileC.vehicle.model} ${profileC.vehicle.variant}`,
+      vehiclePlate: profileC.vehicle.plate,
+      vehiclePowerKw: profileC.vehicle.power_kw,
+      currentInsurer: profileC.currentInsurer,
+      currentPrice: profileC.currentPrice,
       bonusCategory: profileC.bonus,
       region: profileC.region,
+      location: profileC.location,
+      paymentFrequency: profileC.payment,
+      paymentMethod: profileC.paymentMethod,
     },
     topQuotes: top3.map(q => ({
       insurer: q.insurerName,
@@ -243,7 +250,12 @@ function getAdvisoryScenario(lang: Lang): ScenarioConfig {
       badge: q.badge?.text,
       features: q.features,
       satisfaction: q.satisfaction,
+      claimsSpeedDays: q.claimsSpeedDays,
+      digitalRating: q.digitalRating,
+      roadsideAssistance: q.roadsideAssistance,
     })),
+    allInsurerKnowledge: getInsurerKnowledge(),
+    marketStats,
     priceDifference: diff,
     recommendedInsurer: 'Groupama',
   };
