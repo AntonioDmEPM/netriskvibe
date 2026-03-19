@@ -7,15 +7,14 @@ interface AdvisorSidebarProps {
 }
 
 const demos = [
-  { id: 'returning', label: 'Demo: Visszatérő ügyfél', icon: RotateCcw },
-  { id: 'new', label: 'Demo: Új ügyfél', icon: Play },
-  { id: 'advisory', label: 'Demo: Tanácsadás', icon: MessageSquarePlus },
+  { id: 'returning', label: 'Demo: Returning Customer', icon: RotateCcw },
+  { id: 'new', label: 'Demo: New Customer', icon: Play },
+  { id: 'advisory', label: 'Demo: Advisory', icon: MessageSquarePlus },
 ];
 
 const AdvisorSidebar = ({ onNewConversation, onStartDemo, activeDemo }: AdvisorSidebarProps) => {
   return (
     <div className="flex flex-col h-full bg-secondary text-secondary-foreground">
-      {/* Logo */}
       <div className="px-5 py-5 border-b border-sidebar-border">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-primary-foreground text-sm font-bold">
@@ -25,21 +24,19 @@ const AdvisorSidebar = ({ onNewConversation, onStartDemo, activeDemo }: AdvisorS
         </div>
       </div>
 
-      {/* New conversation */}
       <div className="px-4 pt-4 pb-2">
         <button
           onClick={onNewConversation}
           className="w-full flex items-center gap-2 px-3 py-2.5 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:opacity-90 transition-opacity"
         >
           <MessageSquarePlus className="w-4 h-4" />
-          Új beszélgetés
+          New Conversation
         </button>
       </div>
 
-      {/* Demo scenarios */}
       <div className="px-4 pt-4">
         <p className="text-xs text-secondary-foreground/50 uppercase tracking-wider font-medium mb-2 px-1">
-          Demo forgatókönyvek
+          Demo Scenarios
         </p>
         <div className="space-y-1">
           {demos.map((d) => (
@@ -59,7 +56,6 @@ const AdvisorSidebar = ({ onNewConversation, onStartDemo, activeDemo }: AdvisorS
         </div>
       </div>
 
-      {/* Footer */}
       <div className="mt-auto px-5 py-4 border-t border-sidebar-border">
         <p className="text-[10px] text-secondary-foreground/40 leading-relaxed">
           Prototype — Agentic Transformation Demo

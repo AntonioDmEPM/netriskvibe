@@ -11,7 +11,7 @@ const ComparisonPanel = ({ quotes, recommended, onSelect }: ComparisonPanelProps
   return (
     <div className="space-y-3">
       <h4 className="text-sm font-semibold text-foreground">
-        Az Ön számára javasolt ajánlatok
+        Recommended offers for you
       </h4>
       <div className="grid grid-cols-1 gap-3">
         {quotes.map((q, i) => (

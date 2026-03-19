@@ -15,15 +15,15 @@ const SavingsBanner = ({ oldPrice, newPrice }: SavingsBannerProps) => {
       <TrendingDown className="w-5 h-5 text-primary shrink-0" />
       <div className="flex items-center gap-2 flex-wrap">
         <span className="text-sm text-muted-foreground line-through">
-          {formatPrice(oldPrice)} Ft/év
+          {formatPrice(oldPrice)} HUF/yr
         </span>
         <span className="text-sm font-bold text-foreground">→</span>
         <span className="text-sm font-bold text-primary">
-          {formatPrice(newPrice)} Ft/év
+          {formatPrice(newPrice)} HUF/yr
         </span>
       </div>
       <span className="ml-auto text-sm font-bold text-primary whitespace-nowrap">
-        Megtakarítás: {formatPrice(savings)} Ft/év
+        Savings: {formatPrice(savings)} HUF/yr
       </span>
     </div>
   );

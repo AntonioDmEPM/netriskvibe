@@ -19,11 +19,11 @@ export interface Insurer {
 }
 
 export const vehicles: Vehicle[] = [
-  { plate: "ABC-123", make: "Opel", model: "Astra", year: 2015, engine_cc: 1398, power_kw: 74, fuel: "benzin" },
-  { plate: "DEF-456", make: "Suzuki", model: "SX4 S-Cross", year: 2012, engine_cc: 1586, power_kw: 88, fuel: "benzin" },
-  { plate: "GHI-789", make: "Volkswagen", model: "Golf VII", year: 2018, engine_cc: 1395, power_kw: 110, fuel: "benzin" },
-  { plate: "JKL-012", make: "Suzuki", model: "Vitara", year: 2019, engine_cc: 1373, power_kw: 103, fuel: "benzin" },
-  { plate: "MNO-345", make: "Škoda", model: "Octavia", year: 2016, engine_cc: 1598, power_kw: 81, fuel: "dízel" },
+  { plate: "ABC-123", make: "Opel", model: "Astra", year: 2015, engine_cc: 1398, power_kw: 74, fuel: "petrol" },
+  { plate: "DEF-456", make: "Suzuki", model: "SX4 S-Cross", year: 2012, engine_cc: 1586, power_kw: 88, fuel: "petrol" },
+  { plate: "GHI-789", make: "Volkswagen", model: "Golf VII", year: 2018, engine_cc: 1395, power_kw: 110, fuel: "petrol" },
+  { plate: "JKL-012", make: "Suzuki", model: "Vitara", year: 2019, engine_cc: 1373, power_kw: 103, fuel: "petrol" },
+  { plate: "MNO-345", make: "Škoda", model: "Octavia", year: 2016, engine_cc: 1598, power_kw: 81, fuel: "diesel" },
 ];
 
 export const insurers: Insurer[] = [
@@ -102,10 +102,10 @@ export function formatPrice(price: number): string {
 
 export function getInsuranceFeatures(insurer: Insurer): string[] {
   const f: string[] = [];
-  if (insurer.claims_speed >= 4) f.push('Gyors kárrendezés');
-  if (insurer.digital_rating >= 4) f.push('Online ügyintézés');
-  if (insurer.roadside) f.push('Asszisztencia');
-  if (insurer.satisfaction >= 4.0) f.push('Magas elégedettség');
+  if (insurer.claims_speed >= 4) f.push('Fast claims');
+  if (insurer.digital_rating >= 4) f.push('Online management');
+  if (insurer.roadside) f.push('Roadside assistance');
+  if (insurer.satisfaction >= 4.0) f.push('High satisfaction');
   return f;
 }
 

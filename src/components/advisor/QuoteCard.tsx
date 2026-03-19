@@ -20,7 +20,6 @@ const QuoteCard = ({ quote, isRecommended, onSelect }: QuoteCardProps) => {
         isRecommended ? 'border-primary ring-2 ring-primary/20' : 'border-border'
       }`}
     >
-      {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <div
@@ -36,17 +35,15 @@ const QuoteCard = ({ quote, isRecommended, onSelect }: QuoteCardProps) => {
         )}
       </div>
 
-      {/* Price */}
       <div className="mb-3">
         <span className="text-2xl font-bold text-foreground">
-          {formatPrice(quote.yearlyPrice)} Ft/év
+          {formatPrice(quote.yearlyPrice)} HUF/yr
         </span>
         <span className="text-sm text-muted-foreground ml-2">
-          {formatPrice(quote.monthlyPrice)} Ft/hó
+          {formatPrice(quote.monthlyPrice)} HUF/mo
         </span>
       </div>
 
-      {/* Feature pills */}
       <div className="flex flex-wrap gap-1.5 mb-3">
         {quote.features.map((f, i) => (
           <span
@@ -58,20 +55,18 @@ const QuoteCard = ({ quote, isRecommended, onSelect }: QuoteCardProps) => {
         ))}
       </div>
 
-      {/* Assessment */}
       {quote.assessment && (
         <p className="text-sm text-muted-foreground italic mb-3 leading-relaxed">
           {quote.assessment}
         </p>
       )}
 
-      {/* CTA */}
       {onSelect && (
         <button
           onClick={() => onSelect(quote.insurerName)}
           className="w-full py-2 rounded-lg border-2 border-primary text-primary font-semibold text-sm hover:bg-primary hover:text-primary-foreground transition-colors"
         >
-          Ezt választom
+          I choose this
         </button>
       )}
     </div>

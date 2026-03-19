@@ -153,9 +153,9 @@ const Index = () => {
               </p>
               <div className="flex flex-col sm:flex-row gap-3">
                 {[
-                  { id: 'returning', label: 'Visszatérő ügyfél', desc: 'Meglévő KÖBE szerződés összehasonlítása' },
-                  { id: 'new', label: 'Új ügyfél', desc: 'Első kötelező biztosítás keresése' },
-                  { id: 'advisory', label: 'Tanácsadás', desc: 'Kérdés az ajánlatokról' },
+                  { id: 'returning', label: 'Returning Customer', desc: 'Compare existing KÖBE policy' },
+                  { id: 'new', label: 'New Customer', desc: 'Find your first car insurance' },
+                  { id: 'advisory', label: 'Advisory', desc: 'Ask about the offers' },
                 ].map((d) => (
                   <button
                     key={d.id}
