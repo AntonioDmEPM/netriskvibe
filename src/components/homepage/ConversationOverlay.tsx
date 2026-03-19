@@ -13,6 +13,7 @@ interface ConversationOverlayProps {
   flowId: string;
   initialMessage?: string;
   onClose: () => void;
+  onTurnChange?: (turnIndex: number) => void;
 }
 
 const ConversationOverlay = ({ flowId, initialMessage, onClose }: ConversationOverlayProps) => {
