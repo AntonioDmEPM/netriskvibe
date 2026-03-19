@@ -211,6 +211,13 @@ const translations: Record<string, Record<Lang, string>> = {
   "feature.online": { hu: "Online ügyintézés", en: "Online service" },
   "feature.roadside": { hu: "Asszisztencia", en: "Roadside assist" },
   "feature.highsat": { hu: "Magas elégedettség", en: "High satisfaction" },
+
+  // Profile data labels
+  "data.estvalue": { hu: "Becsült érték", en: "Est. value" },
+  "data.insurer": { hu: "Biztosító", en: "Insurer" },
+  "data.annual": { hu: "Éves díj", en: "Annual" },
+  "data.location": { hu: "Lakhely", en: "Location" },
+  "data.yr": { hu: "év", en: "yr" },
 };
 
 const I18nContext = createContext<I18nContextType | null>(null);
