@@ -5,6 +5,7 @@ import ChatMessage, { type Message } from "@/components/advisor/ChatMessage";
 import TypingIndicator from "@/components/advisor/TypingIndicator";
 import ConfettiEffect from "@/components/advisor/ConfettiEffect";
 import { getFlow, genId, type Flow } from "@/lib/flows";
+import { useI18n } from "@/lib/i18n";
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 const SCROLL_THRESHOLD = 150;
