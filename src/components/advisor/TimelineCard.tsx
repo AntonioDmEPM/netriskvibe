@@ -3,16 +3,16 @@ interface TimelineCardProps {
 }
 
 const steps = [
-  { label: "Ma", sublabel: "Összehasonlítás" },
-  { label: "Kalkuláció kész", sublabel: "Ajánlatok" },
-  { label: "30 napos határidő", sublabel: "Felmondás" },
-  { label: "Új biztosítás indul", sublabel: "Szerződés" },
+  { label: "Today", sublabel: "Comparison" },
+  { label: "Quote ready", sublabel: "Offers" },
+  { label: "30-day deadline", sublabel: "Cancellation" },
+  { label: "New policy starts", sublabel: "Contract" },
 ];
 
 const TimelineCard = ({ currentStep }: TimelineCardProps) => {
   return (
     <div className="bg-card border border-border rounded-lg p-4 shadow-sm">
-      <h4 className="text-sm font-semibold text-foreground mb-4">KGFB váltás ütemterve</h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4">MTPL Switching Timeline</h4>
       <div className="flex items-center">
         {steps.map((step, i) => (
           <div key={i} className="flex items-center flex-1 last:flex-initial">

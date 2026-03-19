@@ -75,7 +75,7 @@ const Index = () => {
 
   const handleQuoteSelect = useCallback((insurerName: string) => {
     const id = genId();
-    setMessages((prev) => [...prev, { id, role: 'user', parts: [{ type: 'text', content: `Ezt választom: ${insurerName}` }] }]);
+    setMessages((prev) => [...prev, { id, role: 'user', parts: [{ type: 'text', content: `I choose: ${insurerName}` }] }]);
     advanceTurn();
   }, [advanceTurn]);
 
@@ -130,7 +130,7 @@ const Index = () => {
           >
             <Menu className="w-5 h-5 text-foreground" />
           </button>
-          <h1 className="font-bold text-foreground">KGFB Tanácsadó</h1>
+          <h1 className="font-bold text-foreground">MTPL Advisor</h1>
           <span className="ml-2 text-[10px] font-medium bg-primary/10 text-primary px-2 py-0.5 rounded-full flex items-center gap-1">
             <Sparkles className="w-3 h-3" />
             AI-powered
@@ -146,16 +146,16 @@ const Index = () => {
                 n
               </div>
               <h2 className="text-xl font-bold text-foreground mb-2">
-                Netrisk AI Tanácsadó
+                Netrisk AI Advisor
               </h2>
               <p className="text-sm text-muted-foreground mb-8 max-w-md">
-                Személyes AI biztosítási tanácsadó — válasszon egy demo forgatókönyvet az induláshoz.
+                Your personal AI insurance advisor — choose a demo scenario to get started.
               </p>
               <div className="flex flex-col sm:flex-row gap-3">
                 {[
-                  { id: 'returning', label: 'Visszatérő ügyfél', desc: 'Meglévő KÖBE szerződés összehasonlítása' },
-                  { id: 'new', label: 'Új ügyfél', desc: 'Első kötelező biztosítás keresése' },
-                  { id: 'advisory', label: 'Tanácsadás', desc: 'Kérdés az ajánlatokról' },
+                  { id: 'returning', label: 'Returning Customer', desc: 'Compare existing KÖBE policy' },
+                  { id: 'new', label: 'New Customer', desc: 'Find your first car insurance' },
+                  { id: 'advisory', label: 'Advisory', desc: 'Ask about the offers' },
                 ].map((d) => (
                   <button
                     key={d.id}

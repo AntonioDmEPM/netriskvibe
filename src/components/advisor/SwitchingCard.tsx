@@ -24,23 +24,23 @@ const SwitchingCard = ({ from, to, onConfirm }: SwitchingCardProps) => {
         {from && (
           <>
             <div className="flex-1 text-center p-3 bg-muted rounded-lg">
-              <p className="text-xs text-muted-foreground mb-1">Korábbi</p>
+              <p className="text-xs text-muted-foreground mb-1">Previous</p>
               <p className="font-bold text-foreground">{from.name}</p>
-              <p className="text-sm text-muted-foreground">{formatPrice(from.price)} Ft/év</p>
+              <p className="text-sm text-muted-foreground">{formatPrice(from.price)} HUF/yr</p>
             </div>
             <ArrowRight className="w-6 h-6 text-primary shrink-0" />
           </>
         )}
         <div className="flex-1 text-center p-3 bg-green-50 border border-primary/20 rounded-lg">
-          <p className="text-xs text-primary mb-1">Új</p>
+          <p className="text-xs text-primary mb-1">New</p>
           <p className="font-bold text-foreground">{to.name}</p>
-          <p className="text-sm text-primary font-semibold">{formatPrice(to.price)} Ft/év</p>
+          <p className="text-sm text-primary font-semibold">{formatPrice(to.price)} HUF/yr</p>
         </div>
       </div>
 
       {savings > 0 && (
         <p className="text-center text-sm font-semibold text-primary mb-3">
-          Megtakarítás: {formatPrice(savings)} Ft/év
+          Savings: {formatPrice(savings)} HUF/yr
         </p>
       )}
 
@@ -56,10 +56,10 @@ const SwitchingCard = ({ from, to, onConfirm }: SwitchingCardProps) => {
         {confirmed ? (
           <>
             <Check className="w-5 h-5 animate-check-pop" />
-            A Netrisk intézi!
+            Netrisk handles it!
           </>
         ) : (
-          'Váltás indítása'
+          'Start switching'
         )}
       </button>
     </div>
