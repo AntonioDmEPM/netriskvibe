@@ -17,9 +17,9 @@ export interface Recommendation {
 }
 
 const badgeConfig = {
-  best: { bg: "bg-secondary/10 text-secondary", icon: Star },
+  best: { bg: "bg-primary/10 text-primary", icon: Star },
   cheapest: { bg: "bg-savings/10 text-savings", icon: TrendingDown },
-  popular: { bg: "bg-agent/10 text-agent", icon: Zap },
+  popular: { bg: "bg-primary/10 text-primary", icon: Zap },
 };
 
 const RecommendationCard = ({
@@ -46,11 +46,10 @@ const RecommendationCard = ({
       className="card-elevated rounded-2xl bg-card border border-border overflow-hidden"
     >
       <div className="p-5 sm:p-6">
-        {/* Header */}
         <div className="flex items-start justify-between mb-4">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <h3 className="text-lg font-display font-bold text-foreground">
+              <h3 className="text-lg font-bold text-foreground">
                 {recommendation.provider}
               </h3>
               {badge && recommendation.badge && (
@@ -60,7 +59,7 @@ const RecommendationCard = ({
                 </span>
               )}
             </div>
-            <p className="text-sm text-muted-foreground font-body">
+            <p className="text-sm text-muted-foreground">
               {recommendation.coverage}
             </p>
           </div>
@@ -70,7 +69,7 @@ const RecommendationCard = ({
                 key={i}
                 className={`w-3.5 h-3.5 ${
                   i < recommendation.rating
-                    ? "text-amber-400 fill-amber-400"
+                    ? "text-primary fill-primary"
                     : "text-border"
                 }`}
               />
@@ -78,15 +77,12 @@ const RecommendationCard = ({
           </div>
         </div>
 
-        {/* Price */}
         <div className="flex items-end gap-3 mb-4">
           <div>
-            <span className="text-3xl font-display font-bold text-foreground">
+            <span className="text-3xl font-bold text-foreground">
               {recommendation.monthlyPrice}
             </span>
-            <span className="text-sm text-muted-foreground font-body ml-1">
-              / hó
-            </span>
+            <span className="text-sm text-muted-foreground ml-1">/ hó</span>
           </div>
           {recommendation.savings && (
             <span className="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-savings/10 text-savings text-sm font-medium mb-1">
@@ -96,18 +92,16 @@ const RecommendationCard = ({
           )}
         </div>
 
-        {/* Agent reason */}
-        <div className="flex items-start gap-2 p-3 rounded-xl bg-secondary/5 border border-secondary/10 mb-4">
-          <Shield className="w-4 h-4 text-secondary mt-0.5 shrink-0" />
-          <p className="text-sm text-foreground font-body leading-relaxed">
+        <div className="flex items-start gap-2 p-3 rounded-xl bg-orange-light border border-primary/10 mb-4">
+          <Shield className="w-4 h-4 text-primary mt-0.5 shrink-0" />
+          <p className="text-sm text-foreground leading-relaxed">
             {recommendation.reason}
           </p>
         </div>
 
-        {/* Expandable highlights */}
         <button
           onClick={() => setExpanded(!expanded)}
-          className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors font-body"
+          className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
         >
           {expanded ? "Kevesebb részlet" : "Több részlet"}
           {expanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
@@ -121,19 +115,18 @@ const RecommendationCard = ({
         >
           <ul className="mt-3 space-y-2">
             {recommendation.highlights.map((h, i) => (
-              <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground font-body">
-                <div className="w-1.5 h-1.5 rounded-full bg-agent mt-1.5 shrink-0" />
+              <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
+                <div className="w-1.5 h-1.5 rounded-full bg-primary mt-1.5 shrink-0" />
                 {h}
               </li>
             ))}
           </ul>
         </motion.div>
 
-        {/* CTA */}
         <motion.button
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
-          className="w-full mt-5 py-3 rounded-xl bg-secondary text-secondary-foreground font-display font-semibold text-sm tracking-wide transition-all hover:shadow-lg"
+          className="w-full mt-5 py-3 rounded-xl bg-primary text-primary-foreground font-semibold text-sm tracking-wide transition-all hover:bg-orange-hover"
         >
           Ajánlat kérése
         </motion.button>

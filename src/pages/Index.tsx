@@ -111,24 +111,22 @@ const Index = () => {
               transition={{ duration: 0.4 }}
               className="flex flex-col items-center justify-center min-h-[calc(100vh-4rem)] px-4 sm:px-6 gap-10 sm:gap-12"
             >
-              {/* Hero text */}
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
                 className="text-center max-w-2xl"
               >
-                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-display font-bold text-foreground leading-tight mb-4">
-                  Biztosítás,{" "}
-                  <span className="gradient-text">intelligensen</span>
+                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-foreground leading-tight mb-4">
+                  Biztosítást keres?{" "}
+                  <span className="gradient-text">Kérdezzen!</span>
                 </h1>
-                <p className="text-lg sm:text-xl text-muted-foreground font-body leading-relaxed">
-                  Mondja el természetes nyelven, mire van szüksége — az AI ügynökünk
-                  megtalálja a legjobb ajánlatot Önnek.
+                <p className="text-lg sm:text-xl text-muted-foreground leading-relaxed">
+                  Hasonlítson össze biztosításokat egyetlen mondattal — AI ügynökünk
+                  megtalálja a legjobb ajánlatot.
                 </p>
               </motion.div>
 
-              {/* Omnibar */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -138,7 +136,6 @@ const Index = () => {
                 <Omnibar onSubmit={simulateAgent} isProcessing={false} />
               </motion.div>
 
-              {/* Stats */}
               <StatsBar />
             </motion.div>
           )}
@@ -157,15 +154,15 @@ const Index = () => {
                 animate={{ opacity: 1, y: 0 }}
                 className="text-center"
               >
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-agent/10 text-agent text-sm font-medium font-body mb-4">
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
                   <div className="flex gap-1">
-                    <div className="w-2 h-2 rounded-full bg-agent thinking-dot" />
-                    <div className="w-2 h-2 rounded-full bg-agent thinking-dot" />
-                    <div className="w-2 h-2 rounded-full bg-agent thinking-dot" />
+                    <div className="w-2 h-2 rounded-full bg-primary thinking-dot" />
+                    <div className="w-2 h-2 rounded-full bg-primary thinking-dot" />
+                    <div className="w-2 h-2 rounded-full bg-primary thinking-dot" />
                   </div>
                   Feldolgozás alatt
                 </div>
-                <p className="text-sm text-muted-foreground font-body max-w-md">
+                <p className="text-sm text-muted-foreground max-w-md">
                   „{query}"
                 </p>
               </motion.div>
@@ -181,7 +178,6 @@ const Index = () => {
               animate={{ opacity: 1 }}
               className="max-w-4xl mx-auto px-4 sm:px-6 pt-24 pb-20"
             >
-              {/* Results header */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -189,14 +185,14 @@ const Index = () => {
               >
                 <div className="flex items-center gap-2 mb-2">
                   <div className="w-2 h-2 rounded-full bg-savings animate-pulse" />
-                  <span className="text-sm text-savings font-medium font-body">
+                  <span className="text-sm text-savings font-medium">
                     3 ajánlat készen áll
                   </span>
                 </div>
-                <h2 className="text-2xl sm:text-3xl font-display font-bold text-foreground mb-1">
+                <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-1">
                   Az Önnek ajánlott biztosítások
                 </h2>
-                <p className="text-muted-foreground font-body">
+                <p className="text-muted-foreground">
                   „{query}"
                 </p>
 
@@ -206,26 +202,24 @@ const Index = () => {
                     setQuery("");
                     setSteps([]);
                   }}
-                  className="mt-4 text-sm text-agent hover:underline font-body"
+                  className="mt-4 text-sm text-primary hover:underline font-medium"
                   whileHover={{ x: -3 }}
                 >
                   ← Új keresés
                 </motion.button>
               </motion.div>
 
-              {/* Recommendation cards */}
               <div className="space-y-4">
                 {mockRecommendations.map((rec, i) => (
                   <RecommendationCard key={rec.id} recommendation={rec} index={i} />
                 ))}
               </div>
 
-              {/* Footer note */}
               <motion.p
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.8 }}
-                className="text-center text-xs text-muted-foreground font-body mt-10"
+                className="text-center text-xs text-muted-foreground mt-10"
               >
                 Az ajánlatok tájékoztató jellegűek. A végleges díj a részletes adategyeztetés után kerül meghatározásra.
               </motion.p>

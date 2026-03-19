@@ -23,8 +23,8 @@ const ThoughtLog = ({ steps }: { steps: ThoughtStep[] }) => {
       className="w-full max-w-3xl mx-auto"
     >
       <div className="flex items-center gap-2 mb-3">
-        <Brain className="w-4 h-4 text-agent" />
-        <span className="text-sm font-medium text-muted-foreground font-body">
+        <Brain className="w-4 h-4 text-primary" />
+        <span className="text-sm font-medium text-muted-foreground">
           Az ügynök gondolkodik...
         </span>
       </div>
@@ -41,12 +41,12 @@ const ThoughtLog = ({ steps }: { steps: ThoughtStep[] }) => {
                 transition={{ type: "spring", stiffness: 500, damping: 40 }}
                 className="flex items-center gap-3 px-4 py-2.5 rounded-xl bg-card border border-border"
               >
-                <Icon className="w-4 h-4 text-agent shrink-0" />
-                <span className="text-sm text-foreground font-body flex-1">
+                <Icon className="w-4 h-4 text-primary shrink-0" />
+                <span className="text-sm text-foreground flex-1">
                   {step.text}
                 </span>
                 {step.status === "thinking" ? (
-                  <Loader2 className="w-4 h-4 text-agent animate-spin shrink-0" />
+                  <Loader2 className="w-4 h-4 text-primary animate-spin shrink-0" />
                 ) : (
                   <CheckCircle2 className="w-4 h-4 text-savings shrink-0" />
                 )}

@@ -15,16 +15,16 @@ const AgentFAB = () => {
             exit={{ opacity: 0, y: 20, scale: 0.9 }}
             className="absolute bottom-16 right-0 w-80 rounded-2xl bg-card border border-border p-5 shadow-xl"
           >
-            <h4 className="font-display font-bold text-foreground mb-2">
-              BiztosítóAgent
+            <h4 className="font-bold text-foreground mb-2">
+              AI Tanácsadó
             </h4>
-            <p className="text-sm text-muted-foreground font-body leading-relaxed mb-3">
+            <p className="text-sm text-muted-foreground leading-relaxed mb-3">
               Mesterséges intelligencia alapú biztosítási tanácsadó vagyok. Kérdezzen bármit a biztosításokról!
             </p>
             <div className="flex items-center gap-2 p-3 rounded-xl bg-muted">
-              <MessageCircle className="w-4 h-4 text-agent" />
-              <span className="text-xs text-muted-foreground font-body">
-                Írja be kérdését az Omnibar-ba fent...
+              <MessageCircle className="w-4 h-4 text-primary" />
+              <span className="text-xs text-muted-foreground">
+                Írja be kérdését fent a keresőbe...
               </span>
             </div>
           </motion.div>
@@ -33,7 +33,7 @@ const AgentFAB = () => {
 
       <motion.button
         onClick={() => setOpen(!open)}
-        className="w-14 h-14 rounded-full bg-secondary text-secondary-foreground fab-shadow flex items-center justify-center"
+        className="w-14 h-14 rounded-full bg-primary text-primary-foreground fab-shadow flex items-center justify-center"
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
       >
