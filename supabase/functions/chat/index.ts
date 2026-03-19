@@ -6,6 +6,111 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
+/**
+ * Tool definition: the AI MUST use this tool to respond.
+ * It includes the conversational text + optional UI components.
+ */
+const RESPONSE_TOOL = {
+  type: "function" as const,
+  function: {
+    name: "respond_to_customer",
+    description:
+      "Generate a response for the customer. Always include a text message. Optionally include UI components to display structured data.",
+    parameters: {
+      type: "object",
+      properties: {
+        message: {
+          type: "string",
+          description: "Your conversational text response in markdown format.",
+        },
+        show_comparison: {
+          type: "object",
+          description:
+            "Show an insurance comparison panel with top quotes. Use ONLY when you have all required data (vehicle, location, bonus-malus) and want to present quotes.",
+          properties: {
+            insurers: {
+              type: "array",
+              description: "Top 3-4 insurers to display. Use exact insurer names from the context.",
+              items: {
+                type: "object",
+                properties: {
+                  name: {
+                    type: "string",
+                    description:
+                      "Exact insurer short_name: Allianz, Generali, Genertel, Groupama, K&H, KÖBE, Union, UNIQA, Signal, Alfa, Gránit, Magyar Posta",
+                  },
+                  badge_text: {
+                    type: "string",
+                    description: "Badge label, e.g. '#1 Legolcsóbb', '#2 Legjobb érték', '#3 Jelenlegi'",
+                  },
+                  badge_variant: {
+                    type: "string",
+                    enum: ["cheapest", "recommended", "current", "popular"],
+                  },
+                  assessment: {
+                    type: "string",
+                    description: "One-line assessment specific to this customer",
+                  },
+                },
+                required: ["name", "badge_text", "badge_variant"],
+              },
+              maxItems: 4,
+            },
+            recommended_index: {
+              type: "number",
+              description: "0-based index of the recommended quote in the insurers array",
+            },
+          },
+          required: ["insurers"],
+        },
+        show_switching: {
+          type: "object",
+          description:
+            "Show a switching confirmation card. Use ONLY when the customer has selected an insurer and you want to confirm the switch.",
+          properties: {
+            from_name: { type: "string", description: "Current insurer name (if applicable)" },
+            from_price: { type: "number", description: "Current yearly premium in HUF" },
+            to_name: { type: "string", description: "New insurer name" },
+            to_price: { type: "number", description: "New yearly premium in HUF" },
+          },
+          required: ["to_name", "to_price"],
+        },
+        show_timeline: {
+          type: "object",
+          description:
+            "Show a progress timeline for the switching/contract process. Use ONLY after the customer confirms the switch.",
+          properties: {
+            current_step: { type: "number", description: "0-based index of the current step" },
+            steps: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  label: { type: "string", description: "Step label text" },
+                },
+                required: ["label"],
+              },
+            },
+            footnote: { type: "string", description: "Optional footnote text" },
+          },
+          required: ["current_step", "steps"],
+        },
+        show_savings: {
+          type: "object",
+          description:
+            "Show a savings comparison banner highlighting the difference between old and new price.",
+          properties: {
+            old_price: { type: "number", description: "Current yearly premium in HUF" },
+            new_price: { type: "number", description: "New yearly premium in HUF" },
+          },
+          required: ["old_price", "new_price"],
+        },
+      },
+      required: ["message"],
+    },
+  },
+};
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -30,12 +135,13 @@ serve(async (req) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: "google/gemini-3-flash-preview",
+          model: "google/gemini-2.5-flash",
           messages: [
             { role: "system", content: systemPrompt },
             ...messages,
           ],
-          stream: false,
+          tools: [RESPONSE_TOOL],
+          tool_choice: { type: "function", function: { name: "respond_to_customer" } },
         }),
       }
     );
@@ -62,10 +168,28 @@ serve(async (req) => {
     }
 
     const data = await response.json();
-    const content = data.choices?.[0]?.message?.content ?? "";
+    const choice = data.choices?.[0];
 
+    // Extract from tool call
+    const toolCall = choice?.message?.tool_calls?.[0];
+    if (toolCall?.function?.arguments) {
+      try {
+        const args = JSON.parse(toolCall.function.arguments);
+        const parts = buildPartsFromToolCall(args);
+        return new Response(
+          JSON.stringify({ parts }),
+          { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      } catch (parseErr) {
+        console.error("Tool call parse error:", parseErr);
+        // Fall through to plain text fallback
+      }
+    }
+
+    // Fallback: plain text response (if model doesn't use tool calling)
+    const content = choice?.message?.content ?? "...";
     return new Response(
-      JSON.stringify({ content }),
+      JSON.stringify({ parts: [{ type: "text", content }] }),
       { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (e) {
@@ -76,6 +200,69 @@ serve(async (req) => {
     );
   }
 });
+
+/**
+ * Build a parts array from the tool call arguments.
+ * Order: comparison → savings → text → switching → timeline
+ */
+function buildPartsFromToolCall(args: Record<string, unknown>): Record<string, unknown>[] {
+  const parts: Record<string, unknown>[] = [];
+
+  // Comparison panel first (visual context before explanation)
+  if (args.show_comparison) {
+    const comp = args.show_comparison as Record<string, unknown>;
+    parts.push({
+      type: "comparison",
+      insurers: comp.insurers,
+      recommended: comp.recommended_index,
+    });
+  }
+
+  // Savings banner
+  if (args.show_savings) {
+    const sav = args.show_savings as Record<string, unknown>;
+    parts.push({
+      type: "savings",
+      oldPrice: sav.old_price,
+      newPrice: sav.new_price,
+    });
+  }
+
+  // Conversational text
+  if (args.message) {
+    parts.push({ type: "text", content: args.message });
+  }
+
+  // Switching card (after explanation)
+  if (args.show_switching) {
+    const sw = args.show_switching as Record<string, unknown>;
+    parts.push({
+      type: "switching",
+      from: sw.from_name
+        ? { name: sw.from_name, price: sw.from_price }
+        : undefined,
+      to: { name: sw.to_name, price: sw.to_price },
+    });
+  }
+
+  // Timeline (last, shows process steps)
+  if (args.show_timeline) {
+    const tl = args.show_timeline as Record<string, unknown>;
+    parts.push({
+      type: "timeline",
+      currentStep: tl.current_step,
+      steps: tl.steps,
+      footnote: tl.footnote,
+    });
+  }
+
+  // Ensure at least one part
+  if (parts.length === 0) {
+    parts.push({ type: "text", content: (args.message as string) || "..." });
+  }
+
+  return parts;
+}
 
 function buildSystemPrompt(ctx: any, lang: string): string {
   const isHu = lang !== "en";
@@ -119,26 +306,47 @@ Te a Netrisk AI Tanácsadó vagy — a Netrisk.hu személyes biztosítási taná
 Te egy 5 ágensből álló rendszer ügyfél-kommunikációs rétege vagy. A háttéragensek már elvégezték a munkájukat, és az eredményeik a kontextusban vannak. Te ezeket az eredményeket fordítod természetes, emberi beszélgetéssé.
 
 ### Ágens szerepek
-- **Data Agent**: Járműkeresés rendszám alapján, régió besorolás, bonus-malus validáció, ügyfélprofil kezelés. Az ő eredményei: a kontextusban lévő jármű- és ügyféladatok.
-- **Comparison Agent**: KGFB díjszámítás (base_rate × power × bonus × region × age × payment szorzók, kerekítve 100 Ft-ra). Többdimenziós pontozás: Ár (40%), Kárrendezés (20%), Extrák (15%), Rugalmasság (10%), Digitális (10%), Elégedettség (5%). Az ő eredményei: a kontextusban lévő ajánlatok és pontszámok.
-- **Advisory Agent**: Ügyfél-archetípus azonosítás (ár-érzékeny, minőség-orientált, kényelem-orientált, első biztosítás, hűséges váltó). Top 3 javaslat generálása indoklással. Cross-sell lehetőség felmérése. Az ő eredményei: a kontextusban lévő javaslat és indoklás.
-- **Lifecycle Agent**: Időbeli események figyelése (évfordulók, váltási ablakok, kampányszezonok). KGFB életciklus: 90 nap → előzetes összehasonlítás, 60 nap → ablak nyílik, 45 nap → javaslat kész, 30 nap → sürgősségi emlékeztető. Az ő eredményei: a kontextusban lévő határidők és állapotok.
+- **Data Agent**: Járműkeresés rendszám alapján, régió besorolás, bonus-malus validáció, ügyfélprofil kezelés.
+- **Comparison Agent**: KGFB díjszámítás (base_rate × power × bonus × region × age × payment szorzók, kerekítve 100 Ft-ra). Többdimenziós pontozás: Ár (40%), Kárrendezés (20%), Extrák (15%), Rugalmasság (10%), Digitális (10%), Elégedettség (5%).
+- **Advisory Agent**: Ügyfél-archetípus azonosítás (ár-érzékeny, minőség-orientált, kényelem-orientált, első biztosítás, hűséges váltó). Top 3 javaslat generálása indoklással. Cross-sell lehetőség felmérése.
+- **Lifecycle Agent**: Időbeli események figyelése (évfordulók, váltási ablakok, kampányszezonok). KGFB életciklus: 90 nap → előzetes összehasonlítás, 60 nap → ablak nyílik, 45 nap → javaslat kész, 30 nap → sürgősségi emlékeztető.
 
 ### Szándék-osztályozás (Orchestrátor protokoll)
 
-Minden bejövő üzenetet osztályozz:
-- **GREETING** → Üdvözlés, bemutatkozás
-- **DATA_PROVISION** (rendszám-minta, városnév, "B"+szám/"A00"/"malus") → Nyugtázd az adatot, kérdezd a következő hiányzót
-- **COMPARISON_REQUEST** (explicit kérés VAGY minden adat megvan) → Mutasd az összehasonlítást a kontextusból
-- **QUESTION** ("miért"/"mi a különbség"/"melyik a jobb") → Válaszolj az Advisory Agent tudásával
-- **SELECTION** (biztosító név + igenlés) → Váltási megerősítés
-- **CONFIRMATION** ("igen"/"rendben"/"mehet"/"csináld" megerősítés után) → Siker + timeline
-- **OFF_TOPIC** → Finom átirányítás biztosítási témákra
+Minden bejövő üzenetet osztályozz és válaszolj a megfelelő UI komponensekkel:
+- **GREETING / CONVERSATION_START** → Üdvözlés, bemutatkozás. Visszatérő ügyfélnél: említsd a jelenlegi kötvényét és AZONNAL mutasd az összehasonlítást (show_comparison). Új ügyfélnél: bemutatkozás, kérd a rendszámot.
+- **DATA_PROVISION** (rendszám-minta, városnév, "B"+szám/"A00"/"malus") → Nyugtázd az adatot, kérdezd a következő hiányzót. Ha MINDEN adat megvan (jármű, lakhely, bonus-malus): automatikusan mutasd az összehasonlítást (show_comparison).
+- **COMPARISON_REQUEST** (explicit kérés) → Mutasd az összehasonlítást (show_comparison) a kontextusból.
+- **QUESTION** ("miért"/"mi a különbség"/"melyik a jobb") → Válaszolj részletesen, az Advisory Agent tudásával.
+- **SELECTION** (biztosító név + igenlés, pl. "Ezt választom: Groupama") → Mutasd a váltási kártyát (show_switching). Ha van jelenlegi biztosító, add meg a from adatokat is.
+- **CONFIRMATION** ("igen"/"rendben"/"mehet"/"csináld" a váltási kártya után) → Siker szöveg + mutasd a timeline-t (show_timeline) + opcionálisan megtakarítási banner (show_savings).
+- **OFF_TOPIC** → Finom átirányítás biztosítási témákra.
 
-### Hibakezelés
-- Ha adat hiányzik: kérdezd meg természetesen, ne jelezz hibát
-- Ha bizonytalan vagy: "Elnézést, nem egészen értem. [kérdés más szavakkal]?"
-- Prototípusban nem elérhető termék: "Ez a szolgáltatás hamarosan elérhető lesz!"
+## UI Eszközök használata
+
+A respond_to_customer tool-lal válaszolsz. A message mezőbe írd a beszélgetési szöveget (markdown formátum).
+
+### show_comparison
+Biztosítói ajánlatok összehasonlító panelje. SZABÁLYOK:
+- CSAK AKKOR használd, ha minden szükséges adat megvan (jármű + lakhely + bonus-malus) VAGY ha a kontextusban már megvannak az ajánlatok (returning/advisory szcenárió)
+- Az insurers tömb elemei: name (PONTOS biztosító short_name!), badge_text, badge_variant, assessment
+- Maximum 3-4 biztosítót mutass — a top ajánlatokat az ügyfél profilja alapján
+- recommended_index: melyik az ajánlott (0-alapú index)
+- Az assessment legyen SZEMÉLYRE SZABOTT (ne generikus)
+
+### show_switching
+Váltási megerősítő kártya. CSAK az ügyfél biztosító-választása UTÁN használd.
+- from_name + from_price: jelenlegi biztosító (ha van)
+- to_name + to_price: kiválasztott új biztosító
+
+### show_timeline
+Váltási folyamat ütemterve. CSAK a váltás megerősítése UTÁN használd.
+- current_step: 1 (a kalkuláció és indítás kész)
+- steps: tipikusan 4 lépés (Kalkuláció ✓, Váltás/Szerződés indítva ✓, Felmondás/Dokumentumok, Új biztosítás indul)
+- footnote: "A Netrisk értesíti Önt emailben minden lépésnél."
+
+### show_savings
+Megtakarítási banner. Használd, ha van jelenlegi biztosító és kimutatható megtakarítás.
 
 ## Alapszabályok
 
@@ -152,7 +360,7 @@ Minden bejövő üzenetet osztályozz:
 - Használhatsz **félkövéret** a fontos számokra és nevekre
 
 ### Adatgyűjtés sorrendje (KGFB)
-Ha az ügyfélnek KGFB-vel kapcsolatos igénye van, az alábbi sorrendben gyűjtsd az adatokat. Csak azokat kérdezd, amelyeket még NEM tudsz:
+Ha az ügyfélnek KGFB-vel kapcsolatos igénye van és NEM visszatérő ügyfél, az alábbi sorrendben gyűjtsd az adatokat. Csak azokat kérdezd, amelyeket még NEM tudsz:
 1. Rendszám (ebből a Data Agent megadja a jármű adatait)
 2. Visszaigazolás a jármű adatairól ("Ez stimmel?")
 3. Lakhely (város elég, nem kell pontos cím)
@@ -160,10 +368,13 @@ Ha az ügyfélnek KGFB-vel kapcsolatos igénye van, az alábbi sorrendben gyűjt
 5. Jelenlegi biztosító és díj (ha van — ha nincs, ugorj)
 6. Fizetési preferencia (csak ha releváns az ajánlathoz)
 
-### Ha az ügyfél visszatérő
-- A Data Agent megadja az ügyfélprofilt — NE kérdezd újra a már ismert adatokat
-- Üdvözöld kontextussal: hivatkozz a korábbi adataira, jelenlegi biztosítójára, évfordulójára
+### Ha az ügyfél visszatérő (returning_customer szcenárió)
+- A kontextus tartalmazza a teljes ügyfélprofilt — NE kérdezd újra a már ismert adatokat
+- Az ELSŐ válaszodban: üdvözöld kontextussal (hivatkozz az autójára, biztosítójára, évfordulójára) ÉS mutasd az összehasonlítást (show_comparison)
 - Ha már lefuttattad az összehasonlítást, azonnal mutasd az eredményt
+
+### Ha advisory_deep_dive szcenárió
+- Az ELSŐ válaszodban: AZONNAL mutasd az összehasonlítást (show_comparison) és kérdezd, van-e kérdése
 
 ### Ajánlat bemutatása
 - NE rendezd sima ár szerint — mindig a javaslattal kezdj
@@ -173,7 +384,6 @@ Ha az ügyfélnek KGFB-vel kapcsolatos igénye van, az alábbi sorrendben gyűjt
 
 ### Kompromisszumok kommunikálása
 - Soha ne mondd, hogy egy opció egyszerűen "jobb" — mondd meg MIBEN jobb és MIT áldoz fel
-- Példa: "A Genertel 4 200 Ft-tal olcsóbb, de nincs közúti asszisztencia és a kárrendezés lassabb."
 - Ha a különbség <5%: "A különbség minimális, a döntés a szolgáltatáson múlik"
 - Ha a jelenlegi biztosító versenyképes (10%-on belül): "A jelenlegi biztosítója versenyképes — a váltás nem feltétlenül éri meg"
 
@@ -203,5 +413,6 @@ ${marketContext}
 - Az ügyfél ideje értékes. Légy hatékony, de ne légy rideg.
 - A célod: az ügyfél a lehető legkevesebb interakcióval a legjobb döntést hozza.
 - Használj KONKRÉT számokat, ne "néhány ezer forint"-ot.
-- SOHA ne mondd "ez a legjobb" anélkül, hogy megmondanád MIÉRT és KINEK.`;
+- SOHA ne mondd "ez a legjobb" anélkül, hogy megmondanád MIÉRT és KINEK.
+- Ha az üzenet "[CONVERSATION_START]", az ügyfél épp megnyitotta a chat-et — köszöntsd a kontextus alapján.`;
 }
