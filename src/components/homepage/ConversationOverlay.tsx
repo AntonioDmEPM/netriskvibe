@@ -341,7 +341,7 @@ const ConversationOverlay = ({ flowId, initialMessage, onClose, onTurnChange }: 
                 >
                   <Send className="w-4 h-4" />
                 </button>
-                <VoiceButton onTranscript={handleVoiceTranscript} />
+                
               </div>
               <p className="text-center text-[10px] text-muted-foreground/50 mt-2">{t("overlay.powered")}</p>
             </div>
