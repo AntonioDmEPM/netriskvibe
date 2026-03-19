@@ -326,8 +326,8 @@ const HeroSection = ({ onStartFlow, isReturning }: HeroSectionProps) => {
                       <div className="text-left">
                         <div className="flex items-center gap-1.5 mb-1">
                           <MapPin className="w-3.5 h-3.5 text-muted-foreground" />
-                          <span className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider">
-                            {lang === 'hu' ? 'Lakhely' : 'Location'}
+                           <span className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider">
+                             {t("data.location")}
                           </span>
                         </div>
                         <p className="text-sm font-bold text-foreground">{profileA.location}</p>
