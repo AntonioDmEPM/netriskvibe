@@ -179,6 +179,16 @@ const ConversationOverlay = ({ flowId, initialMessage, onClose, onTurnChange }: 
     advanceStage();
   }, [advanceStage]);
 
+  const handleVoiceTranscript = useCallback((text: string, isAgent: boolean) => {
+    const id = genId();
+    if (isAgent) {
+      setLastMsgId(id);
+      setMessages((prev) => [...prev, { id, role: "agent", parts: [{ type: "text", content: text }] }]);
+    } else {
+      setMessages((prev) => [...prev, { id, role: "user", parts: [{ type: "text", content: text }] }]);
+    }
+  }, []);
+
   const handleQuoteSelect = useCallback((insurerName: string) => {
     const id = genId();
     const msg = lang === "en" ? `I'll pick: ${insurerName}` : `Ezt választom: ${insurerName}`;
