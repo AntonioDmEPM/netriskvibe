@@ -13,7 +13,11 @@ const footerCols = [
   },
 ];
 
-const FooterSection = () => (
+interface FooterSectionProps {
+  onActivatePresenter?: () => void;
+}
+
+const FooterSection = ({ onActivatePresenter }: FooterSectionProps) => (
   <footer className="bg-secondary text-secondary-foreground py-12 sm:py-16">
     <div className="max-w-6xl mx-auto px-4 sm:px-6">
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-8 mb-10">
@@ -37,7 +41,11 @@ const FooterSection = () => (
         <p className="text-xs text-secondary-foreground/50">
           © 1994-2026 Netrisk Magyarország Kft. Minden jog fenntartva.
         </p>
-        <p className="text-xs text-secondary-foreground/30">
+        <p
+          className="text-xs text-secondary-foreground/30 cursor-default select-none"
+          onClick={() => onActivatePresenter?.()}
+          title=""
+        >
           AI Tanácsadó — Prototype Demo
         </p>
       </div>

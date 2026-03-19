@@ -22,7 +22,7 @@ const StickyNav = ({ onOpenOverlay, hasAnnouncementBar, extraTopOffset = 0 }: St
           ? "bg-background/95 backdrop-blur-xl shadow-sm border-b border-border"
           : "bg-transparent"
       }`}
-      style={{ top: hasAnnouncementBar ? '2.25rem' : 0 }}
+      style={{ top: (hasAnnouncementBar ? 36 : 0) + extraTopOffset }}
     >
       <div className="max-w-6xl mx-auto w-full px-4 sm:px-6 flex items-center justify-between">
         <div className="flex items-center gap-2">

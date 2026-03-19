@@ -89,8 +89,9 @@ const ConversationOverlay = ({ flowId, initialMessage, onClose, onTurnChange }: 
     const next = turnRef.current + 1;
     if (next >= flow.length) return;
     turnRef.current = next;
+    onTurnChange?.(next);
     processAgentTurn(flow[next], versionRef.current);
-  }, [processAgentTurn]);
+  }, [processAgentTurn, onTurnChange]);
 
   const handleSend = useCallback((text: string) => {
     if (!flowRef.current || !text.trim()) return;
