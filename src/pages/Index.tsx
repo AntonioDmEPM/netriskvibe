@@ -8,9 +8,11 @@ import BeforeAfter from "@/components/homepage/BeforeAfter";
 import TrustPartners from "@/components/homepage/TrustPartners";
 import FooterSection from "@/components/homepage/FooterSection";
 import ConversationOverlay from "@/components/homepage/ConversationOverlay";
+import AnnouncementBar from "@/components/homepage/AnnouncementBar";
 
 const Index = () => {
   const [overlay, setOverlay] = useState<{ flowId: string; initialMessage?: string } | null>(null);
+  const [isReturning, setIsReturning] = useState(false);
 
   const openOverlay = (flowId: string, initialMessage?: string) => {
     setOverlay({ flowId, initialMessage });
@@ -18,8 +20,9 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <StickyNav onOpenOverlay={() => openOverlay("new")} />
-      <HeroSection onStartFlow={openOverlay} />
+      <AnnouncementBar isReturning={isReturning} onToggle={setIsReturning} />
+      <StickyNav onOpenOverlay={() => openOverlay("new")} hasAnnouncementBar />
+      <HeroSection onStartFlow={openOverlay} isReturning={isReturning} />
       <SocialProofBar />
       <HowItWorks />
       <ProductGrid onStartFlow={openOverlay} />
