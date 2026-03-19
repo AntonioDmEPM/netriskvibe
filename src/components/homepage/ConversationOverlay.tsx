@@ -129,12 +129,13 @@ const ConversationOverlay = ({ flowId, initialMessage, onClose, onTurnChange }: 
     advanceTurn();
   }, [advanceTurn]);
 
-  // Start flow on mount
+  // Start flow on mount (and when language changes)
   useEffect(() => {
     const version = ++versionRef.current;
-    const flow = getFlow(flowId);
+    const flow = getFlow(flowId, lang);
     flowRef.current = flow;
     turnRef.current = 0;
+    setMessages([]);
 
     if (initialMessage && flow.length > 1) {
       const id = genId();
@@ -144,7 +145,7 @@ const ConversationOverlay = ({ flowId, initialMessage, onClose, onTurnChange }: 
     } else {
       processAgentTurn(flow[0], version);
     }
-  }, [flowId, initialMessage, processAgentTurn]);
+  }, [flowId, initialMessage, processAgentTurn, lang]);
 
   // Focus input
   useEffect(() => {
