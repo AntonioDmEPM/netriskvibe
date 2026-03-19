@@ -5,7 +5,6 @@ import ChatMessage, { type Message, type MessagePart } from "@/components/adviso
 import TypingIndicator from "@/components/advisor/TypingIndicator";
 import ConfettiEffect from "@/components/advisor/ConfettiEffect";
 import { genId } from "@/lib/flows";
-import VoiceButton from "@/components/advisor/VoiceButton";
 import { getScenarioConfig, type ScenarioConfig } from "@/lib/scenarioContext";
 import { useI18n } from "@/lib/i18n";
 import { supabase } from "@/integrations/supabase/client";
