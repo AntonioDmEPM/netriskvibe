@@ -5,10 +5,10 @@ interface TimelineCardProps {
 }
 
 const defaultSteps = [
-  { label: "Today", sublabel: "Comparison" },
-  { label: "Quote ready", sublabel: "Offers" },
-  { label: "30-day deadline", sublabel: "Cancellation" },
-  { label: "New policy starts", sublabel: "Contract" },
+  { label: "Ma", sublabel: "Kalkuláció" },
+  { label: "Ajánlat kész", sublabel: "Összehasonlítás" },
+  { label: "30 napos határidő", sublabel: "Felmondás" },
+  { label: "Új kötvény indul", sublabel: "Szerződés" },
 ];
 
 const TimelineCard = ({ currentStep, steps, footnote }: TimelineCardProps) => {
@@ -16,7 +16,7 @@ const TimelineCard = ({ currentStep, steps, footnote }: TimelineCardProps) => {
 
   return (
     <div className="bg-card border border-border rounded-lg p-4 shadow-sm">
-      <h4 className="text-sm font-semibold text-foreground mb-4">Switching Timeline</h4>
+      <h4 className="text-sm font-semibold text-foreground mb-4">Váltás folyamata</h4>
       <div className="flex items-center">
         {displaySteps.map((step, i) => (
           <div key={i} className="flex items-center flex-1 last:flex-initial">

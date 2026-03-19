@@ -102,10 +102,10 @@ export function formatPrice(price: number): string {
 
 export function getInsuranceFeatures(insurer: Insurer): string[] {
   const f: string[] = [];
-  if (insurer.claims_speed >= 4) f.push('Fast claims');
-  if (insurer.digital_rating >= 4) f.push('Online management');
-  if (insurer.roadside) f.push('Roadside assistance');
-  if (insurer.satisfaction >= 4.0) f.push('High satisfaction');
+  if (insurer.claims_speed >= 4) f.push('Gyors kárrendezés');
+  if (insurer.digital_rating >= 4) f.push('Online ügyintézés');
+  if (insurer.roadside) f.push('Asszisztencia');
+  if (insurer.satisfaction >= 4.0) f.push('Magas elégedettség');
   return f;
 }
 
@@ -130,7 +130,7 @@ export interface Profile {
 }
 
 export const profileA: Profile = {
-  vehicle: vehicles[1],
+  vehicle: vehicles[1], // Suzuki SX4, 2012, 88kW
   bonus: 'B10',
   region: 'budapest',
   payment: 'annual',
@@ -139,14 +139,14 @@ export const profileA: Profile = {
 };
 
 export const profileB: Profile = {
-  vehicle: vehicles[2],
+  vehicle: vehicles[2], // VW Golf VII, 2018, 110kW
   bonus: 'A00',
   region: 'county_seat',
-  payment: 'quarterly',
+  payment: 'annual',
 };
 
 export const profileC: Profile = {
-  vehicle: vehicles[0],
+  vehicle: vehicles[0], // Opel Astra, 2015, 74kW
   bonus: 'B06',
   region: 'county_seat',
   payment: 'annual',
