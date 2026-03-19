@@ -1,10 +1,12 @@
 import { useState, useCallback, useRef, useEffect } from "react";
-import { Menu, Sparkles, ChevronDown } from "lucide-react";
+import { Menu, Sparkles, ChevronDown, Search } from "lucide-react";
 import AdvisorSidebar from "@/components/advisor/AdvisorSidebar";
 import ChatMessage, { type Message } from "@/components/advisor/ChatMessage";
 import ChatInput from "@/components/advisor/ChatInput";
 import TypingIndicator from "@/components/advisor/TypingIndicator";
+import AgentViewPanel from "@/components/advisor/AgentViewPanel";
 import { getFlow, genId, type Flow } from "@/lib/flows";
+import { getAgentEvents, type AgentName, type AgentAction, type TurnAgentEvents } from "@/lib/agentEvents";
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
@@ -19,7 +21,14 @@ const Index = () => {
   const [lastMsgId, setLastMsgId] = useState<string | null>(null);
   const [showNewMsg, setShowNewMsg] = useState(false);
 
+  // Agent view state
+  const [agentViewOpen, setAgentViewOpen] = useState(false);
+  const [activeAgent, setActiveAgent] = useState<AgentName>('Conversation Agent');
+  const [agentActions, setAgentActions] = useState<AgentAction[]>([]);
+  const [customerProfile, setCustomerProfile] = useState<Record<string, string>>({});
+
   const flowRef = useRef<Flow | null>(null);
+  const agentEventsRef = useRef<TurnAgentEvents[]>([]);
   const turnRef = useRef(0);
   const versionRef = useRef(0);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -37,7 +46,6 @@ const Index = () => {
     setShowNewMsg(false);
   }, []);
 
-  // Track scroll position
   useEffect(() => {
     const el = scrollContainerRef.current;
     if (!el) return;
@@ -49,7 +57,6 @@ const Index = () => {
     return () => el.removeEventListener("scroll", onScroll);
   }, [checkNearBottom]);
 
-  // Auto-scroll or show "new message" button
   useEffect(() => {
     if (isNearBottomRef.current) {
       scrollToBottom();
@@ -58,9 +65,19 @@ const Index = () => {
     }
   }, [messages, isTyping, scrollToBottom]);
 
-  const processAgentTurn = useCallback(async (turn: (typeof flowRef.current extends Flow ? Flow[number] : never), version: number) => {
+  const applyAgentEvents = useCallback((turnIndex: number) => {
+    const events = agentEventsRef.current;
+    if (!events || turnIndex >= events.length) return;
+    const turn = events[turnIndex];
+    setActiveAgent(turn.activeAgent);
+    setAgentActions((prev) => [...prev, ...turn.actions]);
+    setCustomerProfile((prev) => ({ ...prev, ...turn.profileUpdates }));
+  }, []);
+
+  const processAgentTurn = useCallback(async (turn: (typeof flowRef.current extends Flow ? Flow[number] : never), version: number, turnIndex: number) => {
     if (!turn) return;
     setInputEnabled(false);
+    applyAgentEvents(turnIndex);
     for (let i = 0; i < turn.messages.length; i++) {
       if (versionRef.current !== version) return;
       const msg = turn.messages[i];
@@ -74,12 +91,14 @@ const Index = () => {
       if (i < turn.messages.length - 1) await sleep(400);
     }
     if (versionRef.current === version) setInputEnabled(true);
-  }, []);
+  }, [applyAgentEvents]);
 
   const startDemo = useCallback((id: string) => {
     const version = ++versionRef.current;
     const flow = getFlow(id);
+    const events = getAgentEvents(id);
     flowRef.current = flow;
+    agentEventsRef.current = events;
     turnRef.current = 0;
     setMessages([]);
     setIsTyping(false);
@@ -87,7 +106,10 @@ const Index = () => {
     setActiveDemo(id);
     setSidebarOpen(false);
     setLastMsgId(null);
-    processAgentTurn(flow[0], version);
+    setAgentActions([]);
+    setCustomerProfile({});
+    setActiveAgent('Conversation Agent');
+    processAgentTurn(flow[0], version, 0);
   }, [processAgentTurn]);
 
   const advanceTurn = useCallback(() => {
@@ -96,7 +118,7 @@ const Index = () => {
     const next = turnRef.current + 1;
     if (next >= flow.length) return;
     turnRef.current = next;
-    processAgentTurn(flow[next], versionRef.current);
+    processAgentTurn(flow[next], versionRef.current, next);
   }, [processAgentTurn]);
 
   const handleSend = useCallback((text: string) => {
@@ -119,6 +141,7 @@ const Index = () => {
   const handleNewConversation = useCallback(() => {
     ++versionRef.current;
     flowRef.current = null;
+    agentEventsRef.current = [];
     turnRef.current = 0;
     setMessages([]);
     setIsTyping(false);
@@ -126,6 +149,9 @@ const Index = () => {
     setActiveDemo(null);
     setSidebarOpen(false);
     setLastMsgId(null);
+    setAgentActions([]);
+    setCustomerProfile({});
+    setActiveAgent('Conversation Agent');
   }, []);
 
   return (
@@ -168,69 +194,94 @@ const Index = () => {
             <Sparkles className="w-3 h-3" />
             AI-powered
           </span>
+
+          {/* Agent View toggle */}
+          <button
+            onClick={() => setAgentViewOpen((v) => !v)}
+            className={`ml-auto hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+              agentViewOpen
+                ? 'bg-primary text-primary-foreground'
+                : 'bg-muted text-muted-foreground hover:text-foreground'
+            }`}
+          >
+            <Search className="w-3.5 h-3.5" />
+            Agent View
+          </button>
         </div>
 
-        {/* Messages area */}
-        <div className="flex-1 overflow-y-auto relative" ref={scrollContainerRef}>
-          {messages.length === 0 && !isTyping ? (
-            /* Welcome screen */
-            <div className="flex flex-col items-center justify-center h-full px-6 text-center">
-              <div className="w-16 h-16 rounded-2xl bg-primary flex items-center justify-center text-primary-foreground text-2xl font-bold mb-4">
-                n
-              </div>
-              <h2 className="text-xl font-bold text-foreground mb-2">
-                Netrisk AI Advisor
-              </h2>
-              <p className="text-sm text-muted-foreground mb-8 max-w-md">
-                Your personal AI insurance advisor — choose a demo scenario to get started.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-3">
-                {[
-                  { id: 'returning', label: 'Returning Customer', desc: 'Compare existing KÖBE policy' },
-                  { id: 'new', label: 'New Customer', desc: 'Find your first car insurance' },
-                  { id: 'advisory', label: 'Advisory', desc: 'Ask about the offers' },
-                ].map((d) => (
-                  <button
-                    key={d.id}
-                    onClick={() => startDemo(d.id)}
-                    className="px-5 py-4 rounded-xl border border-border bg-card hover:border-primary/30 hover:shadow-md transition-all text-left max-w-[220px]"
-                  >
-                    <p className="font-semibold text-foreground text-sm mb-1">{d.label}</p>
-                    <p className="text-xs text-muted-foreground">{d.desc}</p>
-                  </button>
-                ))}
-              </div>
-            </div>
-          ) : (
-            <div className="max-w-3xl mx-auto px-4 py-6 space-y-4">
-              {messages.map((msg) => (
-                <ChatMessage
-                  key={msg.id}
-                  message={msg}
-                  animate={msg.id === lastMsgId}
-                  onQuoteSelect={handleQuoteSelect}
-                  onSwitchConfirm={handleSwitchConfirm}
-                />
-              ))}
-              {isTyping && <TypingIndicator />}
-              <div ref={bottomRef} />
-            </div>
-          )}
+        {/* Content row: messages + optional agent panel */}
+        <div className="flex-1 flex min-h-0">
+          {/* Messages area */}
+          <div className="flex-1 flex flex-col min-w-0">
+            <div className="flex-1 overflow-y-auto relative" ref={scrollContainerRef}>
+              {messages.length === 0 && !isTyping ? (
+                <div className="flex flex-col items-center justify-center h-full px-6 text-center">
+                  <div className="w-16 h-16 rounded-2xl bg-primary flex items-center justify-center text-primary-foreground text-2xl font-bold mb-4">
+                    n
+                  </div>
+                  <h2 className="text-xl font-bold text-foreground mb-2">
+                    Netrisk AI Advisor
+                  </h2>
+                  <p className="text-sm text-muted-foreground mb-8 max-w-md">
+                    Your personal AI insurance advisor — choose a demo scenario to get started.
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    {[
+                      { id: 'returning', label: 'Returning Customer', desc: 'Compare existing KÖBE policy' },
+                      { id: 'new', label: 'New Customer', desc: 'Find your first car insurance' },
+                      { id: 'advisory', label: 'Advisory', desc: 'Ask about the offers' },
+                    ].map((d) => (
+                      <button
+                        key={d.id}
+                        onClick={() => startDemo(d.id)}
+                        className="px-5 py-4 rounded-xl border border-border bg-card hover:border-primary/30 hover:shadow-md transition-all text-left max-w-[220px]"
+                      >
+                        <p className="font-semibold text-foreground text-sm mb-1">{d.label}</p>
+                        <p className="text-xs text-muted-foreground">{d.desc}</p>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div className="max-w-3xl mx-auto px-4 py-6 space-y-4">
+                  {messages.map((msg) => (
+                    <ChatMessage
+                      key={msg.id}
+                      message={msg}
+                      animate={msg.id === lastMsgId}
+                      onQuoteSelect={handleQuoteSelect}
+                      onSwitchConfirm={handleSwitchConfirm}
+                    />
+                  ))}
+                  {isTyping && <TypingIndicator />}
+                  <div ref={bottomRef} />
+                </div>
+              )}
 
-          {/* New message floating button */}
-          {showNewMsg && (
-            <button
-              onClick={scrollToBottom}
-              className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1.5 px-4 py-2 rounded-full bg-primary text-primary-foreground text-xs font-semibold shadow-lg hover:opacity-90 transition-all animate-fade-in z-10"
-            >
-              <ChevronDown className="w-3.5 h-3.5" />
-              New message
-            </button>
+              {showNewMsg && (
+                <button
+                  onClick={scrollToBottom}
+                  className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1.5 px-4 py-2 rounded-full bg-primary text-primary-foreground text-xs font-semibold shadow-lg hover:opacity-90 transition-all animate-fade-in z-10"
+                >
+                  <ChevronDown className="w-3.5 h-3.5" />
+                  New message
+                </button>
+              )}
+            </div>
+
+            <ChatInput onSend={handleSend} disabled={!inputEnabled} />
+          </div>
+
+          {/* Agent View Panel */}
+          {agentViewOpen && (
+            <AgentViewPanel
+              activeAgent={activeAgent}
+              profile={customerProfile}
+              actions={agentActions}
+              onClose={() => setAgentViewOpen(false)}
+            />
           )}
         </div>
-
-        {/* Input area */}
-        <ChatInput onSend={handleSend} disabled={!inputEnabled} />
       </div>
     </div>
   );
