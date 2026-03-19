@@ -14,8 +14,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        display: ['Bricolage Grotesque', 'sans-serif'],
-        body: ['Inter', 'sans-serif'],
+        body: ['Inter', 'system-ui', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -61,13 +60,17 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
-        agent: {
-          DEFAULT: "hsl(var(--agent-blue))",
-          glow: "hsl(var(--agent-blue-glow))",
+        orange: {
+          DEFAULT: "hsl(var(--orange))",
+          light: "hsl(var(--orange-light))",
+          hover: "hsl(var(--orange-hover))",
+        },
+        cream: {
+          DEFAULT: "hsl(var(--cream))",
+          dark: "hsl(var(--cream-dark))",
         },
         savings: "hsl(var(--savings-green))",
-        navy: "hsl(var(--navy))",
-        charcoal: "hsl(var(--charcoal))",
+        dark: "hsl(var(--dark))",
       },
       borderRadius: {
         lg: "var(--radius)",

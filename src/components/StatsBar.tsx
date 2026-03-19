@@ -24,11 +24,11 @@ const StatsBar = () => {
           transition={{ delay: 0.7 + i * 0.1 }}
           className="flex flex-col items-center text-center gap-1"
         >
-          <stat.icon className="w-5 h-5 text-agent mb-1" />
-          <span className="text-xl sm:text-2xl font-display font-bold text-foreground">
+          <stat.icon className="w-5 h-5 text-primary mb-1" />
+          <span className="text-xl sm:text-2xl font-bold text-foreground">
             {stat.value}
           </span>
-          <span className="text-xs text-muted-foreground font-body">
+          <span className="text-xs text-muted-foreground">
             {stat.label}
           </span>
         </motion.div>
