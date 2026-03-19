@@ -334,3 +334,64 @@ A demóban a Lifecycle Agent kimenete a következőkben jelenik meg:
 } as const;
 
 export type AgentPromptKey = keyof typeof AGENT_PROMPTS;
+
+/**
+ * Orchestrator protocol — defines how agents coordinate.
+ * Injected into the Conversation Agent's context so the AI understands the full system.
+ */
+export const ORCHESTRATOR_PROTOCOL = `# ORCHESTRÁTOR — Ágens koordinációs protokoll
+
+## Üzenetfolyam
+
+### Bejövő felhasználói üzenet
+
+1. Fogadd a felhasználói üzenetet + aktuális shared_context
+2. Osztályozd a szándékot:
+   - GREETING → csak Conversation Agent
+   - DATA_PROVISION (rendszám, város, bonus osztály) → Data Agent → kontextus frissítés → Conversation Agent
+   - COMPARISON_REQUEST (explicit vagy implicit, ha az adatok teljesek) → Data Agent (ellenőrzés) → Comparison Agent → Advisory Agent → Conversation Agent
+   - QUESTION (biztosításról, folyamatról, konkrét biztosítóról) → Advisory Agent (ha összehasonlításról) vagy Conversation Agent (ha általános FAQ)
+   - SELECTION (felhasználó választ biztosítót) → Conversation Agent (megerősítés renderelése)
+   - CONFIRMATION (felhasználó megerősíti a váltást) → Conversation Agent (siker renderelés) → Lifecycle Agent (követés ütemezése)
+   - OFF_TOPIC → Conversation Agent (finom átirányítás)
+
+### Szándék-osztályozási szabályok
+
+- Ha az üzenet rendszám-szerű mintát tartalmaz (3 betű + kötőjel + 3 szám): DATA_PROVISION (jármű)
+- Ha az üzenet magyar városnevet tartalmaz: DATA_PROVISION (lakhely)
+- Ha az üzenet "B" + számot vagy "A00" vagy "malus"-t tartalmaz: DATA_PROVISION (bonus)
+- Ha az üzenet tartalmazza: "miért" / "mi a különbség" / "melyik a jobb": QUESTION
+- Ha az üzenet biztosító nevet + igenlést tartalmaz: SELECTION
+- Ha az üzenet "igen" / "rendben" / "mehet" / "csináld"-ot tartalmaz megerősítési prompt után: CONFIRMATION
+- Ha shared_context.ready_for_comparison false-ról true-ra vált: automatikus COMPARISON_REQUEST indítás
+
+### Ágens aktiválási sorrend
+
+**COMPARISON_REQUEST esetén:**
+1. Data Agent: profil teljesség validálása → profil visszaadása
+2. Comparison Agent: összes ajánlat kiszámítása → comparison_results visszaadása
+3. Advisory Agent: javaslat generálása → advisory visszaadása
+4. Conversation Agent: összehasonlítási panel + tanácsadói szöveg renderelése → válasz a felhasználónak
+
+**DATA_PROVISION esetén:**
+1. Data Agent: új adat feldolgozása → profil frissítése → teljesség ellenőrzése
+2. Ha ready_for_comparison: COMPARISON_REQUEST szekvencia indítása
+3. Ha nem kész: Conversation Agent → következő hiányzó mező kérdezése
+
+**QUESTION esetén:**
+1. Ellenőrizd, hogy léteznek-e comparison_results a kontextusban
+2. Ha igen: Advisory Agent → kontextuális válasz → Conversation Agent → renderelés
+3. Ha nem: Conversation Agent → válasz FAQ tudásbázisból vagy több adat kérése
+
+### Ágens aktiválás naplózás (Presenter módhoz)
+
+Minden ágens aktiválás eseményt emittál a UI számára:
+{ "agent": "data_agent", "action": "vehicle_lookup", "detail": "Rendszám ABC-123 → 2015 Opel Astra 1.4 (74 kW)", "timestamp": "..." }
+
+## Hibakezelés
+
+- Ha a Comparison Agent meghibásodik: Conversation Agent: "Egy pillanat, újrapróbálom az összehasonlítást..."
+- Ha a Data Agent nem tudja feloldani a rendszámot: Conversation Agent kéri a manuális jármű adatokat
+- Ha az Advisory Agent alacsony konfidenciájú javaslatot ad: jelölés, eredmények erős javaslat nélkül, az ügyfél dönt
+- Ha bármely ágens timeout-ol (>5s): Conversation Agent köztes válasz: "Dolgozom rajta..."
+` as const;
