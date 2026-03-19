@@ -70,8 +70,8 @@ const ChatMessage = ({ message, animate, onQuoteSelect, onSwitchConfirm }: ChatM
       </div>
       <div className="max-w-[85%] space-y-3">
         {isTextOnly ? (
-          <div className="bg-agent-bubble rounded-2xl rounded-bl-md px-4 py-3 text-sm leading-relaxed text-foreground whitespace-pre-wrap">
-            {shouldTypewrite ? displayedText : fullText}
+          <div className="bg-agent-bubble rounded-2xl rounded-bl-md px-4 py-3 text-sm leading-relaxed text-foreground prose prose-sm prose-neutral dark:prose-invert max-w-none">
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>{shouldTypewrite ? displayedText : fullText}</ReactMarkdown>
           </div>
         ) : (
           message.parts.map((part, i) => {
