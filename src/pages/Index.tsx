@@ -146,10 +146,10 @@ const Index = () => {
                 n
               </div>
               <h2 className="text-xl font-bold text-foreground mb-2">
-                Netrisk AI Tanácsadó
+                Netrisk AI Advisor
               </h2>
               <p className="text-sm text-muted-foreground mb-8 max-w-md">
-                Személyes AI biztosítási tanácsadó — válasszon egy demo forgatókönyvet az induláshoz.
+                Your personal AI insurance advisor — choose a demo scenario to get started.
               </p>
               <div className="flex flex-col sm:flex-row gap-3">
                 {[
