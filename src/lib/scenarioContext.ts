@@ -126,7 +126,7 @@ function getAdvisoryScenario(lang: Lang): ScenarioConfig {
       paymentMethod: localizeProfileField(profileC.paymentMethod, lang, paymentMethodMap),
     },
     allQuotes: buildTopQuoteSummary(all),
-    allInsurerKnowledge: getInsurerKnowledge(),
+    allInsurerKnowledge: getInsurerKnowledge(lang),
     marketStats,
     dataComplete: true,
   };
