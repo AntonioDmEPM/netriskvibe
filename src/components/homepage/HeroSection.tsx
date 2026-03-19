@@ -1,54 +1,42 @@
 import { useState, useRef, useEffect } from "react";
 import { ArrowRight, Car, Home, Plane, Shield } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useI18n } from "@/lib/i18n";
 
 interface HeroSectionProps {
   onStartFlow: (flowId: string, initialMessage?: string) => void;
   isReturning?: boolean;
 }
 
-const chips = [
-  { emoji: "🚗", label: "Kötelező biztosítás váltás", flowId: "returning" },
-  { emoji: "🏠", label: "Lakásbiztosítás", flowId: "" },
-  { emoji: "✈️", label: "Utasbiztosítás", flowId: "" },
-];
-
-const placeholders = [
-  "Írja be a rendszámát, vagy mondja el, miben segíthetek...",
-  "ABC-123",
-  "Mennyibe kerül a kötelező biztosítás?",
-  "Melyik a legjobb biztosító?",
-  "Szeretnék biztosítást váltani",
-];
-
 const HeroSection = ({ onStartFlow, isReturning }: HeroSectionProps) => {
+  const { t } = useI18n();
   const [inputValue, setInputValue] = useState("");
   const [returningInput, setReturningInput] = useState("");
   const [placeholderIdx, setPlaceholderIdx] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Cycle placeholder text
-  useEffect(() => {
-    const startTimer = setTimeout(() => {
-      const interval = setInterval(() => {
-        setPlaceholderIdx((prev) => (prev + 1) % placeholders.length);
-      }, 3000);
-      return () => clearInterval(interval);
-    }, 1500);
+  const placeholders = [
+    t("hero.placeholder.0"),
+    t("hero.placeholder.1"),
+    t("hero.placeholder.2"),
+    t("hero.placeholder.3"),
+    t("hero.placeholder.4"),
+  ];
 
-    // Also handle cleanup for the initial timeout
+  const chips = [
+    { emoji: "\u{1F697}", label: t("hero.chip.kgfb"), flowId: "returning" },
+    { emoji: "\u{1F3E0}", label: t("hero.chip.home"), flowId: "" },
+    { emoji: "\u2708\uFE0F", label: t("hero.chip.travel"), flowId: "" },
+  ];
+
+  useEffect(() => {
     let interval: ReturnType<typeof setInterval>;
     const timeout = setTimeout(() => {
       interval = setInterval(() => {
-        setPlaceholderIdx((prev) => (prev + 1) % placeholders.length);
+        setPlaceholderIdx((prev) => (prev + 1) % 5);
       }, 3000);
     }, 1500);
-
-    return () => {
-      clearTimeout(startTimer);
-      clearTimeout(timeout);
-      if (interval) clearInterval(interval);
-    };
+    return () => { clearTimeout(timeout); if (interval) clearInterval(interval); };
   }, []);
 
   const handleSend = () => {
@@ -86,7 +74,7 @@ const HeroSection = ({ onStartFlow, isReturning }: HeroSectionProps) => {
                   className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-semibold mb-6"
                 >
                   <span>✨</span>
-                  Új! AI tanácsadó
+                  {t("hero.badge")}
                 </motion.div>
 
                 <motion.h1
@@ -95,9 +83,9 @@ const HeroSection = ({ onStartFlow, isReturning }: HeroSectionProps) => {
                   transition={{ delay: 0.2 }}
                   className="text-4xl sm:text-5xl lg:text-[3.25rem] font-extrabold text-foreground leading-tight mb-5"
                 >
-                  A biztosítási tanácsadója,
+                  {t("hero.title1")}
                   <br />
-                  <span className="text-primary">aki sosem alszik</span>
+                  <span className="text-primary">{t("hero.title2")}</span>
                 </motion.h1>
 
                 <motion.p
@@ -106,7 +94,7 @@ const HeroSection = ({ onStartFlow, isReturning }: HeroSectionProps) => {
                   transition={{ delay: 0.3 }}
                   className="text-lg text-muted-foreground leading-relaxed mb-8 max-w-xl"
                 >
-                  Nem kell kalkulátort kitöltenie. Mondja el, mire van szüksége, és a Netrisk AI megtalálja a legjobb ajánlatot — percek alatt, magyarul.
+                  {t("hero.subtitle")}
                 </motion.p>
 
                 <motion.div
@@ -124,7 +112,6 @@ const HeroSection = ({ onStartFlow, isReturning }: HeroSectionProps) => {
                       onKeyDown={(e) => { if (e.key === "Enter") handleSend(); }}
                       className="absolute inset-0 w-full h-full px-4 bg-transparent text-foreground outline-none text-base z-10"
                     />
-                    {/* Animated placeholder */}
                     {!inputValue && (
                       <div className="absolute inset-0 flex items-center px-4 pointer-events-none">
                         <AnimatePresence mode="wait">
@@ -167,7 +154,6 @@ const HeroSection = ({ onStartFlow, isReturning }: HeroSectionProps) => {
                 </div>
               </div>
 
-              {/* Illustration */}
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -197,19 +183,18 @@ const HeroSection = ({ onStartFlow, isReturning }: HeroSectionProps) => {
                   </div>
                   <div className="absolute -top-8 -left-8 animate-float-delay-2">
                     <div className="bg-background rounded-2xl rounded-bl-md shadow-lg border border-border px-3 py-2 text-xs text-muted-foreground max-w-[120px]">
-                      "Rendszámom: ABC-123"
+                      {t("hero.bubble.plate")}
                     </div>
                   </div>
                   <div className="absolute -bottom-10 right-0 animate-float">
                     <div className="bg-primary/10 rounded-2xl rounded-br-md shadow-sm px-3 py-2 text-xs text-primary font-medium max-w-[140px]">
-                      "31 200 Ft/év — 15% olcsóbb!"
+                      {t("hero.bubble.savings")}
                     </div>
                   </div>
                 </div>
               </motion.div>
             </motion.div>
           ) : (
-            /* ========== RETURNING CUSTOMER HERO ========== */
             <motion.div
               key="returning"
               initial={{ opacity: 0, y: 10 }}
@@ -225,7 +210,7 @@ const HeroSection = ({ onStartFlow, isReturning }: HeroSectionProps) => {
                 className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-semibold mb-6"
               >
                 <span>👋</span>
-                Visszatérő ügyfél
+                {t("hero.returning.badge")}
               </motion.div>
 
               <motion.h1
@@ -234,7 +219,7 @@ const HeroSection = ({ onStartFlow, isReturning }: HeroSectionProps) => {
                 transition={{ delay: 0.15 }}
                 className="text-4xl sm:text-5xl lg:text-[3.25rem] font-extrabold text-foreground leading-tight mb-5"
               >
-                Üdvözöljük újra! 👋
+                {t("hero.returning.title")}
               </motion.h1>
 
               <motion.p
@@ -243,7 +228,7 @@ const HeroSection = ({ onStartFlow, isReturning }: HeroSectionProps) => {
                 transition={{ delay: 0.25 }}
                 className="text-lg text-muted-foreground leading-relaxed mb-8 max-w-2xl"
               >
-                A Suzuki SX4 S-Cross kötelező biztosítása január 1-jén jár le. Már összehasonlítottam az ajánlatokat — <span className="text-primary font-semibold">6 800 Ft-ot spórolhat évente.</span>
+                {t("hero.returning.subtitle.pre")}<span className="text-primary font-semibold">{t("hero.returning.subtitle.savings")}</span>
               </motion.p>
 
               <motion.button
@@ -253,7 +238,7 @@ const HeroSection = ({ onStartFlow, isReturning }: HeroSectionProps) => {
                 onClick={() => onStartFlow("returning")}
                 className="px-8 py-4 rounded-2xl bg-primary text-primary-foreground text-lg font-bold hover:opacity-90 transition-opacity shadow-lg shadow-primary/25 flex items-center gap-2 mb-4"
               >
-                Mutasd az ajánlatokat
+                {t("hero.returning.cta")}
                 <ArrowRight className="w-5 h-5" />
               </motion.button>
 
@@ -263,14 +248,14 @@ const HeroSection = ({ onStartFlow, isReturning }: HeroSectionProps) => {
                 transition={{ delay: 0.45 }}
                 className="flex flex-col items-center gap-2 mt-2 w-full max-w-md"
               >
-                <p className="text-sm text-muted-foreground">vagy kérdezzen bármit a tanácsadótól</p>
+                <p className="text-sm text-muted-foreground">{t("hero.returning.or")}</p>
                 <div className="flex items-center gap-2 w-full bg-background border border-border rounded-xl p-1.5 shadow-sm">
                   <input
                     type="text"
                     value={returningInput}
                     onChange={(e) => setReturningInput(e.target.value)}
                     onKeyDown={(e) => { if (e.key === "Enter") handleReturningSend(); }}
-                    placeholder="Pl. miért drágább az Allianz?"
+                    placeholder={t("hero.returning.placeholder")}
                     className="flex-1 h-9 px-3 bg-transparent text-sm text-foreground placeholder:text-muted-foreground outline-none"
                   />
                   <button
@@ -291,11 +276,11 @@ const HeroSection = ({ onStartFlow, isReturning }: HeroSectionProps) => {
               >
                 <div className="flex flex-col sm:flex-row items-stretch gap-4 sm:gap-6">
                   <div className="flex-1 text-left">
-                    <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider mb-2">Kötelező biztosítás</p>
+                    <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider mb-2">{t("dashboard.kgfb")}</p>
                     <p className="text-lg font-bold text-foreground">KÖBE</p>
                     <p className="text-sm text-muted-foreground">38 000 Ft/év</p>
                     <span className="inline-block mt-2 text-xs font-semibold bg-destructive/10 text-destructive px-2.5 py-1 rounded-full">
-                      Lejár: jan. 1.
+                      {t("dashboard.expires")}
                     </span>
                   </div>
                   <div className="hidden sm:flex items-center">
@@ -307,16 +292,16 @@ const HeroSection = ({ onStartFlow, isReturning }: HeroSectionProps) => {
                     <ArrowRight className="w-5 h-5 text-primary rotate-90" />
                   </div>
                   <div className="flex-1 text-left">
-                    <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider mb-2">Ajánlott váltás</p>
+                    <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider mb-2">{t("dashboard.recommended")}</p>
                     <p className="text-lg font-bold text-foreground">Groupama</p>
                     <p className="text-sm text-primary font-semibold">33 500 Ft/év</p>
                     <span className="inline-block mt-2 text-xs font-semibold bg-primary/10 text-primary px-2.5 py-1 rounded-full">
-                      Megtakarítás: 4 500 Ft
+                      {t("dashboard.savings")}
                     </span>
                   </div>
                   <div className="flex items-center sm:pl-2">
                     <button className="w-full sm:w-auto px-6 py-3 rounded-xl bg-primary text-primary-foreground font-bold text-sm hover:opacity-90 transition-opacity whitespace-nowrap">
-                      Váltás →
+                      {t("dashboard.switch")}
                     </button>
                   </div>
                 </div>

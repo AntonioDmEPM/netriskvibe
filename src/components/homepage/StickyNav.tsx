@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useI18n } from "@/lib/i18n";
 
 interface StickyNavProps {
   onOpenOverlay: () => void;
@@ -8,6 +9,7 @@ interface StickyNavProps {
 
 const StickyNav = ({ onOpenOverlay, hasAnnouncementBar, extraTopOffset = 0 }: StickyNavProps) => {
   const [scrolled, setScrolled] = useState(false);
+  const { t } = useI18n();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
@@ -33,21 +35,21 @@ const StickyNav = ({ onOpenOverlay, hasAnnouncementBar, extraTopOffset = 0 }: St
         </div>
 
         <div className="hidden md:flex items-center gap-8 text-sm font-medium text-muted-foreground">
-          <span className="hover:text-foreground transition-colors cursor-pointer">Biztosítás</span>
-          <span className="hover:text-foreground transition-colors cursor-pointer">Bank</span>
-          <span className="hover:text-foreground transition-colors cursor-pointer">Tudástár</span>
-          <span className="hover:text-foreground transition-colors cursor-pointer">Rólunk</span>
+          <span className="hover:text-foreground transition-colors cursor-pointer">{t("nav.insurance")}</span>
+          <span className="hover:text-foreground transition-colors cursor-pointer">{t("nav.bank")}</span>
+          <span className="hover:text-foreground transition-colors cursor-pointer">{t("nav.knowledge")}</span>
+          <span className="hover:text-foreground transition-colors cursor-pointer">{t("nav.about")}</span>
         </div>
 
         <div className="flex items-center gap-3">
           <span className="hidden sm:inline text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer">
-            Bejelentkezés
+            {t("nav.login")}
           </span>
           <button
             onClick={onOpenOverlay}
             className="px-4 py-2 rounded-xl bg-primary text-primary-foreground text-sm font-semibold hover:opacity-90 transition-opacity"
           >
-            Díjat számolok
+            {t("nav.cta")}
           </button>
         </div>
       </div>

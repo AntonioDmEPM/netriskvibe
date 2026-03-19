@@ -5,6 +5,7 @@ import ChatMessage, { type Message } from "@/components/advisor/ChatMessage";
 import TypingIndicator from "@/components/advisor/TypingIndicator";
 import ConfettiEffect from "@/components/advisor/ConfettiEffect";
 import { getFlow, genId, type Flow } from "@/lib/flows";
+import { useI18n } from "@/lib/i18n";
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 const SCROLL_THRESHOLD = 150;
@@ -17,6 +18,7 @@ interface ConversationOverlayProps {
 }
 
 const ConversationOverlay = ({ flowId, initialMessage, onClose, onTurnChange }: ConversationOverlayProps) => {
+  const { t } = useI18n();
   const [messages, setMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   const [inputEnabled, setInputEnabled] = useState(false);
@@ -120,7 +122,7 @@ const ConversationOverlay = ({ flowId, initialMessage, onClose, onTurnChange }: 
       setMessages((prev) => [...prev, {
         id,
         role: 'agent',
-        parts: [{ type: 'text', content: 'Köszönöm a bizalmát! A Netrisk csapata hamarosan felveszi Önnel a kapcsolatot emailben. 🎉 Van még kérdése?' }]
+        parts: [{ type: 'text', content: t("switch.thankyou") }]
       }]);
     }, 1500);
 
@@ -192,11 +194,11 @@ const ConversationOverlay = ({ flowId, initialMessage, onClose, onTurnChange }: 
                 <div className="w-7 h-7 rounded-lg bg-primary-foreground/20 flex items-center justify-center text-primary-foreground text-xs font-bold">
                   N
                 </div>
-                <span className="font-bold text-primary-foreground text-sm">Netrisk AI Tanácsadó</span>
+                <span className="font-bold text-primary-foreground text-sm">{t("overlay.title")}</span>
               </div>
               <div className="flex items-center gap-1.5 ml-4">
                 <div className="w-2 h-2 rounded-full bg-emerald-300 animate-pulse" />
-                <span className="text-xs text-primary-foreground/80">Online</span>
+                <span className="text-xs text-primary-foreground/80">{t("overlay.online")}</span>
               </div>
               <button
                 onClick={handleClose}
@@ -231,7 +233,7 @@ const ConversationOverlay = ({ flowId, initialMessage, onClose, onTurnChange }: 
                   className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1.5 px-4 py-2 rounded-full bg-primary text-primary-foreground text-xs font-semibold shadow-lg hover:opacity-90 transition-all animate-fade-in-up z-10"
                 >
                   <ChevronDown className="w-3.5 h-3.5" />
-                  Új üzenet
+                   {t("overlay.newmsg")}
                 </button>
               )}
             </div>
@@ -253,7 +255,7 @@ const ConversationOverlay = ({ flowId, initialMessage, onClose, onTurnChange }: 
                       }
                     }
                   }}
-                  placeholder="Írjon üzenetet..."
+                  placeholder={t("overlay.input")}
                   disabled={!inputEnabled}
                   className="flex-1 bg-muted rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-primary/20 transition-all disabled:opacity-50"
                 />
@@ -270,7 +272,7 @@ const ConversationOverlay = ({ flowId, initialMessage, onClose, onTurnChange }: 
                   <Send className="w-4 h-4" />
                 </button>
               </div>
-              <p className="text-center text-[10px] text-muted-foreground/50 mt-2">Powered by Netrisk AI</p>
+              <p className="text-center text-[10px] text-muted-foreground/50 mt-2">{t("overlay.powered")}</p>
             </div>
           </motion.div>
         </motion.div>
