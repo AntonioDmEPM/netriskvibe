@@ -101,7 +101,7 @@ const ChatMessage = ({ message, animate, onQuoteSelect, onSwitchConfirm }: ChatM
               );
             }
             if (part.type === 'timeline') {
-              return <TimelineCard key={i} currentStep={part.currentStep} />;
+              return <TimelineCard key={i} currentStep={part.currentStep} steps={part.steps} footnote={part.footnote} />;
             }
             if (part.type === 'savings') {
               return <SavingsBanner key={i} oldPrice={part.oldPrice} newPrice={part.newPrice} />;
