@@ -19,13 +19,13 @@ const VoiceButton = ({ onTranscript }: VoiceButtonProps) => {
     onDisconnect: () => {
       console.log("Voice agent disconnected");
     },
-    onMessage: (message) => {
-      if (message.type === "user_transcript" && onTranscript) {
-        const transcript = (message as any).user_transcription_event?.user_transcript;
+    onMessage: (message: any) => {
+      if (message?.type === "user_transcript" && onTranscript) {
+        const transcript = message?.user_transcription_event?.user_transcript;
         if (transcript) onTranscript(transcript, false);
       }
-      if (message.type === "agent_response" && onTranscript) {
-        const response = (message as any).agent_response_event?.agent_response;
+      if (message?.type === "agent_response" && onTranscript) {
+        const response = message?.agent_response_event?.agent_response;
         if (response) onTranscript(response, true);
       }
     },
