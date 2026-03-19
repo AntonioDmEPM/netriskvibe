@@ -194,7 +194,7 @@ const ConversationOverlay = ({ flowId, initialMessage, onClose, onTurnChange }: 
                 <div className="w-7 h-7 rounded-lg bg-primary-foreground/20 flex items-center justify-center text-primary-foreground text-xs font-bold">
                   N
                 </div>
-                <span className="font-bold text-primary-foreground text-sm">Netrisk AI Tanácsadó</span>
+                <span className="font-bold text-primary-foreground text-sm">{t("overlay.title")}</span>
               </div>
               <div className="flex items-center gap-1.5 ml-4">
                 <div className="w-2 h-2 rounded-full bg-emerald-300 animate-pulse" />
