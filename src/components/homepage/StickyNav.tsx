@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 interface StickyNavProps {
   onOpenOverlay: () => void;
   hasAnnouncementBar?: boolean;
+  extraTopOffset?: number;
 }
 
 const StickyNav = ({ onOpenOverlay, hasAnnouncementBar }: StickyNavProps) => {
