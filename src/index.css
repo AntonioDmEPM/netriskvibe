@@ -177,3 +177,30 @@
   from { transform: rotate(0deg) translateX(100px) rotate(0deg); }
   to { transform: rotate(360deg) translateX(100px) rotate(-360deg); }
 }
+
+/* KGFB card pulse */
+@keyframes kgfb-pulse {
+  0%, 100% { border-color: hsla(153, 100%, 33%, 0.25); }
+  50% { border-color: hsla(153, 100%, 33%, 0.6); }
+}
+.animate-kgfb-pulse {
+  animation: kgfb-pulse 2.5s ease-in-out infinite;
+}
+
+/* Marquee */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+}
+
+/* FAB pulse */
+@keyframes fab-pulse {
+  0%, 90%, 100% { box-shadow: 0 4px 15px -3px hsla(153, 100%, 33%, 0.3); }
+  95% { box-shadow: 0 4px 25px 4px hsla(153, 100%, 33%, 0.5); }
+}
+.animate-fab-pulse {
+  animation: fab-pulse 5s ease-in-out infinite;
+}
