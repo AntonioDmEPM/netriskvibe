@@ -7,23 +7,25 @@
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 225 20% 14%;
+    --foreground: 222 47% 17%;
     --card: 0 0% 100%;
-    --card-foreground: 225 20% 14%;
+    --card-foreground: 222 47% 17%;
     --popover: 0 0% 100%;
-    --popover-foreground: 225 20% 14%;
+    --popover-foreground: 222 47% 17%;
     --primary: 153 100% 33%;
     --primary-foreground: 0 0% 100%;
     --secondary: 240 28% 14%;
     --secondary-foreground: 0 0% 90%;
-    --muted: 220 14% 96%;
-    --muted-foreground: 220 10% 46%;
+    --muted: 210 20% 97%;
+    --muted-foreground: 215 16% 47%;
     --accent: 153 100% 33%;
     --accent-foreground: 0 0% 100%;
+    --accent-warm: 16 100% 60%;
+    --accent-warm-foreground: 0 0% 100%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
+    --border: 214 20% 92%;
+    --input: 214 20% 92%;
     --ring: 153 100% 33%;
     --radius: 0.75rem;
     --sidebar-background: 240 28% 14%;
@@ -34,7 +36,9 @@
     --sidebar-accent-foreground: 0 0% 90%;
     --sidebar-border: 240 20% 22%;
     --sidebar-ring: 153 100% 33%;
-    --agent-bubble: 220 14% 96%;
+    --agent-bubble: 210 20% 97%;
+    --section-bg: 200 20% 98%;
+    --navy: 240 28% 14%;
     --font-body: 'Inter', system-ui, sans-serif;
   }
   .dark {
@@ -52,11 +56,15 @@
     --muted-foreground: 220 10% 60%;
     --accent: 153 100% 33%;
     --accent-foreground: 0 0% 100%;
+    --accent-warm: 16 100% 60%;
+    --accent-warm-foreground: 0 0% 100%;
     --destructive: 0 63% 31%;
     --destructive-foreground: 0 0% 100%;
     --border: 225 15% 20%;
     --input: 225 15% 20%;
     --ring: 153 100% 33%;
+    --section-bg: 225 15% 10%;
+    --navy: 240 28% 14%;
   }
 }
 
@@ -68,6 +76,7 @@
   }
 }
 
+/* Typing indicator */
 @keyframes typing-dot {
   0%, 80%, 100% { transform: scale(0.4); opacity: 0.4; }
   40% { transform: scale(1); opacity: 1; }
@@ -108,4 +117,55 @@
 }
 .animate-timeline-progress {
   animation: timeline-progress 2s ease-in-out infinite;
+}
+
+/* Hero input glow */
+@keyframes hero-glow {
+  0%, 100% { box-shadow: 0 0 0 0 hsla(153, 100%, 33%, 0); }
+  50% { box-shadow: 0 0 20px 4px hsla(153, 100%, 33%, 0.15); }
+}
+.hero-input-glow:focus-within {
+  animation: hero-glow 2s ease-in-out infinite;
+  box-shadow: 0 0 0 3px hsla(153, 100%, 33%, 0.1);
+}
+
+/* Scroll reveal */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+.scroll-reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Slide in right */
+@keyframes slide-in-right {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+.animate-slide-in-right {
+  animation: slide-in-right 0.3s ease-out;
+}
+
+/* Floating icon animation */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+.animate-float-delay-1 {
+  animation: float 3s ease-in-out 0.5s infinite;
+}
+.animate-float-delay-2 {
+  animation: float 3s ease-in-out 1s infinite;
+}
+
+/* Orbit animation */
+@keyframes orbit {
+  from { transform: rotate(0deg) translateX(100px) rotate(0deg); }
+  to { transform: rotate(360deg) translateX(100px) rotate(-360deg); }
 }

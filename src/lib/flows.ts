@@ -34,9 +34,9 @@ export function getReturningFlow(): Flow {
   const kobeIdx = all.findIndex(q => q.insurerName === 'KÖBE');
 
   const top3 = prepareQuotes(all, [
-    { index: cheapestIdx, badge: { text: '#1 Cheapest', variant: 'cheapest' }, assessment: 'The lowest price, but customer service receives mixed reviews.' },
-    { index: groupamaIdx, badge: { text: '#2 Best Value', variant: 'recommended' }, assessment: 'Excellent value with roadside assistance and fast claims processing.' },
-    { index: kobeIdx, badge: { text: '#3 Current', variant: 'current' }, assessment: 'Your current insurer — the new calculation shows a lower premium.' },
+    { index: cheapestIdx, badge: { text: '#1 Legolcsóbb', variant: 'cheapest' }, assessment: 'A legalacsonyabb ár, de az ügyfélszolgálat vegyes értékeléseket kap.' },
+    { index: groupamaIdx, badge: { text: '#2 Legjobb érték', variant: 'recommended' }, assessment: 'Kiváló érték asszisztenciával és gyors kárrendezéssel.' },
+    { index: kobeIdx, badge: { text: '#3 Jelenlegi', variant: 'current' }, assessment: 'A jelenlegi biztosítója — az új kalkuláció alacsonyabb díjat mutat.' },
   ]);
 
   const groupamaPrice = all[groupamaIdx].yearlyPrice;
@@ -46,13 +46,13 @@ export function getReturningFlow(): Flow {
     {
       messages: [
         {
-          parts: [{ type: 'text', content: `Hello! I can see that last year you took out mandatory car insurance with KÖBE for your Suzuki SX4 S-Cross at 38,000 HUF/year. Your anniversary is January 1st, so you can switch until November 2nd. 🔍 I've already compared all insurer offers with your data — let me show you what I found.` }],
+          parts: [{ type: 'text', content: `Üdvözlöm! Látom, hogy tavaly a KÖBE-nél kötött kötelező biztosítást a Suzuki SX4 S-Cross-ra, évi 38 000 Ft-ért. Az évfordulója január 1-jén lesz. 🔍 Már összehasonlítottam az összes biztosító ajánlatát — mutatom, mit találtam.` }],
           delay: 1500,
         },
         {
           parts: [
             { type: 'comparison', quotes: top3, recommended: 1 },
-            { type: 'text', content: `I personally recommend Groupama: the price difference compared to ${top3[0].insurerName} is minimal, but the roadside assistance and claims quality are significantly better — in Budapest, this is especially important given the traffic conditions. Compared to your current KÖBE premium, you'd save ${formatPrice(savings)} HUF/year. What do you think?` },
+            { type: 'text', content: `Személyesen a Groupama-t javaslom: az árkülönbség a ${top3[0].insurerName}-hez képest minimális, de az asszisztencia és a kárrendezés minősége lényegesen jobb — Budapesten ez a forgalmi viszonyok miatt különösen fontos. A jelenlegi KÖBE díjához képest ${formatPrice(savings)} Ft-ot spórolna évente. Mi a véleménye?` },
           ],
           delay: 1200,
         },
@@ -63,7 +63,7 @@ export function getReturningFlow(): Flow {
         {
           parts: [
             { type: 'switching', from: { name: 'KÖBE', price: profileA.currentPrice! }, to: { name: 'Groupama', price: groupamaPrice } },
-            { type: 'text', content: 'Great! The switching details are shown above. Netrisk will handle the KÖBE cancellation and the Groupama contract signing. You don\'t need to do anything — we\'ll notify you when everything is done. Shall I start the switch?' },
+            { type: 'text', content: 'Nagyszerű! A Netrisk intézi a KÖBE felmondását és a Groupama szerződés megkötését. Önnek semmit nem kell tennie — értesítjük, ha minden kész. Megkezdem a váltást?' },
           ],
           delay: 1200,
         },
@@ -74,12 +74,12 @@ export function getReturningFlow(): Flow {
         {
           parts: [
             { type: 'timeline', currentStep: 1, steps: [
-              { label: 'Quote ✓' },
-              { label: 'Switch started ✓' },
-              { label: 'Old policy cancelled' },
-              { label: 'New policy starts Jan 1' },
-            ], footnote: 'Netrisk will notify you via email at every step.' },
-            { type: 'text', content: 'Done! I\'ve initiated the switching process. I\'ll send the details via email. 📧 I\'ll keep monitoring offers next year too — if a better option comes up, I\'ll let you know. Any other questions?' },
+              { label: 'Kalkuláció ✓' },
+              { label: 'Váltás indítva ✓' },
+              { label: 'Régi biztosítás felmondva' },
+              { label: 'Új biztosítás indul jan. 1.' },
+            ], footnote: 'A Netrisk értesíti Önt emailben minden lépésnél.' },
+            { type: 'text', content: 'Kész! A váltási folyamatot elindítottam. A részleteket emailben küldöm. 📧 Jövőre is figyelni fogom az ajánlatokat — ha jobb lehetőség adódik, szólok. Van más kérdése?' },
           ],
           delay: 800,
         },
@@ -95,46 +95,46 @@ export function getNewCustomerFlow(): Flow {
   const uniqaIdx = all.findIndex(q => q.insurerName === 'UNIQA');
 
   const top3 = prepareQuotes(all, [
-    { index: kobeIdx, badge: { text: '#1 Cheapest', variant: 'cheapest' }, assessment: 'The cheapest option, but digital services and customer support are weaker.' },
-    { index: genertelIdx, badge: { text: '#2 Popular', variant: 'popular' }, assessment: 'Good price with an excellent online platform, but no roadside assistance.' },
-    { index: uniqaIdx, badge: { text: '#3 Recommended', variant: 'recommended' }, assessment: 'Competitive price with roadside assistance and great digital experience.' },
+    { index: kobeIdx, badge: { text: '#1 Legolcsóbb', variant: 'cheapest' }, assessment: 'A legolcsóbb opció, de a digitális szolgáltatások és az ügyfélszolgálat gyengébb.' },
+    { index: genertelIdx, badge: { text: '#2 Népszerű', variant: 'popular' }, assessment: 'Jó ár kiváló online platformmal, de nincs asszisztencia.' },
+    { index: uniqaIdx, badge: { text: '#3 Ajánlott', variant: 'recommended' }, assessment: 'Versenyképes ár asszisztenciával és remek digitális élménnyel.' },
   ]);
 
   return [
     {
       messages: [{
-        parts: [{ type: 'text', content: 'Hello! I\'m your personal insurance advisor at Netrisk. I\'ll help you find the best mandatory car insurance for your vehicle. 🚗 First, let me ask about your car — could you provide the license plate number? This way I can automatically fill in most of the details.' }],
+        parts: [{ type: 'text', content: 'Üdvözlöm! A Netrisk AI tanácsadója vagyok. Segítek megtalálni a legjobb kötelező biztosítást. 🚗 Meg tudná adni a rendszámot?' }],
         delay: 1500,
       }],
     },
     {
       messages: [{
-        parts: [{ type: 'text', content: 'Thank you! A 2018 Volkswagen Golf VII, 1.4 TSI (110 kW) — is that correct? 👍 And are you the registered owner?' }],
+        parts: [{ type: 'text', content: 'Köszönöm! Egy 2018-as Volkswagen Golf VII, 1.4 TSI (110 kW) — stimmel? 👍 Ön az üzembentartó?' }],
         delay: 1200,
       }],
     },
     {
       messages: [{
-        parts: [{ type: 'text', content: 'Great! Where do you live? This is important because insurance premiums vary by region.' }],
+        parts: [{ type: 'text', content: 'Hol lakik? Ez azért fontos, mert a díj régiónként eltérő.' }],
         delay: 800,
       }],
     },
     {
       messages: [{
-        parts: [{ type: 'text', content: 'Debrecen, got it. Last question: which bonus-malus category are you in? If you don\'t know off the top of your head, that\'s fine — the most common categories are: B10 (10+ years accident-free), A00 (new driver or first insurance). If you have the notice from your previous insurer, that\'s the most accurate.' }],
+        parts: [{ type: 'text', content: 'Debrecen, rendben. Melyik bonus-malus kategóriába tartozik? A leggyakoribb: B10 (10+ éve balesetmentes) vagy A00 (új sofőr). Ha van a korábbi biztosítójától értesítő, az a legpontosabb.' }],
         delay: 1000,
       }],
     },
     {
       messages: [
         {
-          parts: [{ type: 'text', content: 'I see, A00 — first insurance or new driver. Let me compare all 8 insurers\' offers now...' }],
+          parts: [{ type: 'text', content: 'Értem, A00 — első biztosítás vagy új sofőr. Most összehasonlítom mind a 8 biztosító ajánlatát...' }],
           delay: 1000,
         },
         {
           parts: [
             { type: 'comparison', quotes: top3, recommended: 2 },
-            { type: 'text', content: `As a new driver, prices are higher, but there are differences between insurers. In your situation, UNIQA offers the best balance: competitive price (${formatPrice(top3[2].yearlyPrice)} HUF/year), good digital management and roadside assistance in Debrecen. ${top3[0].insurerName} is cheaper, but customer service is only available online. What do you think?` },
+            { type: 'text', content: `Új sofőrként az árak magasabbak, de a biztosítók között van különbség. Az Ön helyzetében az UNIQA kínálja a legjobb egyensúlyt: versenyképes ár (${formatPrice(top3[2].yearlyPrice)} Ft/év), jó digitális ügyintézés és asszisztencia Debrecenben. A ${top3[0].insurerName} olcsóbb, de az ügyfélszolgálat csak online érhető el. Mi a véleménye?` },
           ],
           delay: 2000,
         },
@@ -144,8 +144,7 @@ export function getNewCustomerFlow(): Flow {
       messages: [{
         parts: [
           { type: 'switching', to: { name: 'UNIQA', price: top3[2].yearlyPrice } },
-          { type: 'timeline', currentStep: 1 },
-          { type: 'text', content: 'The contract signing is done online, it only takes a few minutes. Netrisk handles all the administration. Shall I start?' },
+          { type: 'text', content: 'A szerződéskötés online történik, mindössze pár percet vesz igénybe. A Netrisk intéz minden adminisztrációt. Indítsam?' },
         ],
         delay: 1200,
       }],
@@ -154,12 +153,12 @@ export function getNewCustomerFlow(): Flow {
       messages: [{
         parts: [
           { type: 'timeline', currentStep: 1, steps: [
-            { label: 'Quote ✓' },
-            { label: 'Contract started ✓' },
-            { label: 'Documents signed' },
-            { label: 'Policy active Jan 1' },
-          ], footnote: 'Netrisk will notify you via email at every step.' },
-          { type: 'text', content: 'All done! I\'ve initiated the contract process. I\'ll send the details and next steps via email. 📧 Welcome to UNIQA! Any other questions?' },
+            { label: 'Kalkuláció ✓' },
+            { label: 'Szerződés indítva ✓' },
+            { label: 'Dokumentumok aláírva' },
+            { label: 'Kötvény indul jan. 1.' },
+          ], footnote: 'A Netrisk értesíti Önt emailben minden lépésnél.' },
+          { type: 'text', content: 'Minden kész! A szerződési folyamatot elindítottam. A részleteket és a következő lépéseket emailben küldöm. 📧 Üdvözöljük az UNIQA-nál! Van más kérdése?' },
         ],
         delay: 800,
       }],
@@ -174,9 +173,9 @@ export function getAdvisoryFlow(): Flow {
   const allianzIdx = all.findIndex(q => q.insurerName === 'Allianz');
 
   const top3 = prepareQuotes(all, [
-    { index: cheapestIdx, badge: { text: '#1 Cheapest', variant: 'cheapest' }, assessment: 'The best price with basic services.' },
-    { index: groupamaIdx, badge: { text: '#2 Best Value', variant: 'recommended' }, assessment: 'Good balance between price and service quality.' },
-    { index: allianzIdx, badge: { text: '#3 Premium', variant: 'popular' }, assessment: 'The best service package at a premium price.' },
+    { index: cheapestIdx, badge: { text: '#1 Legolcsóbb', variant: 'cheapest' }, assessment: 'A legjobb ár alapszolgáltatásokkal.' },
+    { index: groupamaIdx, badge: { text: '#2 Legjobb érték', variant: 'recommended' }, assessment: 'Jó egyensúly az ár és a szolgáltatásminőség között.' },
+    { index: allianzIdx, badge: { text: '#3 Prémium', variant: 'popular' }, assessment: 'A legjobb szolgáltatáscsomag prémium áron.' },
   ]);
 
   const cheapestPrice = top3[0].yearlyPrice;
@@ -188,20 +187,20 @@ export function getAdvisoryFlow(): Flow {
       messages: [{
         parts: [
           { type: 'comparison', quotes: top3, recommended: 1 },
-          { type: 'text', content: 'Here\'s your comparison for the Opel Astra (Szeged, B06). Do you have any questions about the offers?' },
+          { type: 'text', content: 'Itt a 3 legjobb ajánlat az Opel Astra-ra (Szeged, B06). Van kérdése az ajánlatokkal kapcsolatban?' },
         ],
         delay: 1500,
       }],
     },
     {
       messages: [{
-        parts: [{ type: 'text', content: `Great question! Allianz is indeed ${formatPrice(diff)} HUF more expensive than the cheapest offer. There are several reasons for this:\n\n1️⃣ **Claims quality** — Allianz receives the best claims processing rating in the Hungarian market: faster handling, their own service network, and better replacement car terms.\n\n2️⃣ **Roadside assistance** — 24/7 roadside assistance is included in the base package, which most cheaper insurers only offer as an add-on.\n\n3️⃣ **Digital experience** — Allianz's app is among the best: online claims filing, real-time status tracking, and digital green card.\n\nIn your situation (B06, 74 kW, Szeged) the question is: is it worth paying ~${formatPrice(diff)} HUF/year more for these? If you drive rarely and have a low accident risk, probably not. If you commute daily, Allianz's extra protection is a sensible investment. 🤔 What do you think — is price or service more important to you?` }],
+        parts: [{ type: 'text', content: `Remek kérdés! Az Allianz valóban ${formatPrice(diff)} Ft-tal drágább, mint a legolcsóbb ajánlat. Ennek több oka van:\n\n1️⃣ **Kárrendezés minősége** — Az Allianz a magyar piacon a legjobb kárrendezési értékelést kapja: gyorsabb ügyintézés, saját szervizháló és jobb csereautó feltételek.\n\n2️⃣ **Asszisztencia** — 0-24 közúti segélyszolgálat az alapcsomagban, amit a legtöbb olcsóbb biztosító csak kiegészítőként kínál.\n\n3️⃣ **Digitális élmény** — Az Allianz applikációja a legjobbak közé tartozik: online kárbejelentés, valós idejű állapotkövetés, digitális zöldkártya.\n\nAz Ön helyzetében (B06, 74 kW, Szeged) a kérdés: megéri-e ~${formatPrice(diff)} Ft-tal többet fizetni évente ezekért? Ha ritkán autózik és alacsony a baleseti kockázata, valószínűleg nem. Ha naponta ingázik, az Allianz extra védelme ésszerű befektetés. 🤔 Mi a fontosabb Önnek — az ár vagy a szolgáltatás?` }],
         delay: 1500,
       }],
     },
     {
       messages: [{
-        parts: [{ type: 'text', content: `I understand! Based on that, I recommend Groupama: the ${formatPrice(top3[1].yearlyPrice)} HUF/year premium represents a good middle ground — you get roadside assistance and fast claims processing without paying the premium Allianz price. Would you like me to start the switch?` }],
+        parts: [{ type: 'text', content: `Értem! Akkor a Groupama-t javaslom: a ${formatPrice(top3[1].yearlyPrice)} Ft/év díj jó középutat jelent — asszisztenciát és gyors kárrendezést kap anélkül, hogy a prémium Allianz árat fizetné. Megkezdem a váltást?` }],
         delay: 1200,
       }],
     },

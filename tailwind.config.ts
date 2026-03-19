@@ -40,6 +40,10 @@ export default {
           DEFAULT: "hsl(var(--accent))",
           foreground: "hsl(var(--accent-foreground))",
         },
+        "accent-warm": {
+          DEFAULT: "hsl(var(--accent-warm))",
+          foreground: "hsl(var(--accent-warm-foreground))",
+        },
         popover: {
           DEFAULT: "hsl(var(--popover))",
           foreground: "hsl(var(--popover-foreground))",
@@ -59,6 +63,8 @@ export default {
           ring: "hsl(var(--sidebar-ring))",
         },
         "agent-bubble": "hsl(var(--agent-bubble))",
+        navy: "hsl(var(--navy))",
+        "section-bg": "hsl(var(--section-bg))",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -66,6 +72,7 @@ export default {
         sm: "calc(var(--radius) - 4px)",
         xl: "calc(var(--radius) + 4px)",
         "2xl": "1rem",
+        "3xl": "1.5rem",
       },
       keyframes: {
         "accordion-down": {

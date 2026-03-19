@@ -9,9 +9,9 @@ interface QuoteCardProps {
 
 const badgeColors: Record<string, string> = {
   cheapest: 'bg-amber-100 text-amber-800 border-amber-300',
-  recommended: 'bg-gray-200 text-gray-700 border-gray-300',
+  recommended: 'bg-emerald-100 text-emerald-800 border-emerald-300',
   current: 'bg-gray-100 text-gray-500 border-gray-200',
-  popular: 'bg-gray-100 text-gray-500 border-gray-200',
+  popular: 'bg-blue-100 text-blue-700 border-blue-300',
 };
 
 function getInsurerData(name: string) {
@@ -22,7 +22,7 @@ function MiniBar({ label, value, max }: { label: string; value: number; max: num
   const pct = Math.round((value / max) * 100);
   return (
     <div className="flex items-center gap-2 text-[11px]">
-      <span className="text-muted-foreground w-16 shrink-0 text-right">{label}</span>
+      <span className="text-muted-foreground w-20 shrink-0 text-right">{label}</span>
       <div className="flex-1 h-1.5 bg-muted rounded-full overflow-hidden">
         <div
           className="h-full rounded-full bg-primary/70 transition-all"
@@ -63,17 +63,17 @@ const QuoteCard = ({ quote, isRecommended, onSelect }: QuoteCardProps) => {
       {/* Price */}
       <div className="mb-3">
         <span className="text-2xl font-bold text-foreground">
-          {formatPrice(quote.yearlyPrice)} HUF/yr
+          {formatPrice(quote.yearlyPrice)} Ft/év
         </span>
         <span className="text-sm text-muted-foreground ml-2">
-          {formatPrice(quote.monthlyPrice)} HUF/mo
+          {formatPrice(quote.monthlyPrice)} Ft/hó
         </span>
       </div>
 
       {/* Mini comparison bars */}
       <div className="space-y-1.5 mb-3">
-        <MiniBar label="Claims" value={claimsSpeed} max={5} />
-        <MiniBar label="Rating" value={Math.round(satisfaction)} max={5} />
+        <MiniBar label="Kárrendezés" value={claimsSpeed} max={5} />
+        <MiniBar label="Elégedettség" value={Math.round(satisfaction)} max={5} />
       </div>
 
       {/* Feature pills */}
@@ -101,7 +101,7 @@ const QuoteCard = ({ quote, isRecommended, onSelect }: QuoteCardProps) => {
           onClick={() => onSelect(quote.insurerName)}
           className="w-full py-2 rounded-lg border-2 border-primary text-primary font-semibold text-sm hover:bg-primary hover:text-primary-foreground hover:scale-105 transition-all duration-200"
         >
-          I choose this
+          Ezt választom →
         </button>
       )}
     </div>
