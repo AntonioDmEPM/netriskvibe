@@ -1,250 +1,193 @@
-import { useState, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import Navbar from "@/components/Navbar";
-import Omnibar from "@/components/Omnibar";
-import ThoughtLog, { ThoughtStep } from "@/components/ThoughtLog";
-import RecommendationCard, { Recommendation } from "@/components/RecommendationCard";
-import AgentFAB from "@/components/AgentFAB";
-import StatsBar from "@/components/StatsBar";
-import ComparisonChat from "@/components/ComparisonChat";
+import { useState, useCallback, useRef, useEffect } from "react";
+import { Menu, Sparkles, X } from "lucide-react";
+import AdvisorSidebar from "@/components/advisor/AdvisorSidebar";
+import ChatMessage, { type Message } from "@/components/advisor/ChatMessage";
+import ChatInput from "@/components/advisor/ChatInput";
+import TypingIndicator from "@/components/advisor/TypingIndicator";
+import { getFlow, genId, type Flow } from "@/lib/flows";
 
-const mockRecommendations: Recommendation[] = [
-  {
-    id: "1",
-    provider: "Allianz",
-    monthlyPrice: "$48",
-    yearlyPrice: "$576",
-    savings: "$110/yr",
-    badge: "Best Value",
-    badgeType: "best",
-    reason: "For your 2022 BMW and age group, this offers the optimal price-to-coverage ratio. Accident insurance and roadside assistance are the strongest here.",
-    highlights: [
-      "$0 deductible on glass damage",
-      "24-hour roadside assistance",
-      "Rental car coverage for up to 5 days",
-      "Supplemental accident insurance for driver",
-    ],
-    rating: 5,
-    coverage: "Full Coverage + Add-ons",
-  },
-  {
-    id: "2",
-    provider: "Generali",
-    monthlyPrice: "$42",
-    yearlyPrice: "$504",
-    savings: "$182/yr",
-    badge: "Cheapest",
-    badgeType: "cheapest",
-    reason: "If price is your top priority, this is the best choice. Provides adequate coverage for daily commuting with a basic package.",
-    highlights: [
-      "Basic roadside assistance",
-      "Online claims filing",
-      "Monthly payments with no surcharge",
-    ],
-    rating: 4,
-    coverage: "Basic Liability Package",
-  },
-  {
-    id: "3",
-    provider: "PostaInsurance",
-    monthlyPrice: "$43",
-    yearlyPrice: "$516",
-    badge: "Most Popular",
-    badgeType: "popular",
-    reason: "Most customers with a similar profile chose this option. A well-balanced package with excellent customer service and fast claims processing.",
-    highlights: [
-      "Fast claims processing (avg 5 business days)",
-      "Premium customer support",
-      "Legal protection add-on",
-      "Nationwide partner service network",
-    ],
-    rating: 4,
-    coverage: "Premium Liability Package",
-  },
-];
-
-const thoughtSteps: { text: string; icon: ThoughtStep["icon"] }[] = [
-  { text: "Retrieving vehicle data (2022 BMW)...", icon: "search" },
-  { text: "Analyzing quotes from 12 insurers...", icon: "analyze" },
-  { text: "Comparing value-for-money for your profile...", icon: "compare" },
-  { text: "Verifying coverage terms...", icon: "verify" },
-];
-
-type AppState = "idle" | "thinking" | "results";
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 const Index = () => {
-  const [appState, setAppState] = useState<AppState>("idle");
-  const [steps, setSteps] = useState<ThoughtStep[]>([]);
-  const [query, setQuery] = useState("");
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [isTyping, setIsTyping] = useState(false);
+  const [inputEnabled, setInputEnabled] = useState(false);
+  const [activeDemo, setActiveDemo] = useState<string | null>(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [lastMsgId, setLastMsgId] = useState<string | null>(null);
 
-  const simulateAgent = useCallback((userQuery: string) => {
-    setQuery(userQuery);
-    setAppState("thinking");
-    setSteps([]);
+  const flowRef = useRef<Flow | null>(null);
+  const turnRef = useRef(0);
+  const versionRef = useRef(0);
+  const bottomRef = useRef<HTMLDivElement>(null);
 
-    thoughtSteps.forEach((step, i) => {
-      setTimeout(() => {
-        setSteps((prev) => [
-          ...prev.map((s) => ({ ...s, status: "done" as const })),
-          { id: `step-${i}`, text: step.text, status: "thinking" as const, icon: step.icon },
-        ]);
-      }, i * 1200);
-    });
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, isTyping]);
 
-    setTimeout(() => {
-      setSteps((prev) => prev.map((s) => ({ ...s, status: "done" as const })));
-      setTimeout(() => setAppState("results"), 500);
-    }, thoughtSteps.length * 1200);
+  const processAgentTurn = useCallback(async (turn: (typeof flowRef.current extends Flow ? Flow[number] : never), version: number) => {
+    if (!turn) return;
+    setInputEnabled(false);
+    for (let i = 0; i < turn.messages.length; i++) {
+      if (versionRef.current !== version) return;
+      const msg = turn.messages[i];
+      setIsTyping(true);
+      await sleep(msg.delay ?? 1200);
+      if (versionRef.current !== version) return;
+      setIsTyping(false);
+      const id = genId();
+      setLastMsgId(id);
+      setMessages((prev) => [...prev, { id, role: 'agent', parts: msg.parts }]);
+      if (i < turn.messages.length - 1) await sleep(400);
+    }
+    if (versionRef.current === version) setInputEnabled(true);
+  }, []);
+
+  const startDemo = useCallback((id: string) => {
+    const version = ++versionRef.current;
+    const flow = getFlow(id);
+    flowRef.current = flow;
+    turnRef.current = 0;
+    setMessages([]);
+    setIsTyping(false);
+    setInputEnabled(false);
+    setActiveDemo(id);
+    setSidebarOpen(false);
+    setLastMsgId(null);
+    processAgentTurn(flow[0], version);
+  }, [processAgentTurn]);
+
+  const advanceTurn = useCallback(() => {
+    const flow = flowRef.current;
+    if (!flow) return;
+    const next = turnRef.current + 1;
+    if (next >= flow.length) return;
+    turnRef.current = next;
+    processAgentTurn(flow[next], versionRef.current);
+  }, [processAgentTurn]);
+
+  const handleSend = useCallback((text: string) => {
+    if (!flowRef.current) return;
+    const id = genId();
+    setMessages((prev) => [...prev, { id, role: 'user', parts: [{ type: 'text', content: text }] }]);
+    advanceTurn();
+  }, [advanceTurn]);
+
+  const handleQuoteSelect = useCallback((insurerName: string) => {
+    const id = genId();
+    setMessages((prev) => [...prev, { id, role: 'user', parts: [{ type: 'text', content: `Ezt választom: ${insurerName}` }] }]);
+    advanceTurn();
+  }, [advanceTurn]);
+
+  const handleSwitchConfirm = useCallback(() => {
+    advanceTurn();
+  }, [advanceTurn]);
+
+  const handleNewConversation = useCallback(() => {
+    ++versionRef.current;
+    flowRef.current = null;
+    turnRef.current = 0;
+    setMessages([]);
+    setIsTyping(false);
+    setInputEnabled(false);
+    setActiveDemo(null);
+    setSidebarOpen(false);
+    setLastMsgId(null);
   }, []);
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
+    <div className="h-screen flex bg-background overflow-hidden">
+      {/* Desktop sidebar */}
+      <aside className="hidden lg:block w-[280px] shrink-0">
+        <AdvisorSidebar
+          onNewConversation={handleNewConversation}
+          onStartDemo={startDemo}
+          activeDemo={activeDemo}
+        />
+      </aside>
 
-      <main className="pt-16">
-        <AnimatePresence mode="wait">
-          {appState === "idle" && (
-            <motion.div
-              key="hero"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0, y: -30 }}
-              transition={{ duration: 0.4 }}
-              className="flex flex-col items-center justify-center min-h-[calc(100vh-4rem)] px-4 sm:px-6 gap-10 sm:gap-12"
-            >
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 }}
-                className="text-center max-w-2xl"
-              >
-                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-foreground leading-tight mb-4">
-                  Looking for insurance?{" "}
-                  <span className="gradient-text">Just ask.</span>
-                </h1>
-                <p className="text-lg sm:text-xl text-muted-foreground leading-relaxed">
-                  Compare insurance quotes in a single sentence — our AI agent
-                  finds the best deal for you.
-                </p>
-              </motion.div>
+      {/* Mobile sidebar overlay */}
+      {sidebarOpen && (
+        <div className="lg:hidden fixed inset-0 z-50 flex">
+          <div className="absolute inset-0 bg-black/50" onClick={() => setSidebarOpen(false)} />
+          <div className="relative w-[280px] h-full">
+            <AdvisorSidebar
+              onNewConversation={handleNewConversation}
+              onStartDemo={startDemo}
+              activeDemo={activeDemo}
+            />
+          </div>
+        </div>
+      )}
 
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-                className="w-full"
-              >
-                <Omnibar onSubmit={simulateAgent} isProcessing={false} />
-              </motion.div>
+      {/* Main area */}
+      <div className="flex-1 flex flex-col min-w-0">
+        {/* Top bar */}
+        <div className="h-14 border-b border-border bg-card flex items-center px-4 shrink-0">
+          <button
+            onClick={() => setSidebarOpen(true)}
+            className="lg:hidden mr-3 p-1.5 rounded-lg hover:bg-muted transition-colors"
+          >
+            <Menu className="w-5 h-5 text-foreground" />
+          </button>
+          <h1 className="font-bold text-foreground">KGFB Tanácsadó</h1>
+          <span className="ml-2 text-[10px] font-medium bg-primary/10 text-primary px-2 py-0.5 rounded-full flex items-center gap-1">
+            <Sparkles className="w-3 h-3" />
+            AI-powered
+          </span>
+        </div>
 
-              <StatsBar />
-            </motion.div>
-          )}
-
-          {appState === "thinking" && (
-            <motion.div
-              key="thinking"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.4 }}
-              className="flex flex-col items-center justify-center min-h-[calc(100vh-4rem)] px-4 sm:px-6 gap-8"
-            >
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="text-center"
-              >
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
-                  <div className="flex gap-1">
-                    <div className="w-2 h-2 rounded-full bg-primary thinking-dot" />
-                    <div className="w-2 h-2 rounded-full bg-primary thinking-dot" />
-                    <div className="w-2 h-2 rounded-full bg-primary thinking-dot" />
-                  </div>
-                  Processing
-                </div>
-                <p className="text-sm text-muted-foreground max-w-md">
-                  "{query}"
-                </p>
-              </motion.div>
-
-              <ThoughtLog steps={steps} />
-            </motion.div>
-          )}
-
-          {appState === "results" && (
-            <motion.div
-              key="results"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="max-w-7xl mx-auto px-4 sm:px-6 pt-24 pb-20"
-            >
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="mb-8"
-              >
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="w-2 h-2 rounded-full bg-savings animate-pulse" />
-                  <span className="text-sm text-savings font-medium">
-                    3 quotes ready
-                  </span>
-                </div>
-                <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-1">
-                  Recommended insurance for you
-                </h2>
-                <p className="text-muted-foreground">
-                  "{query}"
-                </p>
-
-                <motion.button
-                  onClick={() => {
-                    setAppState("idle");
-                    setQuery("");
-                    setSteps([]);
-                  }}
-                  className="mt-4 text-sm text-primary hover:underline font-medium"
-                  whileHover={{ x: -3 }}
-                >
-                  ← New search
-                </motion.button>
-              </motion.div>
-
-              <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-                <div className="lg:col-span-3 space-y-4">
-                  {mockRecommendations.map((rec, i) => (
-                    <RecommendationCard key={rec.id} recommendation={rec} index={i} />
-                  ))}
-                </div>
-
-                <div className="lg:col-span-2 lg:sticky lg:top-24 lg:self-start">
-                  <ComparisonChat
-                    query={query}
-                    recommendations={mockRecommendations.map((r) => ({
-                      provider: r.provider,
-                      monthlyPrice: r.monthlyPrice,
-                      coverage: r.coverage,
-                      reason: r.reason,
-                      highlights: r.highlights,
-                    }))}
-                  />
-                </div>
+        {/* Messages area */}
+        <div className="flex-1 overflow-y-auto">
+          {messages.length === 0 && !isTyping ? (
+            /* Welcome screen */
+            <div className="flex flex-col items-center justify-center h-full px-6 text-center">
+              <div className="w-16 h-16 rounded-2xl bg-primary flex items-center justify-center text-primary-foreground text-2xl font-bold mb-4">
+                n
               </div>
-
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.8 }}
-                className="text-center text-xs text-muted-foreground mt-10"
-              >
-                Quotes are for informational purposes only. Final pricing will be determined after detailed data verification.
-              </motion.p>
-            </motion.div>
+              <h2 className="text-xl font-bold text-foreground mb-2">
+                Netrisk AI Tanácsadó
+              </h2>
+              <p className="text-sm text-muted-foreground mb-8 max-w-md">
+                Személyes AI biztosítási tanácsadó — válasszon egy demo forgatókönyvet az induláshoz.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3">
+                {[
+                  { id: 'returning', label: 'Visszatérő ügyfél', desc: 'Meglévő KÖBE szerződés összehasonlítása' },
+                  { id: 'new', label: 'Új ügyfél', desc: 'Első kötelező biztosítás keresése' },
+                  { id: 'advisory', label: 'Tanácsadás', desc: 'Kérdés az ajánlatokról' },
+                ].map((d) => (
+                  <button
+                    key={d.id}
+                    onClick={() => startDemo(d.id)}
+                    className="px-5 py-4 rounded-xl border border-border bg-card hover:border-primary/30 hover:shadow-md transition-all text-left max-w-[220px]"
+                  >
+                    <p className="font-semibold text-foreground text-sm mb-1">{d.label}</p>
+                    <p className="text-xs text-muted-foreground">{d.desc}</p>
+                  </button>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <div className="max-w-3xl mx-auto px-4 py-6 space-y-4">
+              {messages.map((msg) => (
+                <ChatMessage
+                  key={msg.id}
+                  message={msg}
+                  animate={msg.id === lastMsgId}
+                  onQuoteSelect={handleQuoteSelect}
+                  onSwitchConfirm={handleSwitchConfirm}
+                />
+              ))}
+              {isTyping && <TypingIndicator />}
+              <div ref={bottomRef} />
+            </div>
           )}
-        </AnimatePresence>
-      </main>
+        </div>
 
-      {appState !== "results" && <AgentFAB />}
+        {/* Input area */}
+        <ChatInput onSend={handleSend} disabled={!inputEnabled} />
+      </div>
     </div>
   );
 };
