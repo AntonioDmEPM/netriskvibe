@@ -331,7 +331,11 @@ const ConversationOverlay = ({ flowId, initialMessage, onClose, onTurnChange }: 
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: "100%", opacity: 0.5 }}
             transition={{ type: "spring", damping: 28, stiffness: 300, mass: 0.8 }}
-            className="relative w-full sm:max-w-3xl h-[92vh] sm:h-[85vh] bg-background sm:rounded-2xl shadow-2xl flex flex-col overflow-hidden"
+            className={`relative w-full bg-background shadow-2xl flex flex-col overflow-hidden transition-all duration-300 ${
+              isFullscreen
+                ? "h-full max-w-none rounded-none"
+                : "sm:max-w-3xl h-[92vh] sm:h-[85vh] sm:rounded-2xl"
+            }`}
           >
             {showConfetti && <ConfettiEffect />}
 
