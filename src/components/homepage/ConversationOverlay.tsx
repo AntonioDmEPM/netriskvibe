@@ -255,7 +255,7 @@ const ConversationOverlay = ({ flowId, initialMessage, onClose, onTurnChange }: 
                       }
                     }
                   }}
-                  placeholder="Írjon üzenetet..."
+                  placeholder={t("overlay.input")}
                   disabled={!inputEnabled}
                   className="flex-1 bg-muted rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-primary/20 transition-all disabled:opacity-50"
                 />
