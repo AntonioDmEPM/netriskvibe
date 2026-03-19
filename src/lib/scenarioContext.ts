@@ -75,7 +75,7 @@ function getReturningScenario(lang: Lang): ScenarioConfig {
       yearsAsNetriskCustomer: profileA.yearsAsCustomer,
     },
     allQuotes: buildTopQuoteSummary(all),
-    allInsurerKnowledge: getInsurerKnowledge(),
+    allInsurerKnowledge: getInsurerKnowledge(lang),
     marketStats,
     dataComplete: true,
   };
