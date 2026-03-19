@@ -2,10 +2,10 @@ import { motion } from "framer-motion";
 import { Users, TrendingDown, Clock, Shield } from "lucide-react";
 
 const stats = [
-  { icon: Users, value: "150,000+", label: "Elégedett ügyfél" },
-  { icon: TrendingDown, value: "35%", label: "Átlagos megtakarítás" },
-  { icon: Clock, value: "90 mp", label: "Átlagos keresési idő" },
-  { icon: Shield, value: "12+", label: "Biztosító partner" },
+  { icon: Users, value: "150,000+", label: "Happy customers" },
+  { icon: TrendingDown, value: "35%", label: "Average savings" },
+  { icon: Clock, value: "90 sec", label: "Average search time" },
+  { icon: Shield, value: "12+", label: "Insurance partners" },
 ];
 
 const StatsBar = () => {

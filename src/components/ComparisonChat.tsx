@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Send, Bot, User, Sparkles } from "lucide-react";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 interface ChatMessage {
   id: string;
@@ -15,42 +16,45 @@ interface ComparisonChatProps {
 }
 
 const fakeResponses: Record<string, string> = {
-  default: `Szívesen segítek összehasonlítani az ajánlatokat! Kérdezzen bármit a biztosításokról, például:
-- Melyik biztosító nyújtja a legjobb assistance-t?
-- Mi a különbség az alap és prémium csomag között?
-- Melyiket ajánlja fiatal sofőröknek?`,
-  allianz: `Az **Allianz Hungária** erősségei:
-- ✅ **0 Ft önrész** üvegkár esetén — ez ritka a piacon
-- ✅ **24 órás assistance** + 5 napos bérautó
-- ✅ Kiegészítő balesetbiztosítás a sofőrnek
+  default: `Happy to help you compare these quotes! You can ask me anything, for example:
 
-Hátránya: havi **12 450 Ft**, ami a legmagasabb a három közül. De ha az Ön számára fontos a teljes védelem, ez a legjobb ár-érték arány.`,
-  generali: `A **Generali** a legolcsóbb ajánlat (**10 890 Ft/hó**), de kompromisszumokkal:
-- ✅ Alap assistance csomag
-- ✅ Havi díjfizetés **felár nélkül**
-- ⚠️ Nincs bérautó biztosítás
-- ⚠️ Alap szintű kárrendezés
+- Which insurer has the best roadside assistance?
+- What's the difference between basic and premium packages?
+- Which one do you recommend for young drivers?`,
+  allianz: `**Allianz Hungary** strengths:
 
-Ha az ár a legfontosabb és ritkán vezet, ez jó választás.`,
-  különbség: `### Gyors összehasonlítás
+- ✅ **$0 deductible** on glass damage — rare in the market
+- ✅ **24-hour roadside assistance** + 5-day rental car
+- ✅ Supplemental accident insurance for the driver
 
-| | Allianz | Generali | Magyar Posta |
+Downside: at **$48/mo**, it's the most expensive of the three. But if full coverage matters to you, this is the best value.`,
+  generali: `**Generali** is the cheapest option (**$42/mo**), but with trade-offs:
+
+- ✅ Basic roadside assistance
+- ✅ Monthly payments with **no surcharge**
+- ⚠️ No rental car coverage
+- ⚠️ Basic-level claims processing
+
+If price is your top priority and you drive infrequently, this is a good pick.`,
+  compare: `### Quick Comparison
+
+| | Allianz | Generali | PostaInsurance |
 |---|---|---|---|
-| **Havi díj** | 12 450 Ft | 10 890 Ft | 11 200 Ft |
-| **Assistance** | Prémium | Alap | Közép |
-| **Bérautó** | ✅ 5 nap | ❌ | ❌ |
-| **Kárrendezés** | Átlag 7 nap | Átlag 10 nap | Átlag 5 nap |
-| **Üvegkár** | 0 Ft önrész | 20% önrész | 10% önrész |
+| **Monthly** | $48 | $42 | $43 |
+| **Assistance** | Premium | Basic | Mid-tier |
+| **Rental Car** | ✅ 5 days | ❌ | ❌ |
+| **Claims** | Avg 7 days | Avg 10 days | Avg 5 days |
+| **Glass Damage** | $0 deductible | 20% deductible | 10% deductible |
 
-👉 **Ajánlásom:** Ha fontos a gyors kárrendezés → Magyar Posta. Ha teljes védelem kell → Allianz. Ha takarékoskodna → Generali.`,
+👉 **My recommendation:** Fast claims processing → PostaInsurance. Full protection → Allianz. Budget-friendly → Generali.`,
 };
 
 function getResponse(input: string): string {
   const lower = input.toLowerCase();
   if (lower.includes("allianz")) return fakeResponses.allianz;
   if (lower.includes("generali")) return fakeResponses.generali;
-  if (lower.includes("különbség") || lower.includes("összehasonl") || lower.includes("hasonlít") || lower.includes("compare"))
-    return fakeResponses.különbség;
+  if (lower.includes("difference") || lower.includes("compare") || lower.includes("comparison") || lower.includes("between"))
+    return fakeResponses.compare;
   return fakeResponses.default;
 }
 
@@ -59,7 +63,7 @@ const ComparisonChat = ({ query, recommendations }: ComparisonChatProps) => {
     {
       id: "welcome",
       role: "assistant",
-      content: `Megtaláltam a legjobb ajánlatokat a kérésére. Kérdezzen bármit az eredményekről — összehasonlítom, elmagyarázom a különbségeket, vagy segítek választani!`,
+      content: `I've found the best quotes for your request. Ask me anything about the results — I can compare them, explain differences, or help you choose!`,
     },
   ]);
   const [input, setInput] = useState("");
@@ -85,7 +89,6 @@ const ComparisonChat = ({ query, recommendations }: ComparisonChatProps) => {
     setInput("");
     setIsTyping(true);
 
-    // Simulate AI response
     setTimeout(() => {
       const response = getResponse(userInput);
       const aiMsg: ChatMessage = {
@@ -106,9 +109,9 @@ const ComparisonChat = ({ query, recommendations }: ComparisonChatProps) => {
   };
 
   const quickQuestions = [
-    "Mi a különbség a három ajánlat között?",
-    "Melyiket ajánlja, ha fontos a gyors kárrendezés?",
-    "Meséljen az Allianz csomagról részletesebben",
+    "What's the difference between the three quotes?",
+    "Which one is best for fast claims processing?",
+    "Tell me more about the Allianz package",
   ];
 
   return (
@@ -125,8 +128,8 @@ const ComparisonChat = ({ query, recommendations }: ComparisonChatProps) => {
           <Bot className="w-4 h-4 text-primary" />
         </div>
         <div>
-          <p className="text-sm font-semibold text-foreground">AI Tanácsadó</p>
-          <p className="text-xs text-muted-foreground">Kérdezzen az ajánlatokról</p>
+          <p className="text-sm font-semibold text-foreground">AI Advisor</p>
+          <p className="text-xs text-muted-foreground">Ask about the quotes</p>
         </div>
         <div className="ml-auto flex items-center gap-1.5">
           <div className="w-2 h-2 rounded-full bg-savings animate-pulse" />
@@ -158,8 +161,8 @@ const ComparisonChat = ({ query, recommendations }: ComparisonChatProps) => {
                 }`}
               >
                 {msg.role === "assistant" ? (
-                  <div className="prose prose-sm max-w-none [&_p]:my-1 [&_ul]:my-1 [&_li]:my-0.5 [&_table]:my-2 [&_h3]:text-sm [&_h3]:font-bold [&_h3]:mt-2 [&_h3]:mb-1 [&_strong]:text-foreground [&_th]:text-xs [&_td]:text-xs [&_th]:px-2 [&_td]:px-2 [&_th]:py-1 [&_td]:py-1">
-                    <ReactMarkdown>{msg.content}</ReactMarkdown>
+                  <div className="prose prose-sm max-w-none [&_p]:my-1.5 [&_ul]:my-1.5 [&_ol]:my-1.5 [&_li]:my-0.5 [&_h3]:text-sm [&_h3]:font-bold [&_h3]:mt-3 [&_h3]:mb-1.5 [&_strong]:text-foreground [&_table]:my-3 [&_table]:w-full [&_table]:text-xs [&_table]:border-collapse [&_th]:px-2 [&_th]:py-1.5 [&_th]:text-left [&_th]:font-semibold [&_th]:border-b [&_th]:border-border [&_td]:px-2 [&_td]:py-1.5 [&_td]:border-b [&_td]:border-border/50 [&_tr:last-child_td]:border-b-0 [&_thead]:bg-card/50">
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>{msg.content}</ReactMarkdown>
                   </div>
                 ) : (
                   msg.content
@@ -191,7 +194,6 @@ const ComparisonChat = ({ query, recommendations }: ComparisonChatProps) => {
           </motion.div>
         )}
 
-        {/* Quick questions after welcome */}
         {messages.length === 1 && !isTyping && (
           <motion.div
             initial={{ opacity: 0, y: 10 }}
@@ -229,7 +231,7 @@ const ComparisonChat = ({ query, recommendations }: ComparisonChatProps) => {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Kérdezzen az ajánlatokról..."
+            placeholder="Ask about the quotes..."
             className="flex-1 bg-muted rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-primary/20 transition-all"
             disabled={isTyping}
           />

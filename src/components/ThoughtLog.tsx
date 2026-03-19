@@ -25,7 +25,7 @@ const ThoughtLog = ({ steps }: { steps: ThoughtStep[] }) => {
       <div className="flex items-center gap-2 mb-3">
         <Brain className="w-4 h-4 text-primary" />
         <span className="text-sm font-medium text-muted-foreground">
-          Az ügynök gondolkodik...
+          Agent is thinking...
         </span>
       </div>
       <div className="space-y-2">
