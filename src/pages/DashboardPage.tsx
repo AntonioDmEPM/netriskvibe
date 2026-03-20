@@ -3,7 +3,7 @@ import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import ActivityFeed from "@/components/dashboard/ActivityFeed";
 import ContractList from "@/components/dashboard/ContractList";
 import SavingsChart from "@/components/dashboard/SavingsChart";
-import NegotiationDemo from "@/components/dashboard/NegotiationDemo";
+
 import ContractDetailPanel from "@/components/dashboard/ContractDetailPanel";
 import FloatingAgentIndicator from "@/components/dashboard/FloatingAgentIndicator";
 import { type Contract } from "@/components/dashboard/contractData";
