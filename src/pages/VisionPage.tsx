@@ -1,5 +1,6 @@
 import VisionHero from "@/components/vision/VisionHero";
 import EvolutionSection from "@/components/vision/EvolutionSection";
+import MarketGapSection from "@/components/vision/MarketGapSection";
 import ArchitectureSection from "@/components/vision/ArchitectureSection";
 import RegulatorySection from "@/components/vision/RegulatorySection";
 import RevenueSection from "@/components/vision/RevenueSection";
@@ -15,6 +16,7 @@ const VisionPage = ({ onSwitchTab }: VisionPageProps) => (
   <div className="min-h-screen bg-background">
     <VisionHero />
     <EvolutionSection />
+    <MarketGapSection />
     <ArchitectureSection />
     <RegulatorySection />
     <RevenueSection />
