@@ -1,26 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import ScrollReveal from "@/components/homepage/ScrollReveal";
-
-const models = [
-  {
-    title: "Savings Share",
-    price: "30-40% of first year savings",
-    bullets: ["Aligned incentives", "Harder to scale"],
-    recommended: false,
-  },
-  {
-    title: "Subscription",
-    price: "3 000–5 000 Ft/month premium",
-    bullets: ["Predictable revenue", "High-value relationship"],
-    recommended: true,
-  },
-  {
-    title: "Freemium + Affiliate Hybrid",
-    price: "Free monitoring → Paid switching",
-    bullets: ["Free: monitoring + alerts (earns affiliate commission)", "Premium: autonomous switching + negotiation", "Best of both worlds"],
-    recommended: false,
-  },
-];
+import { useI18n } from "@/lib/i18n";
 
 function useCountUp(target: number, duration: number, trigger: boolean) {
   const [value, setValue] = useState(0);
@@ -38,8 +18,37 @@ function useCountUp(target: number, duration: number, trigger: boolean) {
 }
 
 const RevenueSection = () => {
+  const { lang } = useI18n();
   const ref = useRef<HTMLDivElement>(null);
   const [triggered, setTriggered] = useState(false);
+  const bn = lang === "hu" ? "Mrd" : "Bn";
+
+  const models = [
+    {
+      title: lang === "hu" ? "Megtakarítás részesedés" : "Savings Share",
+      price: lang === "hu" ? "Első éves megtakarítás 30-40%-a" : "30-40% of first year savings",
+      bullets: lang === "hu"
+        ? ["Összehangolt ösztönzők", "Nehezebb skálázni"]
+        : ["Aligned incentives", "Harder to scale"],
+      recommended: false,
+    },
+    {
+      title: lang === "hu" ? "Előfizetés" : "Subscription",
+      price: lang === "hu" ? "3 000–5 000 Ft/hó prémium" : "3,000–5,000 Ft/month premium",
+      bullets: lang === "hu"
+        ? ["Kiszámítható bevétel", "Magas értékű kapcsolat"]
+        : ["Predictable revenue", "High-value relationship"],
+      recommended: true,
+    },
+    {
+      title: lang === "hu" ? "Freemium + Affiliate hibrid" : "Freemium + Affiliate Hybrid",
+      price: lang === "hu" ? "Ingyenes figyelés → Fizetős váltás" : "Free monitoring → Paid switching",
+      bullets: lang === "hu"
+        ? ["Ingyenes: figyelés + riasztások (affiliate jutalék)", "Prémium: autonóm váltás + tárgyalás", "Mindkét világ előnyei"]
+        : ["Free: monitoring + alerts (earns affiliate commission)", "Premium: autonomous switching + negotiation", "Best of both worlds"],
+      recommended: false,
+    },
+  ];
 
   useEffect(() => {
     const el = ref.current;
@@ -57,10 +66,10 @@ const RevenueSection = () => {
       <div className="max-w-5xl mx-auto px-6">
         <ScrollReveal>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-foreground text-center mb-4 tracking-tight">
-            Revenue Sizing
+            {lang === "hu" ? "Bevételi méretezés" : "Revenue Sizing"}
           </h2>
           <p className="text-muted-foreground text-center mb-16 max-w-lg mx-auto">
-            Three monetisation models — one clear winner
+            {lang === "hu" ? "Három monetizációs modell — egy egyértelmű győztes" : "Three monetisation models — one clear winner"}
           </p>
         </ScrollReveal>
 
@@ -74,7 +83,7 @@ const RevenueSection = () => {
               }`}>
                 {m.recommended && (
                   <span className="absolute -top-3 left-6 text-[10px] font-bold tracking-widest px-3 py-1 rounded-full bg-primary text-primary-foreground">
-                    RECOMMENDED
+                    {lang === "hu" ? "AJÁNLOTT" : "RECOMMENDED"}
                   </span>
                 )}
                 <h3 className="text-lg font-bold text-foreground mb-2">{m.title}</h3>
@@ -94,14 +103,18 @@ const RevenueSection = () => {
         <ScrollReveal delay={350}>
           <div className="rounded-2xl border border-border bg-card p-6 sm:p-8 max-w-2xl mx-auto">
             <p className="text-xs font-bold tracking-widest text-muted-foreground uppercase mb-4 text-center">
-              TAM Calculation
+              {lang === "hu" ? "TAM számítás" : "TAM Calculation"}
             </p>
             <div className="space-y-2 text-center">
               <p className="text-sm text-foreground">
-                4M Hungarian households × 75 000 Ft avg captured savings = <span className="font-extrabold text-primary tabular-nums">{tam} Mrd Ft TAM (~€750M)</span>
+                {lang === "hu"
+                  ? <>4M magyar háztartás × 75 000 Ft átlagos megtakarítás = <span className="font-extrabold text-primary tabular-nums">{tam} {bn} Ft TAM (~€750M)</span></>
+                  : <>4M Hungarian households × 75,000 Ft avg captured savings = <span className="font-extrabold text-primary tabular-nums">{tam} {bn} Ft TAM (~€750M)</span></>}
               </p>
               <p className="text-sm text-foreground">
-                200K subscribers × 75 000 Ft/year = <span className="font-extrabold text-primary tabular-nums">{arr} Mrd Ft</span> revenue potential
+                {lang === "hu"
+                  ? <>200K előfizető × 75 000 Ft/év = <span className="font-extrabold text-primary tabular-nums">{arr} {bn} Ft</span> bevételi potenciál</>
+                  : <>200K subscribers × 75,000 Ft/year = <span className="font-extrabold text-primary tabular-nums">{arr} {bn} Ft</span> revenue potential</>}
               </p>
             </div>
           </div>

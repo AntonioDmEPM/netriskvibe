@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useI18n } from "@/lib/i18n";
 
 function useCountUp(target: number, duration: number, trigger: boolean) {
   const [value, setValue] = useState(0);
@@ -17,15 +18,16 @@ function useCountUp(target: number, duration: number, trigger: boolean) {
   return value;
 }
 
-const stats = [
-  { target: 350, prefix: "", suffix: " 000+ Ft", label: "average annual household overpayment in Hungary" },
-  { target: 8, prefix: "6-", suffix: "", label: "recurring contracts per household to optimize" },
-  { target: 4, prefix: "", suffix: " millió", label: "Hungarian households addressable" },
-];
-
 const VisionHero = () => {
+  const { lang } = useI18n();
   const ref = useRef<HTMLDivElement>(null);
   const [triggered, setTriggered] = useState(false);
+
+  const stats = [
+    { target: 350, prefix: "", suffix: " 000+ Ft", label: lang === "hu" ? "átlagos éves háztartási túlfizetés Magyarországon" : "average annual household overpayment in Hungary" },
+    { target: 8, prefix: "6-", suffix: "", label: lang === "hu" ? "optimalizálható visszatérő szerződés háztartásonként" : "recurring contracts per household to optimize" },
+    { target: 4, prefix: "", suffix: lang === "hu" ? " millió" : " million", label: lang === "hu" ? "elérhető magyar háztartás" : "Hungarian households addressable" },
+  ];
 
   useEffect(() => {
     const el = ref.current;
@@ -58,7 +60,9 @@ const VisionHero = () => {
           From compare-and-click to set-and-forget
         </p>
         <p className="text-base sm:text-lg font-semibold mb-16" style={{ color: "#00A651" }}>
-          Nem megmutatjuk a legjobb ajánlatot. Megszerezzük.
+          {lang === "hu"
+            ? "Nem megmutatjuk a legjobb ajánlatot. Megszerezzük."
+            : "We don't show you the best deal. We get it for you."}
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-12 max-w-3xl mx-auto">
