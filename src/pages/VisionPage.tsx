@@ -28,6 +28,7 @@ const VisionPage = ({ onSwitchTab }: VisionPageProps) => (
     <ProjectionSection />
     <MarketOpportunitySection />
     <RoadmapSection />
+    <SuccessMetricsSection />
     <ClosingCTA onSwitchTab={onSwitchTab} />
   </div>
 );
