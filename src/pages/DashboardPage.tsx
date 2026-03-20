@@ -41,8 +41,27 @@ const DashboardPage = ({ onSwitchTab }: DashboardPageProps) => {
     }
   }, []);
 
+  const { lang } = useI18n();
+
   return (
     <div className="min-h-screen bg-background">
+      {/* Breadcrumb navigation */}
+      {onSwitchTab && (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-0 flex items-center justify-between text-sm">
+          <button
+            onClick={() => onSwitchTab("netrisk")}
+            className="text-muted-foreground hover:text-foreground transition-colors"
+          >
+            ← {lang === "hu" ? "Vissza a Netrisk főoldalra" : "Back to Netrisk homepage"}
+          </button>
+          <button
+            onClick={() => onSwitchTab("vision")}
+            className="text-muted-foreground hover:text-foreground transition-colors"
+          >
+            {lang === "hu" ? "Az architektúra megtekintése" : "View the architecture"} →
+          </button>
+        </div>
+      )}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <DashboardHeader optimizedCount={optimizedCount} optimizedProgress={optimizedProgress} />
 
