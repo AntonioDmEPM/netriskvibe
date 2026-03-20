@@ -25,19 +25,26 @@ const TopNavBar = ({ activeTab, onTabChange }: TopNavBarProps) => {
         ◆ EPAM Applied AI
       </span>
 
-      <div className="flex items-center gap-1">
+      <div className="flex items-center gap-0.5">
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => onTabChange(tab.id)}
             className={cn(
-              "rounded-full px-3 py-1 text-[12px] font-medium transition-colors",
+              "relative px-3 py-1 text-[12px] font-medium transition-colors rounded-t-md",
               activeTab === tab.id
-                ? "bg-primary text-primary-foreground"
-                : "text-white/60 hover:text-white hover:bg-white/10"
+                ? "text-white font-bold"
+                : "text-white/50 hover:text-white/80"
             )}
           >
             {tab.label}
+            {/* Active indicator line */}
+            {activeTab === tab.id && (
+              <span
+                className="absolute bottom-0 left-2 right-2 h-[2px] rounded-full"
+                style={{ background: "hsl(153 100% 33%)" }}
+              />
+            )}
           </button>
         ))}
       </div>

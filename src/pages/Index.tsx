@@ -13,8 +13,14 @@ import AdvisorFAB from "@/components/homepage/AdvisorFAB";
 import PresenterBar from "@/components/homepage/PresenterBar";
 import AgentPanel from "@/components/homepage/AgentPanel";
 import { type AgentName, getAgentEvents, type TurnAgentEvents } from "@/lib/agentEvents";
+import { type DemoTab } from "@/components/TopNavBar";
+import { useI18n } from "@/lib/i18n";
 
-const Index = () => {
+interface IndexProps {
+  onSwitchTab?: (tab: DemoTab) => void;
+}
+
+const Index = ({ onSwitchTab }: IndexProps) => {
   const [overlay, setOverlay] = useState<{ flowId: string; initialMessage?: string } | null>(null);
   const [isReturning, setIsReturning] = useState(false);
   const [presenterMode, setPresenterMode] = useState(false);
@@ -57,8 +63,23 @@ const Index = () => {
 
   const topOffset = presenterMode ? "2.5rem" : "2.25rem";
 
+  const { lang } = useI18n();
+
   return (
     <div className="min-h-screen bg-background">
+      {/* Cross-link banner to Dashboard */}
+      {onSwitchTab && (
+        <div className="bg-secondary text-secondary-foreground text-center py-2 px-4 text-sm">
+          <span>💡 {lang === "hu" ? "Nézze meg, hogyan működik a teljes pénzügyi ügynök → " : "See how the full financial agent works → "}</span>
+          <button
+            onClick={() => onSwitchTab("dashboard")}
+            className="font-bold text-primary underline underline-offset-2 hover:text-primary/80 transition-colors"
+          >
+            Dashboard
+          </button>
+        </div>
+      )}
+
       {presenterMode && (
         <PresenterBar onStartFlow={openOverlay} onReset={handleReset} />
       )}
