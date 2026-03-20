@@ -1,58 +1,54 @@
 import ScrollReveal from "@/components/homepage/ScrollReveal";
 import { ArrowRight } from "lucide-react";
-import { useI18n } from "@/lib/i18n";
+
+const todayMetrics = [
+  { label: "Revenue per household", value: "€30–€75" },
+  { label: "Model", value: "One-time CPA commission" },
+  { label: "Customer engagement", value: "Once/year at renewal" },
+  { label: "Return rate", value: "~20%" },
+  { label: "Lifetime value", value: "€50–€125" },
+  { label: "Defensibility", value: "Low" },
+];
+
+const tomorrowMetrics = [
+  { label: "Revenue per household", value: "€188–€375/year", highlight: true },
+  { label: "Model", value: "50% of verified savings — recurring" },
+  { label: "Customer engagement", value: "Continuous (daily monitoring)" },
+  { label: "Retention", value: "70–85% annual" },
+  { label: "Lifetime value", value: "€550–€700" },
+  { label: "Defensibility", value: "High (agent has full financial picture)" },
+];
+
+const bottomStats = [
+  { big: "€263", sub: "Contribution margin per household (79%)" },
+  { big: "<2 months", sub: "CAC payback" },
+  { big: "13–30x", sub: "LTV:CAC ratio" },
+];
 
 const RevenueTransformationSection = () => {
-  const { lang } = useI18n();
-
-  const todayMetrics = [
-    { label: lang === "hu" ? "Bevétel háztartásonként" : "Revenue per household", value: "12 000–30 000 Ft" },
-    { label: lang === "hu" ? "Modell" : "Model", value: lang === "hu" ? "Egyszeri CPA jutalék" : "One-time CPA commission" },
-    { label: lang === "hu" ? "Ügyfél-interakció" : "Customer engagement", value: lang === "hu" ? "Évente egyszer, megújításkor" : "Once/year at renewal" },
-    { label: lang === "hu" ? "Visszatérési ráta" : "Return rate", value: "~20%" },
-    { label: lang === "hu" ? "Életciklus érték" : "Lifetime value", value: "20 000–50 000 Ft" },
-    { label: lang === "hu" ? "Védhetőség" : "Defensibility", value: lang === "hu" ? "Alacsony" : "Low" },
-  ];
-
-  const tomorrowMetrics = [
-    { label: lang === "hu" ? "Bevétel háztartásonként" : "Revenue per household", value: "75 000–150 000 Ft/year", highlight: true },
-    { label: lang === "hu" ? "Modell" : "Model", value: lang === "hu" ? "Igazolt megtakarítás 50%-a — visszatérő" : "50% of verified savings — recurring" },
-    { label: lang === "hu" ? "Ügyfél-interakció" : "Customer engagement", value: lang === "hu" ? "Folyamatos (napi figyelés)" : "Continuous (daily monitoring)" },
-    { label: lang === "hu" ? "Megtartás" : "Retention", value: lang === "hu" ? "70–85% éves" : "70–85% annual" },
-    { label: lang === "hu" ? "Életciklus érték" : "Lifetime value", value: "220 000–280 000 Ft" },
-    { label: lang === "hu" ? "Védhetőség" : "Defensibility", value: lang === "hu" ? "Magas (az ágens átlátja a teljes pénzügyi képet)" : "High (agent has full financial picture)" },
-  ];
-
-  const bottomStats = [
-    { big: "105 000 Ft", sub: lang === "hu" ? "Hozzájárulási margin háztartásonként (79%)" : "Contribution margin per household (79%)" },
-    { big: "<2 months", sub: lang === "hu" ? "CAC megtérülés" : "CAC payback" },
-    { big: "13–30x", sub: lang === "hu" ? "LTV:CAC arány" : "LTV:CAC ratio" },
-  ];
-
   return (
     <section className="py-24 sm:py-32 bg-section-bg">
       <div className="max-w-6xl mx-auto px-6">
         <ScrollReveal>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-foreground text-center mb-3 tracking-tight">
-            {lang === "hu" ? "Egyszeri kattintásokból visszatérő kapcsolatok" : "From One-Time Clicks to Recurring Relationships"}
+            From One-Time Clicks to Recurring Relationships
           </h2>
           <p className="text-muted-foreground text-center mb-14 max-w-2xl mx-auto text-balance">
-            {lang === "hu" ? "Hogyan alakítja át az ágens modell az egységgazdaságtant" : "How the agent model transforms unit economics"}
+            How the agent model transforms unit economics
           </p>
         </ScrollReveal>
 
         <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-4 md:gap-0 items-stretch mb-16">
-          {/* TODAY card */}
           <ScrollReveal delay={80}>
             <div className="h-full rounded-2xl border border-border bg-card p-6 sm:p-8 opacity-60">
               <span className="inline-block text-[10px] font-bold tracking-widest uppercase text-muted-foreground bg-muted px-3 py-1 rounded-full mb-5">
-                {lang === "hu" ? "Jelenlegi modell" : "Current model"}
+                Current model
               </span>
               <h3 className="text-lg font-bold text-foreground mb-1">
-                {lang === "hu" ? "Ma: Ár-összehasonlítás" : "Today: Price Comparison"}
+                Today: Price Comparison
               </h3>
               <p className="text-2xl sm:text-3xl font-extrabold text-foreground/70 tabular-nums mt-3 mb-5">
-                12 000–30 000 Ft
+                €30–€75
               </p>
               <ul className="space-y-3">
                 {todayMetrics.slice(1).map((m, i) => (
@@ -65,7 +61,6 @@ const RevenueTransformationSection = () => {
             </div>
           </ScrollReveal>
 
-          {/* Arrow */}
           <ScrollReveal delay={200}>
             <div className="flex md:flex-col items-center justify-center py-4 md:py-0 md:px-6">
               <div className="flex items-center gap-2 md:flex-col md:gap-3">
@@ -77,18 +72,17 @@ const RevenueTransformationSection = () => {
             </div>
           </ScrollReveal>
 
-          {/* TOMORROW card */}
           <ScrollReveal delay={120}>
             <div className="relative h-full rounded-2xl border-2 border-primary/40 bg-card p-6 sm:p-8 shadow-xl shadow-primary/5">
               <div className="absolute -inset-px rounded-2xl bg-gradient-to-b from-primary/8 to-transparent pointer-events-none" />
               <span className="inline-block text-[10px] font-bold tracking-widest uppercase text-primary-foreground bg-primary px-3 py-1 rounded-full mb-5 relative z-10">
-                {lang === "hu" ? "Ágens modell" : "Agent model"}
+                Agent model
               </span>
               <h3 className="text-lg font-bold text-foreground mb-1 relative z-10">
-                {lang === "hu" ? "Holnap: Autonóm ágens" : "Tomorrow: Autonomous Agent"}
+                Tomorrow: Autonomous Agent
               </h3>
               <p className="text-2xl sm:text-3xl font-extrabold text-primary tabular-nums mt-3 mb-5 relative z-10">
-                75 000–150 000 Ft<span className="text-lg font-bold text-primary/70">/year</span>
+                €188–€375<span className="text-lg font-bold text-primary/70">/year</span>
               </p>
               <ul className="space-y-3 relative z-10">
                 {tomorrowMetrics.slice(1).map((m, i) => (
@@ -102,7 +96,6 @@ const RevenueTransformationSection = () => {
           </ScrollReveal>
         </div>
 
-        {/* Bottom stats */}
         <ScrollReveal delay={250}>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
             {bottomStats.map((s, i) => (
@@ -116,9 +109,7 @@ const RevenueTransformationSection = () => {
 
         <ScrollReveal delay={300}>
           <p className="text-sm text-muted-foreground text-center max-w-2xl mx-auto italic leading-relaxed">
-            {lang === "hu"
-              ? "A modell azért működik, mert a fogyasztók nem fizetnek semmit. A soha meg nem talált megtakarítások 50%-a tiszta nyereség. Az ágens a tétlenségből teremt értéket."
-              : "The model works because consumers pay nothing. 50% of savings they never would have found is pure upside. The agent creates value from inaction."}
+            The model works because consumers pay nothing. 50% of savings they never would have found is pure upside. The agent creates value from inaction.
           </p>
         </ScrollReveal>
       </div>

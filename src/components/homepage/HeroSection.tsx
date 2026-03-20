@@ -289,7 +289,7 @@ const HeroSection = ({ onStartFlow, isReturning }: HeroSectionProps) => {
                     </div>
                     <div className="ml-auto text-right">
                       <p className="text-xs text-muted-foreground">{t("data.estvalue")}</p>
-                      <p className="text-sm font-semibold text-foreground">{formatPrice(v.value_huf)} Ft</p>
+                      <p className="text-sm font-semibold text-foreground">€{formatPrice(v.value_eur)}</p>
                     </div>
                   </div>
 

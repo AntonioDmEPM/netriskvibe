@@ -1,32 +1,26 @@
 import ScrollReveal from "@/components/homepage/ScrollReveal";
-import { useI18n } from "@/lib/i18n";
+
+const events = [
+  { year: "2018", label: "PSD2 / Open Banking", region: "EU", highlight: false },
+  { year: "2023", label: "MNB Consumer Protection focus", region: "Hungary", highlight: false },
+  { year: "2024", label: "PSD3 draft", region: "EU", highlight: false },
+  { year: "2025–26", label: "PSD3 + FiDA", region: "EU", highlight: true },
+  { year: "2027+", label: "Open Finance", region: "Insurance, Pensions, Investments", highlight: false },
+];
 
 const RegulatorySection = () => {
-  const { lang } = useI18n();
-
-  const events = [
-    { year: "2018", label: "PSD2 / Open Banking", region: lang === "hu" ? "EU" : "EU", highlight: false },
-    { year: "2023", label: lang === "hu" ? "MNB fogyasztóvédelmi fókusz" : "MNB Consumer Protection focus", region: lang === "hu" ? "Magyarország" : "Hungary", highlight: false },
-    { year: "2024", label: lang === "hu" ? "PSD3 tervezet" : "PSD3 draft", region: lang === "hu" ? "EU" : "EU", highlight: false },
-    { year: "2025–26", label: "PSD3 + FiDA", region: lang === "hu" ? "EU" : "EU", highlight: true },
-    { year: "2027+", label: "Open Finance", region: lang === "hu" ? "Biztosítás, nyugdíj, befektetések" : "Insurance, Pensions, Investments", highlight: false },
-  ];
-
   return (
     <section className="py-24 sm:py-32 bg-background">
       <div className="max-w-5xl mx-auto px-6">
         <ScrollReveal>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-foreground text-center mb-4 tracking-tight">
-            {lang === "hu" ? "Miért most: Szabályozási hajtóerők" : "Why Now: Regulatory Enablers"}
+            Why Now: Regulatory Enablers
           </h2>
           <p className="text-muted-foreground text-center mb-16 max-w-lg mx-auto">
-            {lang === "hu"
-              ? "Egy generációban egyszer előforduló szabályozási konvergencia Európában"
-              : "A once-in-a-generation regulatory convergence across Europe"}
+            A once-in-a-generation regulatory convergence across Europe
           </p>
         </ScrollReveal>
 
-        {/* Timeline */}
         <ScrollReveal delay={150}>
           <div className="relative">
             <div className="hidden sm:block absolute top-8 left-0 right-0 h-px bg-border" />
@@ -42,7 +36,7 @@ const RegulatorySection = () => {
 
                   {ev.highlight && (
                     <span className="absolute -top-6 text-[10px] font-bold tracking-widest text-primary">
-                      {lang === "hu" ? "MOST" : "NOW"}
+                      NOW
                     </span>
                   )}
 
@@ -62,9 +56,7 @@ const RegulatorySection = () => {
         <ScrollReveal delay={300}>
           <div className="mt-16 rounded-2xl border-2 border-primary/20 bg-primary/5 p-6 sm:p-8 text-center">
             <p className="text-base sm:text-lg text-foreground font-medium leading-relaxed" style={{ textWrap: "balance" as any }}>
-              {lang === "hu"
-                ? "Magyarország EU PSD2 piac. Az MNB (Magyar Nemzeti Bank) aktívan szabályozza a biztosítási árazást és 2011 óta működteti a központi KGFB adatbázist. A FiDA kiterjeszti az adathozzáférést a biztosításokra és nyugdíjakra."
-                : "Hungary is an EU PSD2 market. The MNB (Magyar Nemzeti Bank) actively regulates insurance pricing and maintains the centralized KGFB database since 2011. FiDA will extend data access to insurance and pensions."}
+              Hungary is an EU PSD2 market. The MNB (Magyar Nemzeti Bank) actively regulates insurance pricing and maintains the centralized KGFB database since 2011. FiDA will extend data access to insurance and pensions.
             </p>
           </div>
         </ScrollReveal>

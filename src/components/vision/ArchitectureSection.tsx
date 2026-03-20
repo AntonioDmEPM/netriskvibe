@@ -1,73 +1,62 @@
 import ScrollReveal from "@/components/homepage/ScrollReveal";
-import { useI18n } from "@/lib/i18n";
 
 const ArchitectureSection = () => {
-  const { lang } = useI18n();
-
   const layers = [
     {
       color: "bg-primary",
       textColor: "text-primary-foreground",
-      label: lang === "hu" ? "Felhasználói felület réteg" : "User Interface Layer",
+      label: "User Interface Layer",
       boxes: [
-        { title: lang === "hu" ? "Mobilalkalmazás" : "Mobile App" },
-        { title: lang === "hu" ? "Beszélgetős AI" : "Conversational AI" },
-        { title: lang === "hu" ? "Push értesítések" : "Push Notifications" },
+        { title: "Mobile App" },
+        { title: "Conversational AI" },
+        { title: "Push Notifications" },
       ],
     },
     {
       color: "bg-blue-600",
       textColor: "text-white",
-      label: lang === "hu" ? "Ágens orkesztráció réteg" : "Agent Orchestration Layer",
+      label: "Agent Orchestration Layer",
       boxes: [
         {
-          title: lang === "hu" ? "LLM-alapú döntési motor" : "LLM-Powered Decision Engine",
-          subtitle: lang === "hu"
-            ? "Mikor cselekedjen, mit tárgyaljon, melyik szolgáltatóra váltson"
-            : "When to act, what to negotiate, which provider to switch to",
+          title: "LLM-Powered Decision Engine",
+          subtitle: "When to act, what to negotiate, which provider to switch to",
           wide: true,
         },
       ],
     },
     {
       color: "multi",
-      label: lang === "hu" ? "Intelligencia és végrehajtás réteg" : "Intelligence & Execution Layer",
+      label: "Intelligence & Execution Layer",
       boxes: [
         {
-          title: lang === "hu" ? "Szerződés-intelligencia" : "Contract Intelligence",
+          title: "Contract Intelligence",
           color: "bg-amber-500",
           textColor: "text-white",
-          bullets: lang === "hu"
-            ? ["Open Banking (PSD2/PSD3)", "Email szkennelés", "Számla OCR", "Dokumentum feldolgozás"]
-            : ["Open Banking (PSD2/PSD3)", "Email scanning", "Bill OCR", "Document parsing"],
+          bullets: ["Open Banking (PSD2/PSD3)", "Email scanning", "Bill OCR", "Document parsing"],
         },
         {
-          title: lang === "hu" ? "Piaci összehasonlítás" : "Market Comparison",
+          title: "Market Comparison",
           color: "bg-teal-600",
           textColor: "text-white",
-          bullets: lang === "hu"
-            ? ["Szolgáltatói API-k", "Partner aggregátorok", "Valós idejű tarifák", "Biztosítási ajánlatok"]
-            : ["Provider API feeds", "Partner aggregators", "Real-time tariffs", "Insurance quotes"],
+          bullets: ["Provider API feeds", "Partner aggregators", "Real-time tariffs", "Insurance quotes"],
         },
         {
-          title: lang === "hu" ? "Tárgyalómotor" : "Negotiation Engine",
+          title: "Negotiation Engine",
           color: "bg-violet-600",
           textColor: "text-white",
-          bullets: lang === "hu"
-            ? ["Automatizált hívások (Voice AI)", "Chat/email botok", "Meghatalmazás kezelés", "Szabályozott váltó API-k"]
-            : ["Automated calls (Voice AI)", "Chat/email bots", "Letter of Authority", "Regulated switching APIs"],
+          bullets: ["Automated calls (Voice AI)", "Chat/email bots", "Letter of Authority", "Regulated switching APIs"],
         },
       ],
     },
     {
       color: "bg-slate-500",
       textColor: "text-white",
-      label: lang === "hu" ? "Adat és megfelelőségi réteg" : "Data & Compliance Layer",
+      label: "Data & Compliance Layer",
       boxes: [
-        { title: lang === "hu" ? "Fogyasztói hozzájárulás" : "Consumer Consent" },
-        { title: lang === "hu" ? "FCA/MNB megfelelőség" : "FCA/MNB Compliance" },
+        { title: "Consumer Consent" },
+        { title: "FCA/MNB Compliance" },
         { title: "GDPR" },
-        { title: lang === "hu" ? "Audit nyomvonal" : "Audit Trail" },
+        { title: "Audit Trail" },
       ],
     },
   ];
@@ -77,12 +66,10 @@ const ArchitectureSection = () => {
       <div className="max-w-5xl mx-auto px-6">
         <ScrollReveal>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-foreground text-center mb-4 tracking-tight">
-            {lang === "hu" ? "Technikai architektúra" : "Technical Architecture"}
+            Technical Architecture
           </h2>
           <p className="text-muted-foreground text-center mb-16 max-w-lg mx-auto">
-            {lang === "hu"
-              ? "Moduláris, szabályozás-kész platform, amely autonóm cselekvésre épül"
-              : "A modular, regulation-ready platform built for autonomous action"}
+            A modular, regulation-ready platform built for autonomous action
           </p>
         </ScrollReveal>
 

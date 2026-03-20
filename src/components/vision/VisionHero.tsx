@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { useI18n } from "@/lib/i18n";
 
 function useCountUp(target: number, duration: number, trigger: boolean) {
   const [value, setValue] = useState(0);
@@ -19,14 +18,13 @@ function useCountUp(target: number, duration: number, trigger: boolean) {
 }
 
 const VisionHero = () => {
-  const { lang } = useI18n();
   const ref = useRef<HTMLDivElement>(null);
   const [triggered, setTriggered] = useState(false);
 
   const stats = [
-    { target: 350, prefix: "", suffix: " 000+ Ft", label: lang === "hu" ? "átlagos éves háztartási túlfizetés Magyarországon" : "average annual household overpayment in Hungary" },
-    { target: 8, prefix: "6-", suffix: "", label: lang === "hu" ? "optimalizálható visszatérő szerződés háztartásonként" : "recurring contracts per household to optimize" },
-    { target: 4, prefix: "", suffix: lang === "hu" ? " millió" : " million", label: lang === "hu" ? "elérhető magyar háztartás" : "Hungarian households addressable" },
+    { target: 875, prefix: "€", suffix: "+", label: "average annual household overpayment in Hungary" },
+    { target: 8, prefix: "6-", suffix: "", label: "recurring contracts per household to optimize" },
+    { target: 4, prefix: "", suffix: " million", label: "Hungarian households addressable" },
   ];
 
   useEffect(() => {
@@ -43,7 +41,6 @@ const VisionHero = () => {
       className="relative min-h-[90vh] flex flex-col items-center justify-center px-6 py-24 overflow-hidden"
       style={{ background: "linear-gradient(180deg, #0F172A 0%, #1E293B 100%)" }}
     >
-      {/* Subtle grid pattern */}
       <div className="absolute inset-0 opacity-[0.03]" style={{
         backgroundImage: "linear-gradient(rgba(255,255,255,.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.1) 1px, transparent 1px)",
         backgroundSize: "64px 64px"
@@ -60,9 +57,7 @@ const VisionHero = () => {
           From compare-and-click to set-and-forget
         </p>
         <p className="text-base sm:text-lg font-semibold mb-16" style={{ color: "#00A651" }}>
-          {lang === "hu"
-            ? "Nem megmutatjuk a legjobb ajánlatot. Megszerezzük."
-            : "We don't show you the best deal. We get it for you."}
+          We don't show you the best deal. We get it for you.
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-12 max-w-3xl mx-auto">
@@ -86,7 +81,6 @@ const VisionHero = () => {
         </div>
       </div>
 
-      {/* Bottom fade */}
       <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white to-transparent" />
     </section>
   );
