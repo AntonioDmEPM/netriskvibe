@@ -32,7 +32,7 @@ const buildPhases = [
     label: "Phase 1 — MVP",
     weeks: "12 weeks",
     team: "8–10 engineers, 2 designers, 1 PM, 1 architect",
-    cost: "£400–600K",
+    cost: "€400–600K (~240–360M Ft)",
     deliverables: "Open Banking integration, contract detection, benchmarking dashboard, savings calculator",
     color: "bg-amber-500",
   },
@@ -40,7 +40,7 @@ const buildPhases = [
     label: "Phase 2 — Auto-Switch",
     weeks: "16 weeks",
     team: "12–15 engineers, 2 QA, 1 data engineer, 1 compliance",
-    cost: "£600–900K",
+    cost: "€600–900K (~360–540M Ft)",
     deliverables: "Energy/broadband/mobile switching APIs, subscription cancellation, savings verification, payment collection",
     color: "bg-blue-600",
   },
@@ -48,7 +48,7 @@ const buildPhases = [
     label: "Phase 3 — AI Negotiation",
     weeks: "20 weeks",
     team: "15–18 engineers, 2 ML engineers, 2 QA, security review",
-    cost: "£800K–1.2M",
+    cost: "€800K–1.2M (~480–720M Ft)",
     deliverables: "LLM negotiation engine, Voice AI, Letter of Authority system, multi-category optimization",
     color: "bg-primary",
   },
@@ -111,24 +111,20 @@ const RoadmapSection = () => (
         {buildPhases.map((bp, i) => (
           <ScrollReveal key={i} delay={i * 100}>
             <div className="rounded-xl border border-border bg-card overflow-hidden">
-              {/* Header bar */}
               <div className="flex items-center gap-3 px-5 py-3 border-b border-border bg-muted/40">
                 <span className={`w-2.5 h-2.5 rounded-full ${bp.color} shrink-0`} />
                 <span className="text-sm font-bold text-foreground">{bp.label}</span>
                 <span className="text-xs text-muted-foreground ml-auto tabular-nums">{bp.weeks}</span>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-border">
-                {/* Team */}
                 <div className="p-4">
                   <p className="text-[10px] font-bold tracking-widest text-muted-foreground uppercase mb-1.5">Team</p>
                   <p className="text-sm text-foreground leading-relaxed">{bp.team}</p>
                 </div>
-                {/* Cost */}
                 <div className="p-4">
                   <p className="text-[10px] font-bold tracking-widest text-muted-foreground uppercase mb-1.5">Investment</p>
                   <p className="text-lg font-extrabold text-foreground tabular-nums">{bp.cost}</p>
                 </div>
-                {/* Deliverables */}
                 <div className="p-4">
                   <p className="text-[10px] font-bold tracking-widest text-muted-foreground uppercase mb-1.5">Deliverables</p>
                   <p className="text-sm text-muted-foreground leading-relaxed">{bp.deliverables}</p>
@@ -143,7 +139,7 @@ const RoadmapSection = () => (
       <ScrollReveal delay={350}>
         <div className="rounded-xl border-2 border-primary/30 bg-primary/5 px-5 py-4 text-center mb-6">
           <p className="text-sm font-bold text-foreground">
-            Total to full product: <span className="text-primary">~48 weeks</span> | <span className="text-primary">£1.8–2.7M</span> | Full-stack autonomous agent
+            Total: <span className="text-primary">~48 weeks</span> | <span className="text-primary">€1.8–2.7M (~1.1–1.6 Mrd Ft)</span> | Full autonomous agent
           </p>
         </div>
       </ScrollReveal>
@@ -154,7 +150,7 @@ const RoadmapSection = () => (
             Built on: AWS/Azure + TrueLayer (Open Banking) + EPAM DIAL (LLM orchestration) + ElevenLabs (Voice AI)
           </p>
           <p className="text-xs text-muted-foreground italic max-w-2xl mx-auto">
-            For a switching company with existing provider integrations, Phase 1 can be accelerated to 8 weeks.
+            For Netrisk, with existing insurer integrations and the KGFB comparison engine already operational, Phase 1 can be accelerated to 8 weeks.
           </p>
         </div>
       </ScrollReveal>

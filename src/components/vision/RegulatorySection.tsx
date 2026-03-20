@@ -1,9 +1,9 @@
 import ScrollReveal from "@/components/homepage/ScrollReveal";
 
 const events = [
-  { year: "2018", label: "PSD2 / Open Banking", region: "UK/EU", highlight: false },
-  { year: "2023", label: "FCA Consumer Duty", region: "UK", highlight: false },
-  { year: "2024", label: "Section 1033", region: "USA", highlight: false },
+  { year: "2018", label: "PSD2 / Open Banking", region: "EU", highlight: false },
+  { year: "2023", label: "MNB Consumer Protection focus", region: "Hungary", highlight: false },
+  { year: "2024", label: "PSD3 draft", region: "EU", highlight: false },
   { year: "2025–26", label: "PSD3 + FiDA", region: "EU", highlight: true },
   { year: "2027+", label: "Open Finance", region: "Insurance, Pensions, Investments", highlight: false },
 ];
@@ -16,7 +16,7 @@ const RegulatorySection = () => (
           Why Now: Regulatory Enablers
         </h2>
         <p className="text-muted-foreground text-center mb-16 max-w-lg mx-auto">
-          A once-in-a-generation regulatory convergence across three continents
+          A once-in-a-generation regulatory convergence across Europe
         </p>
       </ScrollReveal>
 
@@ -58,8 +58,8 @@ const RegulatorySection = () => (
       <ScrollReveal delay={300}>
         <div className="mt-16 rounded-2xl border-2 border-primary/20 bg-primary/5 p-6 sm:p-8 text-center">
           <p className="text-base sm:text-lg text-foreground font-medium leading-relaxed" style={{ textWrap: "balance" as any }}>
-            For the first time, an agent can <span className="font-bold text-primary">see</span> a consumer's
-            full financial picture across <span className="font-bold text-primary">all</span> providers.
+            Hungary is an EU PSD2 market. The MNB (Magyar Nemzeti Bank) actively regulates insurance pricing and maintains
+            the centralized KGFB database since 2011. FiDA will extend data access to insurance and pensions.
           </p>
         </div>
       </ScrollReveal>

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-function useCountUp(target: number, duration: number, trigger: boolean, prefix = "", suffix = "") {
+function useCountUp(target: number, duration: number, trigger: boolean) {
   const [value, setValue] = useState(0);
   useEffect(() => {
     if (!trigger) return;
@@ -18,9 +18,9 @@ function useCountUp(target: number, duration: number, trigger: boolean, prefix =
 }
 
 const stats = [
-  { target: 1200, prefix: "€", suffix: "+", label: "average annual household overpayment" },
-  { target: 12, prefix: "8-", suffix: "", label: "contracts per household to optimize" },
-  { target: 67, prefix: "", suffix: "%", label: "of consumers would trust an AI financial agent" },
+  { target: 350, prefix: "", suffix: " 000+ Ft", label: "average annual household overpayment in Hungary" },
+  { target: 8, prefix: "6-", suffix: "", label: "recurring contracts per household to optimize" },
+  { target: 4, prefix: "", suffix: " millió", label: "Hungarian households addressable" },
 ];
 
 const VisionHero = () => {
@@ -58,7 +58,7 @@ const VisionHero = () => {
           From compare-and-click to set-and-forget
         </p>
         <p className="text-base sm:text-lg font-semibold mb-16" style={{ color: "#00A651" }}>
-          We don't show you the best deal. We get you the best deal.
+          Nem megmutatjuk a legjobb ajánlatot. Megszerezzük.
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-12 max-w-3xl mx-auto">
@@ -73,7 +73,7 @@ const VisionHero = () => {
                 }}
               >
                 <p className="text-3xl sm:text-4xl font-extrabold text-white tabular-nums mb-2">
-                  {s.prefix}{i === 1 ? `8-${count}` : count}{s.suffix}
+                  {s.prefix}{i === 1 ? `6-${count}` : count}{s.suffix}
                 </p>
                 <p className="text-sm text-gray-400 leading-snug">{s.label}</p>
               </div>

@@ -7,9 +7,9 @@ interface ClosingCTAProps {
 }
 
 const taglines = [
-  "The AI CFO for every household",
+  "Az AI pénzügyi tanácsadó minden háztartásnak",
   "From compare-and-click to set-and-forget",
-  "We don't show you the best deal. We get you the best deal.",
+  "Nem megmutatjuk a legjobb ajánlatot. Megszerezzük.",
 ];
 
 const ClosingCTA = ({ onSwitchTab }: ClosingCTAProps) => (
@@ -23,7 +23,7 @@ const ClosingCTA = ({ onSwitchTab }: ClosingCTAProps) => (
           className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-300 leading-relaxed mb-8 italic"
           style={{ textWrap: "balance" as any }}
         >
-          "Your current model earns £50 when a customer clicks. What if you earned £200–400/year by managing that customer's financial life?"
+          "Your current model earns 15 000 Ft when a customer clicks. What if you earned 75 000–150 000 Ft/year by managing that customer's financial life?"
         </p>
       </ScrollReveal>
 
