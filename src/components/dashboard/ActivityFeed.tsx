@@ -1,5 +1,7 @@
 import { useI18n } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { Loader2 } from "lucide-react";
 
 interface FeedItem {
   color: string;
@@ -8,7 +10,8 @@ interface FeedItem {
   time_en: string;
   text_hu: string;
   text_en: string;
-  buttons?: { label_hu: string; label_en: string; variant: "default" | "outline" }[];
+  action?: "kgfb-approve" | "mvm-details";
+  buttons?: { label_hu: string; label_en: string; variant: "default" | "outline"; action?: string }[];
 }
 
 const feedItems: FeedItem[] = [
@@ -17,15 +20,16 @@ const feedItems: FeedItem[] = [
     time_hu: "2 órája", time_en: "2 hours ago",
     text_hu: "Az energiadíjak csökkentek. Az E.ON új tarifája évi 42 000 Ft-tal olcsóbb, mint a jelenlegi MVM szerződése. Váltás előkészítve.",
     text_en: "Energy prices dropped. E.ON's new tariff is 42,000 HUF/year cheaper than your current MVM contract. Switch prepared.",
-    buttons: [{ label_hu: "Részletek →", label_en: "Details →", variant: "outline" }],
+    buttons: [{ label_hu: "Részletek →", label_en: "Details →", variant: "outline", action: "mvm-details" }],
   },
   {
     color: "bg-amber-500", dotClass: "border-amber-200",
     time_hu: "tegnap", time_en: "yesterday",
     text_hu: "A kötelező biztosítás (KGFB) évfordulója 3 nap múlva lejár. Groupama ajánlata évi 33 500 Ft — 4 500 Ft megtakarítás. Jóváhagyása szükséges.",
     text_en: "Your MTPL insurance anniversary expires in 3 days. Groupama quote: 33,500 HUF/year — 4,500 HUF savings. Approval needed.",
+    action: "kgfb-approve",
     buttons: [
-      { label_hu: "Jóváhagyom ✓", label_en: "Approve ✓", variant: "default" },
+      { label_hu: "Jóváhagyom ✓", label_en: "Approve ✓", variant: "default", action: "kgfb-approve" },
       { label_hu: "Részletek", label_en: "Details", variant: "outline" },
     ],
   },
@@ -68,8 +72,23 @@ const feedItems: FeedItem[] = [
   },
 ];
 
-const ActivityFeed = () => {
+interface ActivityFeedProps {
+  kgfbApproved: boolean;
+  onKgfbApprove: () => void;
+  onScrollToContract: (contractId: string) => void;
+}
+
+const ActivityFeed = ({ kgfbApproved, onKgfbApprove, onScrollToContract }: ActivityFeedProps) => {
   const { lang } = useI18n();
+  const [approving, setApproving] = useState(false);
+
+  const handleApprove = () => {
+    setApproving(true);
+    setTimeout(() => {
+      setApproving(false);
+      onKgfbApprove();
+    }, 1000);
+  };
 
   return (
     <div>
@@ -82,8 +101,8 @@ const ActivityFeed = () => {
           {feedItems.map((item, i) => (
             <div
               key={i}
-              className="relative pl-7 animate-fade-in"
-              style={{ animationDelay: `${i * 80}ms` }}
+              className="relative pl-7 opacity-0"
+              style={{ animation: `fade-in-up 0.4s ease-out ${i * 100}ms forwards` }}
             >
               <div className={`absolute left-0 top-1.5 w-[15px] h-[15px] rounded-full ${item.color} border-2 ${item.dotClass} ring-2 ring-background`} />
               <div className="bg-card border border-border rounded-lg p-3">
@@ -95,11 +114,55 @@ const ActivityFeed = () => {
                 </p>
                 {item.buttons && (
                   <div className="flex gap-2 mt-2">
-                    {item.buttons.map((btn, j) => (
-                      <Button key={j} size="sm" variant={btn.variant} className="h-7 text-xs">
-                        {lang === "hu" ? btn.label_hu : btn.label_en}
-                      </Button>
-                    ))}
+                    {item.buttons.map((btn, j) => {
+                      // KGFB approve button
+                      if (btn.action === "kgfb-approve") {
+                        if (kgfbApproved) {
+                          return (
+                            <span key={j} className="inline-flex items-center gap-1.5 text-xs font-medium text-primary px-3 py-1.5 rounded-md bg-primary/10">
+                              ✅ {lang === "hu" ? "Jóváhagyva — váltás folyamatban" : "Approved — switch in progress"}
+                            </span>
+                          );
+                        }
+                        return (
+                          <Button
+                            key={j}
+                            size="sm"
+                            variant={btn.variant}
+                            className="h-7 text-xs"
+                            onClick={handleApprove}
+                            disabled={approving}
+                          >
+                            {approving ? (
+                              <><Loader2 className="w-3 h-3 animate-spin mr-1" />{lang === "hu" ? "Feldolgozás..." : "Processing..."}</>
+                            ) : (
+                              lang === "hu" ? btn.label_hu : btn.label_en
+                            )}
+                          </Button>
+                        );
+                      }
+
+                      // MVM details button
+                      if (btn.action === "mvm-details") {
+                        return (
+                          <Button
+                            key={j}
+                            size="sm"
+                            variant={btn.variant}
+                            className="h-7 text-xs"
+                            onClick={() => onScrollToContract("mvm-energy")}
+                          >
+                            {lang === "hu" ? btn.label_hu : btn.label_en}
+                          </Button>
+                        );
+                      }
+
+                      return (
+                        <Button key={j} size="sm" variant={btn.variant} className="h-7 text-xs">
+                          {lang === "hu" ? btn.label_hu : btn.label_en}
+                        </Button>
+                      );
+                    })}
                   </div>
                 )}
               </div>

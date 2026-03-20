@@ -2,46 +2,42 @@ import { useI18n } from "@/lib/i18n";
 import { TrendingUp, FileText, CheckCircle, Clock } from "lucide-react";
 import { useEffect, useState } from "react";
 
-const DashboardHeader = () => {
+interface DashboardHeaderProps {
+  optimizedCount: number;
+  optimizedProgress: number;
+}
+
+const DashboardHeader = ({ optimizedCount, optimizedProgress }: DashboardHeaderProps) => {
   const { lang } = useI18n();
   const [animatedSavings, setAnimatedSavings] = useState(0);
   const [animatedProgress, setAnimatedProgress] = useState(0);
 
   useEffect(() => {
     const target = 187400;
-    const duration = 1500;
-    const steps = 60;
-    const increment = target / steps;
-    let current = 0;
-    const timer = setInterval(() => {
-      current += increment;
-      if (current >= target) {
-        setAnimatedSavings(target);
-        clearInterval(timer);
-      } else {
-        setAnimatedSavings(Math.floor(current));
-      }
-    }, duration / steps);
-    return () => clearInterval(timer);
+    const duration = 2000;
+    const start = performance.now();
+    const step = (now: number) => {
+      const p = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - p, 3);
+      setAnimatedSavings(Math.round(eased * target));
+      if (p < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
   }, []);
 
   useEffect(() => {
-    const target = 62.5;
-    const duration = 1200;
-    const steps = 50;
-    const increment = target / steps;
-    let current = 0;
-    const timer = setInterval(() => {
-      current += increment;
-      if (current >= target) {
-        setAnimatedProgress(target);
-        clearInterval(timer);
-      } else {
-        setAnimatedProgress(current);
-      }
-    }, duration / steps);
-    return () => clearInterval(timer);
-  }, []);
+    const start = performance.now();
+    const from = animatedProgress;
+    const to = optimizedProgress;
+    const duration = 800;
+    const step = (now: number) => {
+      const p = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - p, 3);
+      setAnimatedProgress(from + (to - from) * eased);
+      if (p < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }, [optimizedProgress]);
 
   const circumference = 2 * Math.PI * 18;
   const strokeDashoffset = circumference - (animatedProgress / 100) * circumference;
@@ -68,7 +64,7 @@ const DashboardHeader = () => {
       textColor: "text-orange-700",
       icon: <CheckCircle className="w-5 h-5 text-orange-600" />,
       label: lang === "hu" ? "Optimalizálva" : "Optimized",
-      value: "5/8",
+      value: `${optimizedCount}/8`,
       sub: null,
       progress: true,
     },
@@ -99,8 +95,8 @@ const DashboardHeader = () => {
         {stats.map((s, i) => (
           <div
             key={i}
-            className={`rounded-xl border p-4 ${s.color} animate-fade-in`}
-            style={{ animationDelay: `${i * 100}ms` }}
+            className={`rounded-xl border p-4 ${s.color} opacity-0`}
+            style={{ animation: `fade-in-up 0.4s ease-out ${i * 100}ms forwards` }}
           >
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs font-medium text-muted-foreground">{s.label}</span>
@@ -113,7 +109,7 @@ const DashboardHeader = () => {
                     strokeDashoffset={strokeDashoffset}
                     strokeLinecap="round"
                     transform="rotate(-90 22 22)"
-                    className="transition-all duration-1000"
+                    style={{ transition: "stroke-dashoffset 0.8s cubic-bezier(0.16, 1, 0.3, 1)" }}
                   />
                   <text x="22" y="26" textAnchor="middle" className="text-[10px] font-bold fill-orange-700">
                     {Math.round(animatedProgress)}%
@@ -123,7 +119,7 @@ const DashboardHeader = () => {
                 s.icon
               )}
             </div>
-            <p className={`text-2xl font-bold ${s.textColor}`}>{s.value}</p>
+            <p className={`text-2xl font-bold ${s.textColor} tabular-nums`}>{s.value}</p>
             {s.sub && <p className="text-xs text-primary mt-1 font-medium">{s.sub}</p>}
           </div>
         ))}
