@@ -8,8 +8,14 @@ import ContractDetailPanel from "@/components/dashboard/ContractDetailPanel";
 import FloatingAgentIndicator from "@/components/dashboard/FloatingAgentIndicator";
 import { type Contract } from "@/components/dashboard/contractData";
 import { useToast } from "@/hooks/use-toast";
+import { useI18n } from "@/lib/i18n";
+import { type DemoTab } from "@/components/TopNavBar";
 
-const DashboardPage = () => {
+interface DashboardPageProps {
+  onSwitchTab?: (tab: DemoTab) => void;
+}
+
+const DashboardPage = ({ onSwitchTab }: DashboardPageProps) => {
   const [selectedContract, setSelectedContract] = useState<Contract | null>(null);
   const [kgfbApproved, setKgfbApproved] = useState(false);
   const [highlightedContractId, setHighlightedContractId] = useState<string | null>(null);
