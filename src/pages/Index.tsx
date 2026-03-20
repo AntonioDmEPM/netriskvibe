@@ -66,12 +66,12 @@ const Index = () => {
       <AnnouncementBar
         isReturning={isReturning}
         onToggle={setIsReturning}
-        style={presenterMode ? { top: "2.5rem" } : undefined}
+        style={{ top: presenterMode ? "calc(36px + 2.5rem)" : "36px" }}
       />
       <StickyNav
         onOpenOverlay={() => openOverlay("new")}
         hasAnnouncementBar
-        extraTopOffset={presenterMode ? 40 : 0}
+        extraTopOffset={36 + (presenterMode ? 40 : 0)}
         isReturning={isReturning}
       />
       <HeroSection onStartFlow={openOverlay} isReturning={isReturning} />
