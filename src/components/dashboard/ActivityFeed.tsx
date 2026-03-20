@@ -1,7 +1,9 @@
 import { useI18n } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { Loader2 } from "lucide-react";
+import { Loader2, Eye } from "lucide-react";
+import { activityConversations } from "./activityConversations";
+import ActivityDetailPopup from "./ActivityDetailPopup";
 
 interface FeedItem {
   color: string;
@@ -81,14 +83,18 @@ interface ActivityFeedProps {
 const ActivityFeed = ({ kgfbApproved, onKgfbApprove, onScrollToContract }: ActivityFeedProps) => {
   const { lang } = useI18n();
   const [approving, setApproving] = useState(false);
+  const [openConversationIdx, setOpenConversationIdx] = useState<number | null>(null);
 
-  const handleApprove = () => {
+  const handleApprove = (e: React.MouseEvent) => {
+    e.stopPropagation();
     setApproving(true);
     setTimeout(() => {
       setApproving(false);
       onKgfbApprove();
     }, 1000);
   };
+
+  const hasConversation = (idx: number) => activityConversations[idx] != null;
 
   return (
     <div>
@@ -98,78 +104,98 @@ const ActivityFeed = ({ kgfbApproved, onKgfbApprove, onScrollToContract }: Activ
       <div className="relative">
         <div className="absolute left-[7px] top-2 bottom-2 w-px bg-border" />
         <div className="space-y-4">
-          {feedItems.map((item, i) => (
-            <div
-              key={i}
-              className="relative pl-7 opacity-0"
-              style={{ animation: `fade-in-up 0.4s ease-out ${i * 100}ms forwards` }}
-            >
-              <div className={`absolute left-0 top-1.5 w-[15px] h-[15px] rounded-full ${item.color} border-2 ${item.dotClass} ring-2 ring-background`} />
-              <div className="bg-card border border-border rounded-lg p-3">
-                <span className="text-[11px] text-muted-foreground font-medium">
-                  {lang === "hu" ? item.time_hu : item.time_en}
-                </span>
-                <p className="text-sm text-foreground mt-1 leading-relaxed">
-                  {lang === "hu" ? item.text_hu : item.text_en}
-                </p>
-                {item.buttons && (
-                  <div className="flex gap-2 mt-2">
-                    {item.buttons.map((btn, j) => {
-                      // KGFB approve button
-                      if (btn.action === "kgfb-approve") {
-                        if (kgfbApproved) {
+          {feedItems.map((item, i) => {
+            const clickable = hasConversation(i);
+            return (
+              <div
+                key={i}
+                className="relative pl-7 opacity-0"
+                style={{ animation: `fade-in-up 0.4s ease-out ${i * 100}ms forwards` }}
+              >
+                <div className={`absolute left-0 top-1.5 w-[15px] h-[15px] rounded-full ${item.color} border-2 ${item.dotClass} ring-2 ring-background`} />
+                <div
+                  className={`bg-card border border-border rounded-lg p-3 transition-all duration-150 ${
+                    clickable ? "cursor-pointer hover:shadow-md hover:border-primary/20 active:scale-[0.99]" : ""
+                  }`}
+                  onClick={() => { if (clickable) setOpenConversationIdx(i); }}
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <span className="text-[11px] text-muted-foreground font-medium">
+                      {lang === "hu" ? item.time_hu : item.time_en}
+                    </span>
+                    {clickable && (
+                      <span className="inline-flex items-center gap-1 text-[10px] text-primary font-medium shrink-0">
+                        <Eye className="w-3 h-3" />
+                        {lang === "hu" ? "Részletek" : "Details"}
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-sm text-foreground mt-1 leading-relaxed">
+                    {lang === "hu" ? item.text_hu : item.text_en}
+                  </p>
+                  {item.buttons && (
+                    <div className="flex gap-2 mt-2">
+                      {item.buttons.map((btn, j) => {
+                        if (btn.action === "kgfb-approve") {
+                          if (kgfbApproved) {
+                            return (
+                              <span key={j} className="inline-flex items-center gap-1.5 text-xs font-medium text-primary px-3 py-1.5 rounded-md bg-primary/10">
+                                ✅ {lang === "hu" ? "Jóváhagyva — váltás folyamatban" : "Approved — switch in progress"}
+                              </span>
+                            );
+                          }
                           return (
-                            <span key={j} className="inline-flex items-center gap-1.5 text-xs font-medium text-primary px-3 py-1.5 rounded-md bg-primary/10">
-                              ✅ {lang === "hu" ? "Jóváhagyva — váltás folyamatban" : "Approved — switch in progress"}
-                            </span>
+                            <Button
+                              key={j}
+                              size="sm"
+                              variant={btn.variant}
+                              className="h-7 text-xs"
+                              onClick={handleApprove}
+                              disabled={approving}
+                            >
+                              {approving ? (
+                                <><Loader2 className="w-3 h-3 animate-spin mr-1" />{lang === "hu" ? "Feldolgozás..." : "Processing..."}</>
+                              ) : (
+                                lang === "hu" ? btn.label_hu : btn.label_en
+                              )}
+                            </Button>
+                          );
+                        }
+                        if (btn.action === "mvm-details") {
+                          return (
+                            <Button
+                              key={j}
+                              size="sm"
+                              variant={btn.variant}
+                              className="h-7 text-xs"
+                              onClick={(e) => { e.stopPropagation(); onScrollToContract("mvm-energy"); }}
+                            >
+                              {lang === "hu" ? btn.label_hu : btn.label_en}
+                            </Button>
                           );
                         }
                         return (
-                          <Button
-                            key={j}
-                            size="sm"
-                            variant={btn.variant}
-                            className="h-7 text-xs"
-                            onClick={handleApprove}
-                            disabled={approving}
-                          >
-                            {approving ? (
-                              <><Loader2 className="w-3 h-3 animate-spin mr-1" />{lang === "hu" ? "Feldolgozás..." : "Processing..."}</>
-                            ) : (
-                              lang === "hu" ? btn.label_hu : btn.label_en
-                            )}
-                          </Button>
-                        );
-                      }
-
-                      // MVM details button
-                      if (btn.action === "mvm-details") {
-                        return (
-                          <Button
-                            key={j}
-                            size="sm"
-                            variant={btn.variant}
-                            className="h-7 text-xs"
-                            onClick={() => onScrollToContract("mvm-energy")}
-                          >
+                          <Button key={j} size="sm" variant={btn.variant} className="h-7 text-xs" onClick={(e) => e.stopPropagation()}>
                             {lang === "hu" ? btn.label_hu : btn.label_en}
                           </Button>
                         );
-                      }
-
-                      return (
-                        <Button key={j} size="sm" variant={btn.variant} className="h-7 text-xs">
-                          {lang === "hu" ? btn.label_hu : btn.label_en}
-                        </Button>
-                      );
-                    })}
-                  </div>
-                )}
+                      })}
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
+
+      {/* Conversation detail popup */}
+      {openConversationIdx !== null && activityConversations[openConversationIdx] && (
+        <ActivityDetailPopup
+          conversation={activityConversations[openConversationIdx]!}
+          onClose={() => setOpenConversationIdx(null)}
+        />
+      )}
     </div>
   );
 };
