@@ -5,8 +5,13 @@ import RegulatorySection from "@/components/vision/RegulatorySection";
 import RevenueSection from "@/components/vision/RevenueSection";
 import RoadmapSection from "@/components/vision/RoadmapSection";
 import ClosingCTA from "@/components/vision/ClosingCTA";
+import { type DemoTab } from "@/components/TopNavBar";
 
-const VisionPage = () => (
+interface VisionPageProps {
+  onSwitchTab?: (tab: DemoTab) => void;
+}
+
+const VisionPage = ({ onSwitchTab }: VisionPageProps) => (
   <div className="min-h-screen bg-background">
     <VisionHero />
     <EvolutionSection />
@@ -14,7 +19,7 @@ const VisionPage = () => (
     <RegulatorySection />
     <RevenueSection />
     <RoadmapSection />
-    <ClosingCTA />
+    <ClosingCTA onSwitchTab={onSwitchTab} />
   </div>
 );
 
