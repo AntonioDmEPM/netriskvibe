@@ -83,7 +83,6 @@ const DashboardPage = ({ onSwitchTab }: DashboardPageProps) => {
         </div>
 
         <SavingsChart />
-        <NegotiationDemo />
       </div>
 
       {selectedContract && (
