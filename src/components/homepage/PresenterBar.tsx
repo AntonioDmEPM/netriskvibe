@@ -16,7 +16,7 @@ const PresenterBar = ({ onStartFlow, onReset }: PresenterBarProps) => {
   ];
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-[70] h-10 bg-[#0f172a] flex items-center px-4 gap-4">
+    <div className="fixed left-0 right-0 z-[70] h-10 bg-[#0f172a] flex items-center px-4 gap-4" style={{ top: 36 }}>
       <span className="text-xs font-bold text-white flex items-center gap-1.5 shrink-0">
         {t("presenter.label")}
       </span>
