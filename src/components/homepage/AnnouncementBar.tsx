@@ -8,7 +8,7 @@ interface AnnouncementBarProps {
 }
 
 const AnnouncementBar = ({ isReturning, onToggle, style }: AnnouncementBarProps) => {
-  const { lang, setLang, t } = useI18n();
+  const { t } = useI18n();
 
   return (
     <div className="fixed top-0 left-0 right-0 z-[60] h-9 bg-secondary flex items-center justify-center" style={style}>
