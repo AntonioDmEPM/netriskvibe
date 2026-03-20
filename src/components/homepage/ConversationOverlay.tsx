@@ -6,7 +6,7 @@ import TypingIndicator from "@/components/advisor/TypingIndicator";
 import ConfettiEffect from "@/components/advisor/ConfettiEffect";
 import { getScenarioConfig, type ScenarioConfig } from "@/lib/scenarioContext";
 import { useI18n } from "@/lib/i18n";
-import { supabase } from "@/integrations/supabase/client";
+import { chatAPI } from "@/lib/api";
 import type { QuoteData } from "@/lib/mockData";
 
 const SCROLL_THRESHOLD = 150;
@@ -21,36 +21,19 @@ interface ConversationOverlayProps {
 }
 
 /**
- * Call the AI edge function and return structured parts.
+ * Call the backend API and return structured parts.
  */
 async function callAI(
   conversationHistory: { role: string; content: string }[],
   scenarioContext: Record<string, any>,
   lang: string,
 ): Promise<{ parts: any[] }> {
-  const { data, error } = await supabase.functions.invoke("chat", {
-    body: { messages: conversationHistory, scenarioContext, lang },
+  const response = await chatAPI({
+    messages: conversationHistory,
+    scenarioContext,
+    lang,
   });
-
-  if (error) {
-    console.error("AI chat error:", error);
-    const fallbackText = lang === "en"
-      ? "I'm having trouble connecting right now. Let me try again..."
-      : "Jelenleg kapcsolódási problémám van. Próbálom újra...";
-    return { parts: [{ type: "text", content: fallbackText }] };
-  }
-
-  // The edge function now returns { parts: [...] }
-  if (data?.parts) {
-    return { parts: data.parts };
-  }
-
-  // Legacy fallback: { content: string }
-  if (data?.content) {
-    return { parts: [{ type: "text", content: data.content }] };
-  }
-
-  return { parts: [{ type: "text", content: "..." }] };
+  return { parts: response.parts };
 }
 
 /**
@@ -374,12 +357,13 @@ const ConversationOverlay = ({ flowId, initialMessage, onClose, onTurnChange }: 
 
             <div className="flex-1 overflow-y-auto relative" ref={scrollContainerRef}>
               <div className="sticky top-0 left-0 right-0 h-8 bg-gradient-to-b from-background to-transparent z-[5] pointer-events-none" />
-              <div className="max-w-2xl mx-auto px-4 pb-6 space-y-4">
+              <div className={`mx-auto px-4 pb-6 space-y-4 transition-all ${isFullscreen ? "max-w-6xl" : "max-w-2xl"}`}>
                 {messages.map((msg) => (
                   <ChatMessage
                     key={msg.id}
                     message={msg}
                     animate={msg.id === lastMsgId}
+                    fullWidth={isFullscreen}
                     onQuoteSelect={handleQuoteSelect}
                     onSwitchConfirm={handleSwitchConfirm}
                   />
@@ -400,7 +384,7 @@ const ConversationOverlay = ({ flowId, initialMessage, onClose, onTurnChange }: 
             </div>
 
             <div className="border-t border-border bg-card px-4 py-3 shrink-0">
-              <div className="max-w-2xl mx-auto flex items-center gap-2">
+              <div className={`mx-auto flex items-center gap-2 transition-all ${isFullscreen ? "max-w-6xl" : "max-w-2xl"}`}>
                 <input
                   ref={inputRef}
                   type="text"

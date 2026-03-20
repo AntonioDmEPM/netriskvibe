@@ -23,6 +23,7 @@ export interface Message {
 interface ChatMessageProps {
   message: Message;
   animate?: boolean;
+  fullWidth?: boolean;
   onQuoteSelect?: (insurerName: string) => void;
   onSwitchConfirm?: () => void;
 }
@@ -46,7 +47,7 @@ function useTypewriter(text: string, enabled: boolean) {
   return text.slice(0, count);
 }
 
-const ChatMessage = ({ message, animate, onQuoteSelect, onSwitchConfirm }: ChatMessageProps) => {
+const ChatMessage = ({ message, animate, fullWidth, onQuoteSelect, onSwitchConfirm }: ChatMessageProps) => {
   const isAgent = message.role === 'agent';
   const isTextOnly = message.parts.every(p => p.type === 'text');
   const fullText = message.parts.filter(p => p.type === 'text').map(p => p.content).join('\n\n');
@@ -68,7 +69,7 @@ const ChatMessage = ({ message, animate, onQuoteSelect, onSwitchConfirm }: ChatM
       <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0 text-primary-foreground text-xs font-bold">
         N
       </div>
-      <div className="max-w-[85%] space-y-3">
+      <div className={`space-y-3 ${fullWidth ? "max-w-[95%]" : "max-w-[85%]"}`}>
         {isTextOnly ? (
           <div className="bg-agent-bubble rounded-2xl rounded-bl-md px-4 py-3 text-sm leading-relaxed text-foreground prose prose-sm prose-neutral dark:prose-invert max-w-none">
             <ReactMarkdown remarkPlugins={[remarkGfm]}>{shouldTypewrite ? displayedText : fullText}</ReactMarkdown>
