@@ -63,8 +63,23 @@ const Index = ({ onSwitchTab }: IndexProps) => {
 
   const topOffset = presenterMode ? "2.5rem" : "2.25rem";
 
+  const { lang } = useI18n();
+
   return (
     <div className="min-h-screen bg-background">
+      {/* Cross-link banner to Dashboard */}
+      {onSwitchTab && (
+        <div className="bg-secondary text-secondary-foreground text-center py-2 px-4 text-sm">
+          <span>💡 {lang === "hu" ? "Nézze meg, hogyan működik a teljes pénzügyi ügynök → " : "See how the full financial agent works → "}</span>
+          <button
+            onClick={() => onSwitchTab("dashboard")}
+            className="font-bold text-primary underline underline-offset-2 hover:text-primary/80 transition-colors"
+          >
+            Dashboard
+          </button>
+        </div>
+      )}
+
       {presenterMode && (
         <PresenterBar onStartFlow={openOverlay} onReset={handleReset} />
       )}
