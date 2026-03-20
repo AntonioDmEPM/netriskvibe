@@ -13,8 +13,12 @@ interface FeedItem {
   text_hu: string;
   text_en: string;
   action?: "kgfb-approve" | "mvm-details";
+  // Annual savings for this activity (null = no savings line)
+  savings?: number;
   buttons?: { label_hu: string; label_en: string; variant: "default" | "outline"; action?: string }[];
 }
+
+const fmt = (n: number) => n.toLocaleString("hu-HU");
 
 const feedItems: FeedItem[] = [
   {
@@ -22,6 +26,7 @@ const feedItems: FeedItem[] = [
     time_hu: "2 órája", time_en: "2 hours ago",
     text_hu: "Az energiadíjak csökkentek. Az E.ON új tarifája évi 42 000 Ft-tal olcsóbb, mint a jelenlegi MVM szerződése. Váltás előkészítve.",
     text_en: "Energy prices dropped. E.ON's new tariff is 42,000 HUF/year cheaper than your current MVM contract. Switch prepared.",
+    savings: 42000,
     buttons: [{ label_hu: "Részletek →", label_en: "Details →", variant: "outline", action: "mvm-details" }],
   },
   {
@@ -29,6 +34,7 @@ const feedItems: FeedItem[] = [
     time_hu: "tegnap", time_en: "yesterday",
     text_hu: "A kötelező biztosítás (KGFB) évfordulója 3 nap múlva lejár. Groupama ajánlata évi 33 500 Ft — 4 500 Ft megtakarítás. Jóváhagyása szükséges.",
     text_en: "Your MTPL insurance anniversary expires in 3 days. Groupama quote: 33,500 HUF/year — 4,500 HUF savings. Approval needed.",
+    savings: 4500,
     action: "kgfb-approve",
     buttons: [
       { label_hu: "Jóváhagyom ✓", label_en: "Approve ✓", variant: "default", action: "kgfb-approve" },
@@ -46,24 +52,28 @@ const feedItems: FeedItem[] = [
     time_hu: "1 hete", time_en: "1 week ago",
     text_hu: "Sikeresen újratárgyaltam a Vodafone internet díját: havi 7 990 Ft → 5 990 Ft. Éves megtakarítás: 24 000 Ft. ✅ Automatikusan végrehajtva.",
     text_en: "Successfully renegotiated Vodafone internet: 7,990 → 5,990 HUF/month. Annual savings: 24,000 HUF. ✅ Executed automatically.",
+    savings: 24000,
   },
   {
     color: "bg-primary", dotClass: "border-primary/30",
     time_hu: "2 hete", time_en: "2 weeks ago",
     text_hu: "A lakásbiztosítást átváltottam Generali → Allianz-ra. Éves megtakarítás: 8 200 Ft, jobb fedezeti kör. ✅",
     text_en: "Switched home insurance from Generali → Allianz. Annual savings: 8,200 HUF, better coverage. ✅",
+    savings: 8200,
   },
   {
     color: "bg-blue-500", dotClass: "border-blue-200",
     time_hu: "3 hete", time_en: "3 weeks ago",
     text_hu: "Az OTP bankszámlát elemeztem. Az MBH Bank ingyenes számlacsomagja évi 14 400 Ft megtakarítás lenne, de a váltás bonyolult (állandó megbízások átállítása). Csak az Ön megerősítésével lépnék.",
     text_en: "Analyzed your OTP bank account. MBH Bank's free plan would save 14,400 HUF/year, but switching is complex (standing orders). Would only proceed with your confirmation.",
+    savings: 14400,
   },
   {
     color: "bg-amber-500", dotClass: "border-amber-200",
     time_hu: "1 hónapja", time_en: "1 month ago",
     text_hu: "A CIB hitelkártyán észleltem egy nem használt éves díjat (5 900 Ft). Felmondási kérelmet készítettem elő.",
     text_en: "Detected an unused annual fee (5,900 HUF) on your CIB credit card. Cancellation request prepared.",
+    savings: 5900,
     buttons: [{ label_hu: "Felmondás jóváhagyása", label_en: "Approve cancellation", variant: "outline" }],
   },
   {
@@ -71,6 +81,7 @@ const feedItems: FeedItem[] = [
     time_hu: "1 hónapja", time_en: "1 month ago",
     text_hu: "A Digi TV előfizetését sikeresen leváltottam egy olcsóbb csomagra. Havi megtakarítás: 2 500 Ft. ✅",
     text_en: "Successfully switched your Digi TV subscription to a cheaper plan. Monthly savings: 2,500 HUF. ✅",
+    savings: 30000, // annualized: 2500 * 12
   },
 ];
 
@@ -79,6 +90,33 @@ interface ActivityFeedProps {
   onKgfbApprove: () => void;
   onScrollToContract: (contractId: string) => void;
 }
+
+const SavingsSplitBar = ({ savings, lang }: { savings: number; lang: string }) => {
+  const customer = Math.round(savings / 2);
+  const fee = savings - customer;
+  return (
+    <div className="mt-2 pt-2 border-t border-border/50">
+      <div className="flex items-center gap-2 text-[11px]">
+        <span className="text-muted-foreground">
+          {lang === "hu" ? "Megtakarítás:" : "Savings:"} {fmt(savings)} Ft/{lang === "hu" ? "év" : "yr"}
+        </span>
+        <span className="text-muted-foreground/50">→</span>
+        <span className="font-semibold" style={{ color: "#00A651" }}>
+          {lang === "hu" ? "Ön:" : "You:"} {fmt(customer)} Ft
+        </span>
+        <span className="text-muted-foreground/40">|</span>
+        <span className="font-medium text-blue-400/80">
+          {lang === "hu" ? "Díj:" : "Fee:"} {fmt(fee)} Ft
+        </span>
+      </div>
+      {/* Mini two-tone bar */}
+      <div className="flex h-1.5 rounded-full overflow-hidden mt-1.5 bg-muted">
+        <div className="h-full rounded-l-full" style={{ width: "50%", background: "#00A651" }} />
+        <div className="h-full rounded-r-full bg-blue-400/50" style={{ width: "50%" }} />
+      </div>
+    </div>
+  );
+};
 
 const ActivityFeed = ({ kgfbApproved, onKgfbApprove, onScrollToContract }: ActivityFeedProps) => {
   const { lang } = useI18n();
@@ -182,6 +220,8 @@ const ActivityFeed = ({ kgfbApproved, onKgfbApprove, onScrollToContract }: Activ
                       })}
                     </div>
                   )}
+                  {/* 50/50 savings split bar */}
+                  {item.savings && <SavingsSplitBar savings={item.savings} lang={lang} />}
                 </div>
               </div>
             );
@@ -189,7 +229,6 @@ const ActivityFeed = ({ kgfbApproved, onKgfbApprove, onScrollToContract }: Activ
         </div>
       </div>
 
-      {/* Conversation detail popup */}
       {openConversationIdx !== null && activityConversations[openConversationIdx] && (
         <ActivityDetailPopup
           conversation={activityConversations[openConversationIdx]!}
