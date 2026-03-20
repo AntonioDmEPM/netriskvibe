@@ -10,7 +10,7 @@ const models = [
   },
   {
     title: "Subscription",
-    price: "€8-12/month premium",
+    price: "3 000–5 000 Ft/month premium",
     bullets: ["Predictable revenue", "High-value relationship"],
     recommended: true,
   },
@@ -49,8 +49,8 @@ const RevenueSection = () => {
     return () => obs.disconnect();
   }, []);
 
-  const tam = useCountUp(42, 1400, triggered);
-  const arr = useCountUp(120, 1400, triggered);
+  const tam = useCountUp(300, 1400, triggered);
+  const arr = useCountUp(15, 1400, triggered);
 
   return (
     <section ref={ref} className="py-24 sm:py-32 bg-section-bg">
@@ -98,10 +98,10 @@ const RevenueSection = () => {
             </p>
             <div className="space-y-2 text-center">
               <p className="text-sm text-foreground">
-                28M UK households × €150 avg captured savings = <span className="font-extrabold text-primary tabular-nums">€{tam / 10}.{tam % 10}B TAM</span>
+                4M Hungarian households × 75 000 Ft avg captured savings = <span className="font-extrabold text-primary tabular-nums">{tam} Mrd Ft TAM (~€750M)</span>
               </p>
               <p className="text-sm text-foreground">
-                1M subscribers × €120/year = <span className="font-extrabold text-primary tabular-nums">€{arr}M ARR</span> potential
+                200K subscribers × 75 000 Ft/year = <span className="font-extrabold text-primary tabular-nums">{arr} Mrd Ft</span> revenue potential
               </p>
             </div>
           </div>
