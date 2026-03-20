@@ -13,8 +13,14 @@ import AdvisorFAB from "@/components/homepage/AdvisorFAB";
 import PresenterBar from "@/components/homepage/PresenterBar";
 import AgentPanel from "@/components/homepage/AgentPanel";
 import { type AgentName, getAgentEvents, type TurnAgentEvents } from "@/lib/agentEvents";
+import { type DemoTab } from "@/components/TopNavBar";
+import { useI18n } from "@/lib/i18n";
 
-const Index = () => {
+interface IndexProps {
+  onSwitchTab?: (tab: DemoTab) => void;
+}
+
+const Index = ({ onSwitchTab }: IndexProps) => {
   const [overlay, setOverlay] = useState<{ flowId: string; initialMessage?: string } | null>(null);
   const [isReturning, setIsReturning] = useState(false);
   const [presenterMode, setPresenterMode] = useState(false);
