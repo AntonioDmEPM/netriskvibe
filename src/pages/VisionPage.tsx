@@ -8,6 +8,7 @@ import RevenueSection from "@/components/vision/RevenueSection";
 import ProjectionSection from "@/components/vision/ProjectionSection";
 import MarketOpportunitySection from "@/components/vision/MarketOpportunitySection";
 import RoadmapSection from "@/components/vision/RoadmapSection";
+import SuccessMetricsSection from "@/components/vision/SuccessMetricsSection";
 import ClosingCTA from "@/components/vision/ClosingCTA";
 import { type DemoTab } from "@/components/TopNavBar";
 
