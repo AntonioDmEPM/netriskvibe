@@ -1,85 +1,42 @@
 import { useI18n } from "@/lib/i18n";
-import { TrendingUp, FileText, CheckCircle, Clock } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Wallet, Shield, CheckCircle, Handshake, Scissors } from "lucide-react";
 
 interface DashboardHeaderProps {
   optimizedCount: number;
   optimizedProgress: number;
 }
 
+function useCountUp(target: number, duration: number) {
+  const [value, setValue] = useState(0);
+  useEffect(() => {
+    const start = performance.now();
+    const step = (now: number) => {
+      const p = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - p, 3);
+      setValue(Math.round(eased * target));
+      if (p < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }, [target, duration]);
+  return value;
+}
+
+const fmt = (n: number) => n.toLocaleString("hu-HU");
+
 const DashboardHeader = ({ optimizedCount, optimizedProgress }: DashboardHeaderProps) => {
   const { lang } = useI18n();
-  const [animatedSavings, setAnimatedSavings] = useState(0);
-  const [animatedProgress, setAnimatedProgress] = useState(0);
+  const totalSavings = 187400;
+  const customerShare = Math.round(totalSavings / 2);
+  const serviceFee = totalSavings - customerShare;
 
-  useEffect(() => {
-    const target = 187400;
-    const duration = 2000;
-    const start = performance.now();
-    const step = (now: number) => {
-      const p = Math.min((now - start) / duration, 1);
-      const eased = 1 - Math.pow(1 - p, 3);
-      setAnimatedSavings(Math.round(eased * target));
-      if (p < 1) requestAnimationFrame(step);
-    };
-    requestAnimationFrame(step);
-  }, []);
-
-  useEffect(() => {
-    const start = performance.now();
-    const from = animatedProgress;
-    const to = optimizedProgress;
-    const duration = 800;
-    const step = (now: number) => {
-      const p = Math.min((now - start) / duration, 1);
-      const eased = 1 - Math.pow(1 - p, 3);
-      setAnimatedProgress(from + (to - from) * eased);
-      if (p < 1) requestAnimationFrame(step);
-    };
-    requestAnimationFrame(step);
-  }, [optimizedProgress]);
-
-  const circumference = 2 * Math.PI * 18;
-  const strokeDashoffset = circumference - (animatedProgress / 100) * circumference;
-
-  const stats = [
-    {
-      color: "bg-primary/10 border-primary/20",
-      textColor: "text-primary",
-      icon: <TrendingUp className="w-5 h-5 text-primary" />,
-      label: lang === "hu" ? "Éves megtakarítás" : "Annual savings",
-      value: `${animatedSavings.toLocaleString("hu-HU")} Ft`,
-      sub: lang === "hu" ? "↑ 23% vs. tavaly" : "↑ 23% vs. last year",
-    },
-    {
-      color: "bg-blue-50 border-blue-200",
-      textColor: "text-blue-700",
-      icon: <FileText className="w-5 h-5 text-blue-600" />,
-      label: lang === "hu" ? "Aktív szerződések" : "Active contracts",
-      value: "8",
-      sub: null,
-    },
-    {
-      color: "bg-orange-50 border-orange-200",
-      textColor: "text-orange-700",
-      icon: <CheckCircle className="w-5 h-5 text-orange-600" />,
-      label: lang === "hu" ? "Optimalizálva" : "Optimized",
-      value: `${optimizedCount}/8`,
-      sub: null,
-      progress: true,
-    },
-    {
-      color: "bg-purple-50 border-purple-200",
-      textColor: "text-purple-700",
-      icon: <Clock className="w-5 h-5 text-purple-600" />,
-      label: lang === "hu" ? "Következő teendő" : "Next action",
-      value: lang === "hu" ? "3 nap múlva" : "In 3 days",
-      sub: null,
-    },
-  ];
+  const animatedTotal = useCountUp(totalSavings, 2000);
+  const animatedCustomer = useCountUp(customerShare, 2000);
+  const animatedFee = useCountUp(serviceFee, 2000);
 
   return (
     <div className="mb-8">
+      {/* Welcome */}
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-foreground">
           {lang === "hu" ? "Üdvözöljük, Anna! 👋" : "Welcome, Anna! 👋"}
@@ -91,38 +48,90 @@ const DashboardHeader = ({ optimizedCount, optimizedProgress }: DashboardHeaderP
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {stats.map((s, i) => (
-          <div
-            key={i}
-            className={`rounded-xl border p-4 ${s.color} opacity-0`}
-            style={{ animation: `fade-in-up 0.4s ease-out ${i * 100}ms forwards` }}
-          >
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-medium text-muted-foreground">{s.label}</span>
-              {s.progress ? (
-                <svg width="44" height="44" viewBox="0 0 44 44" className="-mr-1">
-                  <circle cx="22" cy="22" r="18" fill="none" stroke="hsl(var(--border))" strokeWidth="3" />
-                  <circle
-                    cx="22" cy="22" r="18" fill="none" stroke="hsl(24 95% 53%)" strokeWidth="3"
-                    strokeDasharray={circumference}
-                    strokeDashoffset={strokeDashoffset}
-                    strokeLinecap="round"
-                    transform="rotate(-90 22 22)"
-                    style={{ transition: "stroke-dashoffset 0.8s cubic-bezier(0.16, 1, 0.3, 1)" }}
-                  />
-                  <text x="22" y="26" textAnchor="middle" className="text-[10px] font-bold fill-orange-700">
-                    {Math.round(animatedProgress)}%
-                  </text>
-                </svg>
-              ) : (
-                s.icon
-              )}
-            </div>
-            <p className={`text-2xl font-bold ${s.textColor} tabular-nums`}>{s.value}</p>
-            {s.sub && <p className="text-xs text-primary mt-1 font-medium">{s.sub}</p>}
+      {/* Savings Counter — hero card */}
+      <div
+        className="rounded-2xl p-6 sm:p-8 opacity-0"
+        style={{
+          background: "linear-gradient(135deg, #0F172A 0%, #1E293B 100%)",
+          animation: "fade-in-up 0.5s ease-out 0.1s forwards",
+        }}
+      >
+        <div className="grid grid-cols-1 md:grid-cols-10 gap-6 md:gap-8 items-center">
+          {/* LEFT — 40% */}
+          <div className="md:col-span-4 text-center md:text-left">
+            <p className="text-sm font-medium text-gray-400 mb-2">
+              {lang === "hu" ? "Az Ön megtakarításai idén" : "Your savings this year"}
+            </p>
+            <p className="text-4xl sm:text-5xl font-extrabold tabular-nums mb-1" style={{ color: "#00A651" }}>
+              {fmt(animatedTotal)} Ft
+            </p>
+            <p className="text-sm text-gray-300">
+              {lang === "hu" ? "megtakarítás összesen" : "total savings"}
+            </p>
           </div>
-        ))}
+
+          {/* CENTER — 30% */}
+          <div className="md:col-span-3 space-y-3">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: "rgba(0,166,81,0.15)" }}>
+                <Wallet className="w-4 h-4" style={{ color: "#00A651" }} />
+              </div>
+              <div>
+                <p className="text-sm font-semibold" style={{ color: "#00A651" }}>
+                  {lang === "hu" ? "Ön tartja meg:" : "You keep:"} {fmt(animatedCustomer)} Ft
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-lg bg-blue-500/15 flex items-center justify-center shrink-0">
+                <Shield className="w-4 h-4 text-blue-400" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-blue-300">
+                  {lang === "hu" ? "Szolgáltatási díj:" : "Service fee:"} {fmt(animatedFee)} Ft
+                </p>
+              </div>
+            </div>
+            <p className="text-xs text-gray-500 italic leading-snug">
+              {lang === "hu"
+                ? "Teljesen ingyenes. Csak akkor fizetünk, ha Ön spórol."
+                : "Completely free. You only pay when you save."}
+            </p>
+          </div>
+
+          {/* RIGHT — 30% */}
+          <div className="md:col-span-3 space-y-2.5">
+            {[
+              { icon: CheckCircle, text_hu: `${optimizedCount} szerződés optimalizálva`, text_en: `${optimizedCount} contracts optimized`, color: "#00A651" },
+              { icon: Handshake, text_hu: "2 sikeres tárgyalás", text_en: "2 successful negotiations", color: "#00A651" },
+              { icon: Scissors, text_hu: "3 felesleges előfizetés törölve", text_en: "3 unused subscriptions cancelled", color: "#00A651" },
+            ].map((stat, i) => (
+              <div key={i} className="flex items-center gap-2.5">
+                <stat.icon className="w-4 h-4 shrink-0" style={{ color: stat.color }} />
+                <span className="text-sm text-gray-300">
+                  {lang === "hu" ? stat.text_hu : stat.text_en}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* "Without Agent" comparison bar */}
+      <div
+        className="mt-3 rounded-xl border border-border bg-card px-5 py-3 flex flex-col sm:flex-row items-center justify-between gap-2 opacity-0"
+        style={{ animation: "fade-in-up 0.4s ease-out 0.4s forwards" }}
+      >
+        <div className="flex items-center gap-2 text-sm">
+          <span className="text-muted-foreground">{lang === "hu" ? "Ügynök nélkül:" : "Without agent:"}</span>
+          <span className="line-through text-destructive/60 font-medium">0 Ft {lang === "hu" ? "megtakarítás" : "savings"}</span>
+        </div>
+        <div className="flex items-center gap-2 text-sm">
+          <span className="text-muted-foreground">{lang === "hu" ? "Az ügynökkel:" : "With agent:"}</span>
+          <span className="font-bold" style={{ color: "#00A651" }}>
+            {fmt(customerShare)} Ft {lang === "hu" ? "a zsebében" : "in your pocket"}
+          </span>
+        </div>
       </div>
     </div>
   );
