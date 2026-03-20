@@ -59,12 +59,12 @@ const EvolutionSection = () => {
           </p>
         </ScrollReveal>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch relative">
           {eras.map((era, i) => (
             <ScrollReveal key={i} delay={i * 120}>
               <div className="relative h-full">
                 {i < 2 && (
-                  <div className="hidden md:flex absolute -right-3 top-1/2 -translate-y-1/2 z-10 text-muted-foreground/40">
+                  <div className="hidden md:flex absolute -right-[15px] top-1/2 -translate-y-1/2 z-10 text-muted-foreground/40">
                     <ArrowRight className="w-6 h-6" />
                   </div>
                 )}
