@@ -52,7 +52,7 @@ const DashboardPage = ({ onSwitchTab }: DashboardPageProps) => {
             onClick={() => onSwitchTab("netrisk")}
             className="text-muted-foreground hover:text-foreground transition-colors"
           >
-            ← {lang === "hu" ? "Vissza a Netrisk főoldalra" : "Back to Netrisk homepage"}
+            ← Back to Netrisk homepage
           </button>
           <button
             onClick={() => onSwitchTab("vision")}
