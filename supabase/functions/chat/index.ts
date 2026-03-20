@@ -115,8 +115,10 @@ const MAX_MESSAGES = 30;
 const ALLOWED_ORIGINS = [
   "https://netriskvibe.lovable.app",
   "https://id-preview--4d82f559-3259-47e1-9c4c-06b1963a3fbe.lovable.app",
+  "https://4d82f559-3259-47e1-9c4c-06b1963a3fbe.lovableproject.com",
   "http://localhost:5173",
   "http://localhost:8080",
+  "http://localhost:3000",
 ];
 
 serve(async (req) => {
@@ -124,14 +126,16 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
-  // Origin check — reject requests from unknown origins
+  // Origin check — reject requests from unknown origins (skip for server-to-server calls)
   const origin = req.headers.get("origin") || req.headers.get("referer") || "";
-  const isAllowed = ALLOWED_ORIGINS.some((o) => origin.startsWith(o));
-  if (!isAllowed) {
-    return new Response(
-      JSON.stringify({ error: "Forbidden" }),
-      { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
+  if (origin) {
+    const isAllowed = ALLOWED_ORIGINS.some((o) => origin.startsWith(o));
+    if (!isAllowed) {
+      return new Response(
+        JSON.stringify({ error: "Forbidden" }),
+        { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
   }
 
   try {
