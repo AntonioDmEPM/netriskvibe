@@ -1,6 +1,8 @@
 /**
- * API client — supports both Lovable Cloud (edge function) and local Express server.
- * Toggle via ?backend=local or ?backend=cloud in the URL, or defaults intelligently.
+ * API client — routes to the right backend:
+ * - On Vercel: relative /api/chat (serverless function)
+ * - Local with ?backend=local: http://localhost:3001/api/chat
+ * - Local with Supabase: edge function
  */
 
 export interface ChatRequest {
@@ -14,46 +16,28 @@ export interface ChatResponse {
   error?: string;
 }
 
-export type BackendMode = "cloud" | "local" | "auto";
+function getChatUrl(): string {
+  if (typeof window === "undefined") return "/api/chat";
 
-/** Read backend preference from URL search params (?backend=cloud|local|auto) */
-function getBackendMode(): BackendMode {
-  if (typeof window === "undefined") return "auto";
   const params = new URLSearchParams(window.location.search);
   const mode = params.get("backend");
-  if (mode === "cloud" || mode === "local") return mode;
-  return "auto";
-}
 
-function getChatUrl(mode: BackendMode): string {
-  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+  // Explicit override via ?backend=local or ?backend=cloud
+  if (mode === "local") return "http://localhost:3001/api/chat";
+  if (mode === "cloud") {
+    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+    if (supabaseUrl) return `${supabaseUrl}/functions/v1/chat`;
+  }
 
-  if (mode === "cloud" && supabaseUrl) {
-    return `${supabaseUrl}/functions/v1/chat`;
-  }
-  if (mode === "local") {
-    return "http://localhost:3001/api/chat";
-  }
-  // Auto: use edge function if available, else local
-  if (supabaseUrl) {
-    return `${supabaseUrl}/functions/v1/chat`;
-  }
-  return "http://localhost:3001/api/chat";
-}
-
-export function getCurrentBackendLabel(): string {
-  const mode = getBackendMode();
-  const url = getChatUrl(mode);
-  if (url.includes("/functions/v1/")) return "Cloud";
-  return "Local";
+  // Default: use relative /api/chat (works on both Vercel and local with Vite proxy)
+  return "/api/chat";
 }
 
 export async function chatAPI(request: ChatRequest): Promise<ChatResponse> {
-  const mode = getBackendMode();
-  const url = getChatUrl(mode);
+  const url = getChatUrl();
   const headers: Record<string, string> = { "Content-Type": "application/json" };
 
-  // Add auth header when calling the edge function
+  // Add auth header when calling the Supabase edge function
   const anonKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
   if (anonKey && url.includes("/functions/v1/")) {
     headers["Authorization"] = `Bearer ${anonKey}`;

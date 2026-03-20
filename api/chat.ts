@@ -227,12 +227,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     res.status(200).json({ parts: [{ type: "text", content: textBlock?.text ?? "..." }] });
   } catch (err: unknown) {
     const error = err as { status?: number; message?: string };
-    console.error("Chat error:", error.message ?? err);
+    const msg = error.message ?? String(err);
+    console.error("Chat error:", msg);
 
-    if (error.status === 401) {
-      res.status(200).json({ parts: [{ type: "text", content: "API key not configured. Set ANTHROPIC_API_KEY in Vercel environment variables." }] });
+    if (error.status === 401 || msg.includes("api_key") || msg.includes("API key")) {
+      res.status(200).json({ parts: [{ type: "text", content: "API key error. Check ANTHROPIC_API_KEY in Vercel environment variables." }] });
       return;
     }
-    res.status(500).json({ parts: [{ type: "text", content: "Server error — please try again." }] });
+    if (error.status === 429) {
+      res.status(200).json({ parts: [{ type: "text", content: "Rate limited — please wait a moment and try again." }] });
+      return;
+    }
+    // Surface the error message for debugging (remove in production)
+    res.status(200).json({ parts: [{ type: "text", content: `Error: ${msg.substring(0, 200)}` }] });
   }
 }
