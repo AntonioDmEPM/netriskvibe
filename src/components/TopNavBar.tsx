@@ -1,5 +1,4 @@
 import { cn } from "@/lib/utils";
-import { useI18n } from "@/lib/i18n";
 export type DemoTab = "netrisk" | "dashboard" | "vision";
 
 const tabs: { id: DemoTab; label: string }[] = [
@@ -14,8 +13,6 @@ interface TopNavBarProps {
 }
 
 const TopNavBar = ({ activeTab, onTabChange }: TopNavBarProps) => {
-  const { lang, setLang } = useI18n();
-
   return (
     <div
       className="fixed top-0 left-0 right-0 z-[100] flex items-center justify-between px-4"
@@ -38,7 +35,6 @@ const TopNavBar = ({ activeTab, onTabChange }: TopNavBarProps) => {
             )}
           >
             {tab.label}
-            {/* Active indicator line */}
             {activeTab === tab.id && (
               <span
                 className="absolute bottom-0 left-2 right-2 h-[2px] rounded-full"
@@ -49,31 +45,9 @@ const TopNavBar = ({ activeTab, onTabChange }: TopNavBarProps) => {
         ))}
       </div>
 
-      <div className="flex items-center gap-3">
-        <div className="flex rounded-full bg-white/10 p-0.5">
-          <button
-            onClick={() => setLang("hu")}
-            className={cn(
-              "px-2 py-0.5 rounded-full text-[11px] font-semibold transition-all",
-              lang === "hu" ? "bg-white/20 text-white" : "text-white/40 hover:text-white/70"
-            )}
-          >
-            HU
-          </button>
-          <button
-            onClick={() => setLang("en")}
-            className={cn(
-              "px-2 py-0.5 rounded-full text-[11px] font-semibold transition-all",
-              lang === "en" ? "bg-white/20 text-white" : "text-white/40 hover:text-white/70"
-            )}
-          >
-            EN
-          </button>
-        </div>
-        <span className="text-[12px] text-white/40 select-none">
-          Prototype Demo v1.0
-        </span>
-      </div>
+      <span className="text-[12px] text-white/40 select-none">
+        Prototype Demo v1.0
+      </span>
     </div>
   );
 };
