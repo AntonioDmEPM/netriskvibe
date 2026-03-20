@@ -1,6 +1,7 @@
 import VisionHero from "@/components/vision/VisionHero";
 import EvolutionSection from "@/components/vision/EvolutionSection";
 import MarketGapSection from "@/components/vision/MarketGapSection";
+import RevenueTransformationSection from "@/components/vision/RevenueTransformationSection";
 import ArchitectureSection from "@/components/vision/ArchitectureSection";
 import RegulatorySection from "@/components/vision/RegulatorySection";
 import RevenueSection from "@/components/vision/RevenueSection";
@@ -17,6 +18,7 @@ const VisionPage = ({ onSwitchTab }: VisionPageProps) => (
     <VisionHero />
     <EvolutionSection />
     <MarketGapSection />
+    <RevenueTransformationSection />
     <ArchitectureSection />
     <RegulatorySection />
     <RevenueSection />
