@@ -64,7 +64,7 @@ const EvolutionSection = () => {
             <ScrollReveal key={i} delay={i * 120}>
               <div className="relative h-full">
                 {i < 2 && (
-                  <div className="hidden md:flex absolute -right-3 top-1/2 -translate-y-1/2 z-10 text-muted-foreground/40">
+                  <div className="hidden md:flex absolute -right-[15px] top-1/2 -translate-y-1/2 z-10 text-muted-foreground/40">
                     <ArrowRight className="w-6 h-6" />
                   </div>
                 )}
