@@ -1,86 +1,72 @@
 import ScrollReveal from "@/components/homepage/ScrollReveal";
-import { useI18n } from "@/lib/i18n";
 
 const buildPhases = [
   {
     label: "Phase 1 — MVP",
     weeks: "12 weeks",
     team: "8–10 engineers, 2 designers, 1 PM, 1 architect",
-    cost: "€400–600K (~240–360M Ft)",
-    deliverablesEn: "Open Banking integration, contract detection, benchmarking dashboard, savings calculator",
-    deliverablesHu: "Open Banking integráció, szerződés-felismerés, összehasonlító irányítópult, megtakarítás-kalkulátor",
+    cost: "€400–600K",
+    deliverables: "Open Banking integration, contract detection, benchmarking dashboard, savings calculator",
     color: "bg-amber-500",
   },
   {
     label: "Phase 2 — Auto-Switch",
     weeks: "16 weeks",
     team: "12–15 engineers, 2 QA, 1 data engineer, 1 compliance",
-    cost: "€600–900K (~360–540M Ft)",
-    deliverablesEn: "Energy/broadband/mobile switching APIs, subscription cancellation, savings verification, payment collection",
-    deliverablesHu: "Energia/internet/mobil váltó API-k, előfizetés-lemondás, megtakarítás-ellenőrzés, fizetésgyűjtés",
+    cost: "€600–900K",
+    deliverables: "Energy/broadband/mobile switching APIs, subscription cancellation, savings verification, payment collection",
     color: "bg-blue-600",
   },
   {
     label: "Phase 3 — AI Negotiation",
     weeks: "20 weeks",
     team: "15–18 engineers, 2 ML engineers, 2 QA, security review",
-    cost: "€800K–1.2M (~480–720M Ft)",
-    deliverablesEn: "LLM negotiation engine, Voice AI, Letter of Authority system, multi-category optimization",
-    deliverablesHu: "LLM tárgyalómotor, Voice AI, meghatalmazás-kezelő rendszer, több kategóriás optimalizálás",
+    cost: "€800K–1.2M",
+    deliverables: "LLM negotiation engine, Voice AI, Letter of Authority system, multi-category optimization",
     color: "bg-primary",
   },
 ];
 
+const phases = [
+  {
+    phase: "Phase 1",
+    weeks: "12 weeks",
+    title: "Contract Intelligence",
+    bullets: ["Open Banking integration", "AI contract categorization", "Renewal alerting", "Market benchmarking"],
+    tag: "MVP",
+    tagColor: "bg-amber-500 text-white",
+  },
+  {
+    phase: "Phase 2",
+    weeks: "+16 weeks",
+    title: "Automated Switching",
+    bullets: ["Energy switching (regulated API)", "Broadband One Touch Switch", "Subscription cancellation", "Savings optimization"],
+    tag: "GROWTH",
+    tagColor: "bg-blue-600 text-white",
+  },
+  {
+    phase: "Phase 3",
+    weeks: "+20 weeks",
+    title: "AI Negotiation",
+    bullets: ["LLM-powered provider negotiation", "Voice AI (phone-based)", "Letter of Authority management", "Multi-provider optimization"],
+    tag: "MOAT",
+    tagColor: "bg-primary text-primary-foreground",
+  },
+];
+
 const RoadmapSection = () => {
-  const { lang } = useI18n();
-  const bn = lang === "hu" ? "Mrd" : "Bn";
-
-  const phases = [
-    {
-      phase: lang === "hu" ? "1. fázis" : "Phase 1",
-      weeks: lang === "hu" ? "12 hét" : "12 weeks",
-      title: lang === "hu" ? "Szerződés-intelligencia" : "Contract Intelligence",
-      bullets: lang === "hu"
-        ? ["Open Banking integráció", "AI szerződés-kategorizálás", "Megújítási riasztás", "Piaci összehasonlítás"]
-        : ["Open Banking integration", "AI contract categorization", "Renewal alerting", "Market benchmarking"],
-      tag: "MVP",
-      tagColor: "bg-amber-500 text-white",
-    },
-    {
-      phase: lang === "hu" ? "2. fázis" : "Phase 2",
-      weeks: lang === "hu" ? "+16 hét" : "+16 weeks",
-      title: lang === "hu" ? "Automatikus váltás" : "Automated Switching",
-      bullets: lang === "hu"
-        ? ["Energiaváltás (szabályozott API)", "Szélessáv One Touch Switch", "Előfizetés-lemondás", "Megtakarítás-optimalizálás"]
-        : ["Energy switching (regulated API)", "Broadband One Touch Switch", "Subscription cancellation", "Savings optimization"],
-      tag: lang === "hu" ? "NÖVEKEDÉS" : "GROWTH",
-      tagColor: "bg-blue-600 text-white",
-    },
-    {
-      phase: lang === "hu" ? "3. fázis" : "Phase 3",
-      weeks: lang === "hu" ? "+20 hét" : "+20 weeks",
-      title: lang === "hu" ? "AI tárgyalás" : "AI Negotiation",
-      bullets: lang === "hu"
-        ? ["LLM-alapú szolgáltatói tárgyalás", "Voice AI (telefonos)", "Meghatalmazás-kezelés", "Több szolgáltatós optimalizálás"]
-        : ["LLM-powered provider negotiation", "Voice AI (phone-based)", "Letter of Authority management", "Multi-provider optimization"],
-      tag: lang === "hu" ? "VÉDELMI SÁNC" : "MOAT",
-      tagColor: "bg-primary text-primary-foreground",
-    },
-  ];
-
   return (
     <section className="py-24 sm:py-32 bg-background">
       <div className="max-w-5xl mx-auto px-6">
         <ScrollReveal>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-foreground text-center mb-4 tracking-tight">
-            {lang === "hu" ? "Megvalósítási ütemterv" : "Implementation Roadmap"}
+            Implementation Roadmap
           </h2>
           <p className="text-muted-foreground text-center mb-16 max-w-lg mx-auto">
-            {lang === "hu" ? "48 hét a koncepciótól a versenyelőnyig" : "48 weeks from concept to competitive moat"}
+            48 weeks from concept to competitive moat
           </p>
         </ScrollReveal>
 
-        {/* Phase cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-24">
           {phases.map((p, i) => (
             <ScrollReveal key={i} delay={i * 120}>
@@ -111,13 +97,12 @@ const RoadmapSection = () => {
           ))}
         </div>
 
-        {/* Build Investment */}
         <ScrollReveal>
           <h3 className="text-2xl sm:text-3xl font-bold text-foreground text-center mb-3">
-            {lang === "hu" ? "Ami az építéshez kell" : "What It Takes to Build"}
+            What It Takes to Build
           </h3>
           <p className="text-muted-foreground text-center mb-10 max-w-md mx-auto">
-            {lang === "hu" ? "Csapat, költség és eredmények fázisonként" : "Team, cost, and deliverables by phase"}
+            Team, cost, and deliverables by phase
           </p>
         </ScrollReveal>
 
@@ -132,24 +117,16 @@ const RoadmapSection = () => {
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-border">
                   <div className="p-4">
-                    <p className="text-[10px] font-bold tracking-widest text-muted-foreground uppercase mb-1.5">
-                      {lang === "hu" ? "Csapat" : "Team"}
-                    </p>
+                    <p className="text-[10px] font-bold tracking-widest text-muted-foreground uppercase mb-1.5">Team</p>
                     <p className="text-sm text-foreground leading-relaxed">{bp.team}</p>
                   </div>
                   <div className="p-4">
-                    <p className="text-[10px] font-bold tracking-widest text-muted-foreground uppercase mb-1.5">
-                      {lang === "hu" ? "Befektetés" : "Investment"}
-                    </p>
+                    <p className="text-[10px] font-bold tracking-widest text-muted-foreground uppercase mb-1.5">Investment</p>
                     <p className="text-lg font-extrabold text-foreground tabular-nums">{bp.cost}</p>
                   </div>
                   <div className="p-4">
-                    <p className="text-[10px] font-bold tracking-widest text-muted-foreground uppercase mb-1.5">
-                      {lang === "hu" ? "Eredmények" : "Deliverables"}
-                    </p>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      {lang === "hu" ? bp.deliverablesHu : bp.deliverablesEn}
-                    </p>
+                    <p className="text-[10px] font-bold tracking-widest text-muted-foreground uppercase mb-1.5">Deliverables</p>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{bp.deliverables}</p>
                   </div>
                 </div>
               </div>
@@ -157,13 +134,10 @@ const RoadmapSection = () => {
           ))}
         </div>
 
-        {/* Summary bar */}
         <ScrollReveal delay={350}>
           <div className="rounded-xl border-2 border-primary/30 bg-primary/5 px-5 py-4 text-center mb-6">
             <p className="text-sm font-bold text-foreground">
-              {lang === "hu"
-                ? <>Összesen: <span className="text-primary">~48 hét</span> | <span className="text-primary">€1.8–2.7M (~1.1–1.6 Mrd Ft)</span> | Teljes autonóm ágens</>
-                : <>Total: <span className="text-primary">~48 weeks</span> | <span className="text-primary">€1.8–2.7M (~1.1–1.6 Bn Ft)</span> | Full autonomous agent</>}
+              Total: <span className="text-primary">~48 weeks</span> | <span className="text-primary">€1.8–2.7M</span> | Full autonomous agent
             </p>
           </div>
         </ScrollReveal>
@@ -171,14 +145,10 @@ const RoadmapSection = () => {
         <ScrollReveal delay={400}>
           <div className="space-y-3 text-center">
             <p className="text-xs text-muted-foreground italic max-w-2xl mx-auto">
-              {lang === "hu"
-                ? "Technológia: AWS/Azure + TrueLayer (Open Banking) + EPAM DIAL (LLM orkesztráció) + ElevenLabs (Voice AI)"
-                : "Built on: AWS/Azure + TrueLayer (Open Banking) + EPAM DIAL (LLM orchestration) + ElevenLabs (Voice AI)"}
+              Built on: AWS/Azure + TrueLayer (Open Banking) + EPAM DIAL (LLM orchestration) + ElevenLabs (Voice AI)
             </p>
             <p className="text-xs text-muted-foreground italic max-w-2xl mx-auto">
-              {lang === "hu"
-                ? "A Netrisk meglévő biztosítói integrációival és a már működő KGFB összehasonlító motorjával az 1. fázis 8 hétre gyorsítható."
-                : "For Netrisk, with existing insurer integrations and the KGFB comparison engine already operational, Phase 1 can be accelerated to 8 weeks."}
+              For Netrisk, with existing insurer integrations and the KGFB comparison engine already operational, Phase 1 can be accelerated to 8 weeks.
             </p>
           </div>
         </ScrollReveal>

@@ -1,23 +1,21 @@
 import ScrollReveal from "@/components/homepage/ScrollReveal";
 import { useEffect, useRef, useState } from "react";
-import { useI18n } from "@/lib/i18n";
 
 const comparables = [
-  { name: "Rocket Money", val: "$1.275B", multiple: "12x revenue", descEn: "US bill negotiation", descHu: "USA számlakezelés" },
-  { name: "MoneySuperMarket", val: "£1.5B", multiple: "3.5x revenue", descEn: "UK comparison (mature)", descHu: "UK összehasonlítás (érett)" },
-  { name: "Netrisk Group", val: "~€200–300M", multiple: "implied", descEn: "CEE leader, 6 markets", descHu: "KKE vezető, 6 piac" },
-  { name: "Plum", val: "~£200M", multiple: "10–13x revenue", descEn: "UK smart savings", descHu: "UK okos megtakarítás" },
+  { name: "Rocket Money", val: "$1.275B", multiple: "12x revenue", desc: "US bill negotiation" },
+  { name: "MoneySuperMarket", val: "£1.5B", multiple: "3.5x revenue", desc: "UK comparison (mature)" },
+  { name: "Netrisk Group", val: "~€200–300M", multiple: "implied", desc: "CEE leader, 6 markets" },
+  { name: "Plum", val: "~£200M", multiple: "10–13x revenue", desc: "UK smart savings" },
 ];
 
-// Revenue data points for the SVG chart
 const revenuePoints = [
   { x: 0, y: 0, label: "Now" },
-  { x: 1, y: 1.5, label: "Y1" },
-  { x: 2, y: 6.4, label: "Y2" },
-  { x: 3, y: 15, label: "Y3" },
+  { x: 1, y: 3.75, label: "Y1" },
+  { x: 2, y: 16, label: "Y2" },
+  { x: 3, y: 37.5, label: "Y3" },
 ];
 
-const AnimatedChart = ({ bn }: { bn: string }) => {
+const AnimatedChart = () => {
   const ref = useRef<SVGSVGElement>(null);
   const [drawn, setDrawn] = useState(false);
 
@@ -33,7 +31,7 @@ const AnimatedChart = ({ bn }: { bn: string }) => {
   }, []);
 
   const W = 600, H = 200, PX = 60, PY = 30;
-  const maxY = 18;
+  const maxY = 45;
   const toSvg = (x: number, y: number) => ({
     sx: PX + (x / 3) * (W - PX * 2),
     sy: H - PY - (y / maxY) * (H - PY * 2),
@@ -49,12 +47,12 @@ const AnimatedChart = ({ bn }: { bn: string }) => {
 
   return (
     <svg ref={ref} viewBox={`0 0 ${W} ${H}`} className="w-full max-w-2xl mx-auto" style={{ overflow: "visible" }}>
-      {[0, 5, 10, 15].map((v) => {
+      {[0, 10, 20, 30, 40].map((v) => {
         const { sy } = toSvg(0, v);
         return (
           <g key={v}>
             <line x1={PX} y1={sy} x2={W - PX} y2={sy} className="stroke-border" strokeWidth={1} strokeDasharray="4 4" />
-            <text x={PX - 8} y={sy + 4} textAnchor="end" className="fill-muted-foreground" fontSize={10}>{v} {bn}</text>
+            <text x={PX - 8} y={sy + 4} textAnchor="end" className="fill-muted-foreground" fontSize={10}>€{v}M</text>
           </g>
         );
       })}
@@ -100,7 +98,7 @@ const AnimatedChart = ({ bn }: { bn: string }) => {
             fontWeight={700}
             style={{ opacity: drawn ? 1 : 0, transition: `opacity 0.3s ease-out ${0.6 + i * 0.3}s` }}
           >
-            {p.y} {bn} Ft
+            €{p.y}M
           </text>
         );
       })}
@@ -109,13 +107,10 @@ const AnimatedChart = ({ bn }: { bn: string }) => {
 };
 
 const ProjectionSection = () => {
-  const { lang } = useI18n();
-  const bn = lang === "hu" ? "Mrd" : "Bn";
-
   const years = [
-    { year: lang === "hu" ? "1. év" : "Year 1", households: "20 000", revenue: `1.5 ${bn} Ft`, revenueEur: "~€3.75M", ebitda: "450M Ft", margin: "30%", progress: 33, highlight: false, tag: lang === "hu" ? "Megtérülés Q4-re" : "Breakeven by Q4", tagColor: "bg-amber-500 text-white" },
-    { year: lang === "hu" ? "2. év" : "Year 2", households: "80 000", revenue: `6.4 ${bn} Ft`, revenueEur: "~€16M", ebitda: `2.9 ${bn} Ft`, margin: "45%", progress: 66, highlight: false },
-    { year: lang === "hu" ? "3. év" : "Year 3", households: "200 000", revenue: `15 ${bn} Ft`, revenueEur: "~€37.5M", ebitda: `7.5 ${bn} Ft`, margin: "50%", progress: 100, highlight: true, tag: lang === "hu" ? "5% piaci penetráció" : "5% market penetration", tagColor: "bg-primary text-primary-foreground" },
+    { year: "Year 1", households: "20,000", revenue: "€3.75M", ebitda: "€1.1M", margin: "30%", progress: 33, highlight: false, tag: "Breakeven by Q4", tagColor: "bg-amber-500 text-white" },
+    { year: "Year 2", households: "80,000", revenue: "€16M", ebitda: "€7.2M", margin: "45%", progress: 66, highlight: false },
+    { year: "Year 3", households: "200,000", revenue: "€37.5M", ebitda: "€18.75M", margin: "50%", progress: 100, highlight: true, tag: "5% market penetration", tagColor: "bg-primary text-primary-foreground" },
   ];
 
   return (
@@ -123,14 +118,13 @@ const ProjectionSection = () => {
       <div className="max-w-6xl mx-auto px-6">
         <ScrollReveal>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-foreground text-center mb-3 tracking-tight">
-            {lang === "hu" ? "Skálázás útja" : "Path to Scale"}
+            Path to Scale
           </h2>
           <p className="text-muted-foreground text-center mb-14 max-w-xl mx-auto text-balance">
-            {lang === "hu" ? "Alap eset: 50% megtakarítás részesedés, magyar piac" : "Base case: 50% savings share, Hungarian market"}
+            Base case: 50% savings share, Hungarian market
           </p>
         </ScrollReveal>
 
-        {/* Year cards */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-14">
           {years.map((y, i) => (
             <ScrollReveal key={i} delay={i * 100}>
@@ -155,20 +149,19 @@ const ProjectionSection = () => {
 
                 <div className="space-y-3 flex-1 relative z-10">
                   <div>
-                    <p className="text-[11px] text-muted-foreground uppercase tracking-wide">{lang === "hu" ? "Háztartások" : "Households"}</p>
+                    <p className="text-[11px] text-muted-foreground uppercase tracking-wide">Households</p>
                     <p className="text-lg font-bold text-foreground tabular-nums">{y.households}</p>
                   </div>
                   <div>
-                    <p className="text-[11px] text-muted-foreground uppercase tracking-wide">{lang === "hu" ? "Bevétel" : "Revenue"}</p>
+                    <p className="text-[11px] text-muted-foreground uppercase tracking-wide">Revenue</p>
                     <p className={`text-2xl font-extrabold tabular-nums ${y.highlight ? "text-primary" : "text-foreground"}`}>{y.revenue}</p>
-                    <p className="text-xs text-muted-foreground">{y.revenueEur}</p>
                   </div>
                   <div>
                     <p className="text-[11px] text-muted-foreground uppercase tracking-wide">EBITDA</p>
                     <p className="text-lg font-bold text-foreground tabular-nums">{y.ebitda}</p>
                   </div>
                   <div>
-                    <p className="text-[11px] text-muted-foreground uppercase tracking-wide">{lang === "hu" ? "Margin" : "Margin"}</p>
+                    <p className="text-[11px] text-muted-foreground uppercase tracking-wide">Margin</p>
                     <p className="text-lg font-bold text-foreground tabular-nums">{y.margin}</p>
                   </div>
                 </div>
@@ -184,37 +177,29 @@ const ProjectionSection = () => {
           ))}
         </div>
 
-        {/* Revenue trajectory chart */}
         <ScrollReveal delay={300}>
           <div className="mb-10">
-            <AnimatedChart bn={bn} />
+            <AnimatedChart />
           </div>
         </ScrollReveal>
 
         <ScrollReveal delay={350}>
           <div className="space-y-2 text-center mb-20">
             <p className="text-sm text-muted-foreground italic">
-              {lang === "hu"
-                ? `Konzervatív: 8 ${bn} Ft bevétel a 3. évben 100K háztartással`
-                : `Conservative: 8 ${bn} Ft revenue at Year 3 with 100K households`}
+              Conservative: €20M revenue at Year 3 with 100K households
             </p>
             <p className="text-sm text-muted-foreground italic">
-              {lang === "hu"
-                ? "Megtérülés: 8 000–15 000 háztartás (elérhető 6–9 hónap alatt)"
-                : "Breakeven: 8,000–15,000 households (achievable in 6–9 months)"}
+              Breakeven: 8,000–15,000 households (achievable in 6–9 months)
             </p>
             <p className="text-sm text-muted-foreground italic">
-              {lang === "hu"
-                ? "Több piaci potenciál: a Netrisk Csoport 6 piacán való replikálás = 5–8x a magyar számok"
-                : "Multi-market potential: replicating across Netrisk Group's 6 markets = 5–8x the Hungarian figures"}
+              Multi-market potential: replicating across Netrisk Group's 6 markets = 5–8x the Hungarian figures
             </p>
           </div>
         </ScrollReveal>
 
-        {/* Valuation Comparables */}
         <ScrollReveal delay={100}>
           <h3 className="text-xl sm:text-2xl font-bold text-foreground text-center mb-8">
-            {lang === "hu" ? "Értékelési összehasonlítás" : "Valuation Comparables"}
+            Valuation Comparables
           </h3>
         </ScrollReveal>
 
@@ -225,7 +210,7 @@ const ProjectionSection = () => {
                 <p className="text-sm font-semibold text-foreground mb-1">{c.name}</p>
                 <p className="text-2xl font-extrabold text-foreground tabular-nums">{c.val}</p>
                 <p className="text-xs font-medium text-primary mt-1">{c.multiple}</p>
-                <p className="text-xs text-muted-foreground mt-1.5">{lang === "hu" ? c.descHu : c.descEn}</p>
+                <p className="text-xs text-muted-foreground mt-1.5">{c.desc}</p>
               </div>
             </ScrollReveal>
           ))}
@@ -233,9 +218,7 @@ const ProjectionSection = () => {
 
         <ScrollReveal delay={400}>
           <p className="text-sm text-muted-foreground text-center italic max-w-xl mx-auto">
-            {lang === "hu"
-              ? "A 3. évben (€37.5M bevétel): 8–12x bevétel = €300–450M értékelés csak Magyarországra. 6 piaci bevezetéssel a platform €1B+ értékelést is elérhet"
-              : "At Year 3 (€37.5M revenue): 8–12x revenue = €300–450M valuation for Hungary alone. With 6-market rollout potential, the platform could command €1B+"}
+            At Year 3 (€37.5M revenue): 8–12x revenue = €300–450M valuation for Hungary alone. With 6-market rollout potential, the platform could command €1B+
           </p>
         </ScrollReveal>
       </div>

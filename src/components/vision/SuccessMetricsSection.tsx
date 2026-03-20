@@ -1,39 +1,35 @@
 import ScrollReveal from "@/components/homepage/ScrollReveal";
 import { Users, Wallet, TrendingUp, CheckCircle, Star, RefreshCw, Handshake, Zap, Target } from "lucide-react";
 import { type LucideIcon } from "lucide-react";
-import { useI18n } from "@/lib/i18n";
 
 interface Metric {
   icon: LucideIcon;
-  labelEn: string;
-  labelHu: string;
+  label: string;
   target: string;
 }
 
 const metrics: Metric[] = [
-  { icon: Users, labelEn: "Households onboarded", labelHu: "Csatlakozott háztartások", target: "20,000" },
-  { icon: Wallet, labelEn: "Avg savings per household", labelHu: "Átlagos megtakarítás háztartásonként", target: "120,000+ Ft" },
-  { icon: TrendingUp, labelEn: "Revenue per household", labelHu: "Bevétel háztartásonként", target: "60,000+ Ft" },
-  { icon: CheckCircle, labelEn: "Savings verification rate", labelHu: "Megtakarítás-ellenőrzési ráta", target: ">85%" },
-  { icon: Star, labelEn: "Consumer NPS", labelHu: "Fogyasztói NPS", target: ">50" },
-  { icon: RefreshCw, labelEn: "Y1→Y2 retention", labelHu: "1. év→2. év megtartás", target: ">70%" },
-  { icon: Handshake, labelEn: "Negotiation success rate", labelHu: "Tárgyalási sikerráta", target: ">60%" },
-  { icon: Zap, labelEn: "Time to first saving", labelHu: "Idő az első megtakarításig", target: "<7 days" },
-  { icon: Target, labelEn: "CAC payback", labelHu: "CAC megtérülés", target: "<3 months" },
+  { icon: Users, label: "Households onboarded", target: "20,000" },
+  { icon: Wallet, label: "Avg savings per household", target: "€300+" },
+  { icon: TrendingUp, label: "Revenue per household", target: "€150+" },
+  { icon: CheckCircle, label: "Savings verification rate", target: ">85%" },
+  { icon: Star, label: "Consumer NPS", target: ">50" },
+  { icon: RefreshCw, label: "Y1→Y2 retention", target: ">70%" },
+  { icon: Handshake, label: "Negotiation success rate", target: ">60%" },
+  { icon: Zap, label: "Time to first saving", target: "<7 days" },
+  { icon: Target, label: "CAC payback", target: "<3 months" },
 ];
 
 const SuccessMetricsSection = () => {
-  const { lang } = useI18n();
-
   return (
     <section className="py-24 sm:py-32 bg-section-bg">
       <div className="max-w-5xl mx-auto px-6">
         <ScrollReveal>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-foreground text-center mb-3 tracking-tight">
-            {lang === "hu" ? "Hogyan mérjük a sikert" : "How We Measure Success"}
+            How We Measure Success
           </h2>
           <p className="text-muted-foreground text-center mb-14 max-w-md mx-auto text-balance">
-            {lang === "hu" ? "1. éves célok" : "Year 1 targets"}
+            Year 1 targets
           </p>
         </ScrollReveal>
 
@@ -45,7 +41,7 @@ const SuccessMetricsSection = () => {
                   <m.icon className="w-5 h-5 text-primary" />
                 </div>
                 <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1.5">
-                  {lang === "hu" ? m.labelHu : m.labelEn}
+                  {m.label}
                 </p>
                 <p className="text-2xl font-extrabold text-foreground tabular-nums">{m.target}</p>
               </div>
@@ -55,9 +51,7 @@ const SuccessMetricsSection = () => {
 
         <ScrollReveal delay={550}>
           <p className="text-sm text-muted-foreground text-center mt-10 italic max-w-lg mx-auto">
-            {lang === "hu"
-              ? "Ezek a mutatók bizonyítják, hogy a modell működik. Mindegyik mérhető az 1. naptól."
-              : "These metrics prove the model works. Every one is measurable from Day 1."}
+            These metrics prove the model works. Every one is measurable from Day 1.
           </p>
         </ScrollReveal>
       </div>

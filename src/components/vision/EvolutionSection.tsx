@@ -1,21 +1,16 @@
 import { Search, MessageSquareMore, Bot, ArrowRight } from "lucide-react";
 import ScrollReveal from "@/components/homepage/ScrollReveal";
-import { useI18n } from "@/lib/i18n";
 
 const EvolutionSection = () => {
-  const { lang } = useI18n();
-
   const eras = [
     {
       icon: Search,
-      era: lang === "hu" ? "Összehasonlítás" : "Compare",
+      era: "Compare",
       period: "2000–2020",
-      desc: lang === "hu" ? "Ár-összehasonlító oldalak" : "Price comparison sites",
-      bullets: lang === "hu"
-        ? ["A fogyasztó keres, összehasonlít, kattint, jelentkezik", "Éves interakció, a fogyasztó végzi a munkát"]
-        : ["Consumer searches, compares, clicks, applies", "Annual interaction, consumer does all the work"],
-      revenue: lang === "hu" ? "€30-80 kattintásonként" : "€30-80 per click",
-      examples: lang === "hu" ? "MoneySuperMarket, Netrisk, Check24" : "MoneySuperMarket, Netrisk, Check24",
+      desc: "Price comparison sites",
+      bullets: ["Consumer searches, compares, clicks, applies", "Annual interaction, consumer does all the work"],
+      revenue: "€75–200 per click",
+      examples: "MoneySuperMarket, Netrisk, Check24",
       style: "opacity-60",
       border: "border-border",
       iconBg: "bg-muted",
@@ -23,35 +18,31 @@ const EvolutionSection = () => {
     },
     {
       icon: MessageSquareMore,
-      era: lang === "hu" ? "Tanácsadás" : "Advise",
+      era: "Advise",
       period: "2024–2026",
-      desc: lang === "hu" ? "AI-alapú tanácsadás" : "AI-powered advisory",
-      bullets: lang === "hu"
-        ? ["Beszélgetős ágens megtalálja a legjobb ajánlatot", "A fogyasztó még mindig dönt és jóváhagy"]
-        : ["Conversational agent finds the best deal", "Consumer still decides and approves"],
-      revenue: lang === "hu" ? "€50-150 tranzakciónként" : "€50-150 per transaction",
-      examples: lang === "hu" ? "Amit az imént bemutattunk (1. fül)" : "What we just demoed (Tab 1)",
+      desc: "AI-powered advisory",
+      bullets: ["Conversational agent finds the best deal", "Consumer still decides and approves"],
+      revenue: "€125–375 per transaction",
+      examples: "What we just demoed (Tab 1)",
       style: "",
       border: "border-primary/40 shadow-lg shadow-primary/5",
       iconBg: "bg-primary/10",
       iconColor: "text-primary",
-      badge: lang === "hu" ? "JELEN" : "PRESENT",
+      badge: "PRESENT",
     },
     {
       icon: Bot,
-      era: lang === "hu" ? "Cselekvés" : "Act",
+      era: "Act",
       period: "2026+",
-      desc: lang === "hu" ? "Autonóm pénzügyi ágens" : "Autonomous financial agent",
-      bullets: lang === "hu"
-        ? ["Az ágens figyel, tárgyal, automatikusan vált", "A fogyasztó egyszer jóváhagy, az ágens folyamatosan optimalizál"]
-        : ["Agent monitors, negotiates, switches automatically", "Consumer approves once, agent optimizes continuously"],
-      revenue: lang === "hu" ? "€100-180 háztartásonként/év" : "€100-180 per household per year",
-      examples: lang === "hu" ? "Amit építünk (2. fül)" : "What we're building (Tab 2)",
+      desc: "Autonomous financial agent",
+      bullets: ["Agent monitors, negotiates, switches automatically", "Consumer approves once, agent optimizes continuously"],
+      revenue: "€250–450 per household per year",
+      examples: "What we're building (Tab 2)",
       style: "",
       border: "border-primary shadow-xl shadow-primary/10",
       iconBg: "bg-primary/15",
       iconColor: "text-primary",
-      badge: lang === "hu" ? "JÖVŐ" : "FUTURE",
+      badge: "FUTURE",
       glow: true,
     },
   ];
@@ -61,12 +52,10 @@ const EvolutionSection = () => {
       <div className="max-w-6xl mx-auto px-6">
         <ScrollReveal>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-foreground text-center mb-4 tracking-tight">
-            {lang === "hu" ? "A fogyasztói pénzügyek fejlődése" : "The Evolution of Consumer Finance"}
+            The Evolution of Consumer Finance
           </h2>
           <p className="text-muted-foreground text-center mb-16 max-w-xl mx-auto">
-            {lang === "hu"
-              ? "Három paradigmaváltás abban, hogyan kezelik a fogyasztók a pénzüket"
-              : "Three paradigm shifts in how consumers manage their money"}
+            Three paradigm shifts in how consumers manage their money
           </p>
         </ScrollReveal>
 
@@ -89,7 +78,7 @@ const EvolutionSection = () => {
 
                   {era.badge && (
                     <span className={`absolute -top-3 left-6 text-[10px] font-bold tracking-widest px-3 py-1 rounded-full ${
-                      era.badge === "FUTURE" || era.badge === "JÖVŐ" ? "bg-primary text-primary-foreground" : "bg-foreground/10 text-foreground"
+                      era.badge === "FUTURE" ? "bg-primary text-primary-foreground" : "bg-foreground/10 text-foreground"
                     }`}>
                       {era.badge}
                     </span>

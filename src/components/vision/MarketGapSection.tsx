@@ -1,5 +1,4 @@
 import ScrollReveal from "@/components/homepage/ScrollReveal";
-import { useI18n } from "@/lib/i18n";
 
 const companies = ["Billshark", "Rocket Money", "Snoop", "Plum", "MSM", "AI Agent"];
 
@@ -27,40 +26,26 @@ const Cell = ({ value, isAgent }: { value: V; isAgent: boolean }) => {
   return <span className="text-base text-muted-foreground/40">✗</span>;
 };
 
+const capabilities = [
+  "Monitors all bills continuously",
+  "Negotiates with current provider",
+  "Switches provider autonomously",
+  "Covers all bill categories",
+  "UK/EU market",
+  "Truly autonomous (zero user action)",
+  "Real-time / continuous optimization",
+];
+
 const MarketGapSection = () => {
-  const { lang } = useI18n();
-
-  const capabilities = lang === "hu"
-    ? [
-        "Folyamatosan figyeli az összes számlát",
-        "Tárgyal a jelenlegi szolgáltatóval",
-        "Autonóm módon szolgáltatót vált",
-        "Minden számlakategóriát lefed",
-        "UK/EU piac",
-        "Valóban autonóm (nulla felhasználói beavatkozás)",
-        "Valós idejű / folyamatos optimalizálás",
-      ]
-    : [
-        "Monitors all bills continuously",
-        "Negotiates with current provider",
-        "Switches provider autonomously",
-        "Covers all bill categories",
-        "UK/EU market",
-        "Truly autonomous (zero user action)",
-        "Real-time / continuous optimization",
-      ];
-
   return (
     <section className="py-24 sm:py-32 bg-background">
       <div className="max-w-6xl mx-auto px-6">
         <ScrollReveal>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-foreground text-center mb-3 tracking-tight">
-            {lang === "hu" ? "Ezt még senki nem csinálja — egyelőre" : "Nobody Does All of This — Yet"}
+            Nobody Does All of This — Yet
           </h2>
           <p className="text-muted-foreground text-center mb-14 max-w-2xl mx-auto text-balance">
-            {lang === "hu"
-              ? "A jelenlegi szereplők a probléma töredékét oldják meg. Az autonóm ágens az egészet."
-              : "Current players solve fragments of the problem. The autonomous agent solves all of it."}
+            Current players solve fragments of the problem. The autonomous agent solves all of it.
           </p>
         </ScrollReveal>
 
@@ -70,7 +55,7 @@ const MarketGapSection = () => {
               <thead>
                 <tr className="border-b border-border bg-muted/50">
                   <th className="text-left py-3 px-4 font-semibold text-muted-foreground sticky left-0 bg-muted/50 z-20 min-w-[200px]">
-                    {lang === "hu" ? "Képesség" : "Capability"}
+                    Capability
                   </th>
                   {companies.map((c, i) => {
                     const isAgent = i === companies.length - 1;
@@ -117,9 +102,7 @@ const MarketGapSection = () => {
 
         <ScrollReveal delay={200}>
           <p className="text-sm text-muted-foreground text-center mt-8 max-w-2xl mx-auto italic">
-            {lang === "hu"
-              ? "A fő hiányosság: egyetlen meglévő szereplő sem működik teljesen autonóm, több kategóriás, folyamatos optimalizálást végző ágensként."
-              : "The core gap: no existing player acts as a fully autonomous, multi-category, continuous-optimization agent."}
+            The core gap: no existing player acts as a fully autonomous, multi-category, continuous-optimization agent.
           </p>
         </ScrollReveal>
       </div>
