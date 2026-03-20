@@ -1,6 +1,26 @@
+import DashboardHeader from "@/components/dashboard/DashboardHeader";
+import ActivityFeed from "@/components/dashboard/ActivityFeed";
+import ContractList from "@/components/dashboard/ContractList";
+import SavingsChart from "@/components/dashboard/SavingsChart";
+import NegotiationDemo from "@/components/dashboard/NegotiationDemo";
+
 const DashboardPage = () => (
-  <div className="min-h-screen bg-background flex items-center justify-center">
-    <p className="text-muted-foreground text-lg">Personal Finance Dashboard — coming soon</p>
+  <div className="min-h-screen bg-background">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <DashboardHeader />
+
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+        <div className="lg:col-span-3">
+          <ActivityFeed />
+        </div>
+        <div className="lg:col-span-2">
+          <ContractList />
+        </div>
+      </div>
+
+      <SavingsChart />
+      <NegotiationDemo />
+    </div>
   </div>
 );
 
