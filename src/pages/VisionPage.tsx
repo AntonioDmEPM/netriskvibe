@@ -18,6 +18,7 @@ const VisionPage = ({ onSwitchTab }: VisionPageProps) => (
     <VisionHero />
     <EvolutionSection />
     <MarketGapSection />
+    <RevenueTransformationSection />
     <ArchitectureSection />
     <RegulatorySection />
     <RevenueSection />
