@@ -5,6 +5,7 @@ import RevenueTransformationSection from "@/components/vision/RevenueTransformat
 import ArchitectureSection from "@/components/vision/ArchitectureSection";
 import RegulatorySection from "@/components/vision/RegulatorySection";
 import RevenueSection from "@/components/vision/RevenueSection";
+import ProjectionSection from "@/components/vision/ProjectionSection";
 import RoadmapSection from "@/components/vision/RoadmapSection";
 import ClosingCTA from "@/components/vision/ClosingCTA";
 import { type DemoTab } from "@/components/TopNavBar";
@@ -22,6 +23,8 @@ const VisionPage = ({ onSwitchTab }: VisionPageProps) => (
     <ArchitectureSection />
     <RegulatorySection />
     <RevenueSection />
+    <RevenueSection />
+    <ProjectionSection />
     <RoadmapSection />
     <ClosingCTA onSwitchTab={onSwitchTab} />
   </div>
