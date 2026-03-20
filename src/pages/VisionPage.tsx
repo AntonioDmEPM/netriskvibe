@@ -23,6 +23,8 @@ const VisionPage = ({ onSwitchTab }: VisionPageProps) => (
     <ArchitectureSection />
     <RegulatorySection />
     <RevenueSection />
+    <RevenueSection />
+    <ProjectionSection />
     <RoadmapSection />
     <ClosingCTA onSwitchTab={onSwitchTab} />
   </div>
