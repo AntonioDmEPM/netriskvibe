@@ -111,13 +111,39 @@ const RESPONSE_TOOL = {
   },
 };
 
+const MAX_MESSAGES = 30;
+const ALLOWED_ORIGINS = [
+  "https://netriskvibe.lovable.app",
+  "https://id-preview--4d82f559-3259-47e1-9c4c-06b1963a3fbe.lovable.app",
+  "http://localhost:5173",
+  "http://localhost:8080",
+];
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
+  // Origin check — reject requests from unknown origins
+  const origin = req.headers.get("origin") || req.headers.get("referer") || "";
+  const isAllowed = ALLOWED_ORIGINS.some((o) => origin.startsWith(o));
+  if (!isAllowed) {
+    return new Response(
+      JSON.stringify({ error: "Forbidden" }),
+      { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    );
+  }
+
   try {
     const { messages, scenarioContext, lang } = await req.json();
+
+    // Cap message array to prevent abuse
+    if (!Array.isArray(messages) || messages.length > MAX_MESSAGES) {
+      return new Response(
+        JSON.stringify({ error: "Too many messages. Please start a new conversation." }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) {
