@@ -2,24 +2,24 @@ import ScrollReveal from "@/components/homepage/ScrollReveal";
 import { useEffect, useRef, useState } from "react";
 
 const years = [
-  { year: "Year 1", households: "50,000", revenue: "£17.5M", ebitda: "£6.6M", margin: "37%", progress: 33, highlight: false },
-  { year: "Year 2", households: "250,000", revenue: "£75M", ebitda: "£39.7M", margin: "53%", progress: 66, highlight: false },
-  { year: "Year 3", households: "750,000", revenue: "£202.5M", ebitda: "£112.2M", margin: "55%", progress: 100, highlight: true },
+  { year: "Year 1", households: "20 000", revenue: "1.5 Mrd Ft", revenueEur: "~€3.75M", ebitda: "450M Ft", margin: "30%", progress: 33, highlight: false, tag: "Breakeven by Q4", tagColor: "bg-amber-500 text-white" },
+  { year: "Year 2", households: "80 000", revenue: "6.4 Mrd Ft", revenueEur: "~€16M", ebitda: "2.9 Mrd Ft", margin: "45%", progress: 66, highlight: false },
+  { year: "Year 3", households: "200 000", revenue: "15 Mrd Ft", revenueEur: "~€37.5M", ebitda: "7.5 Mrd Ft", margin: "50%", progress: 100, highlight: true, tag: "5% market penetration", tagColor: "bg-primary text-primary-foreground" },
 ];
 
 const comparables = [
-  { name: "Rocket Money", val: "$1.275B", multiple: "12x revenue", desc: "Bill negotiation" },
-  { name: "MoneySuperMarket", val: "£1.5B", multiple: "3.5x revenue", desc: "Price comparison" },
-  { name: "Plum", val: "~£200M", multiple: "10–13x revenue", desc: "Smart savings" },
-  { name: "Cleo", val: "~$750M", multiple: "7.5x revenue", desc: "AI budgeting" },
+  { name: "Rocket Money", val: "$1.275B", multiple: "12x revenue", desc: "US bill negotiation" },
+  { name: "MoneySuperMarket", val: "£1.5B", multiple: "3.5x revenue", desc: "UK comparison (mature)" },
+  { name: "Netrisk Group", val: "~€200–300M", multiple: "implied", desc: "CEE leader, 6 markets" },
+  { name: "Plum", val: "~£200M", multiple: "10–13x revenue", desc: "UK smart savings" },
 ];
 
-// Revenue data points for the SVG chart
+// Revenue data points for the SVG chart (in Mrd Ft)
 const revenuePoints = [
   { x: 0, y: 0, label: "Now" },
-  { x: 1, y: 17.5, label: "Y1" },
-  { x: 2, y: 75, label: "Y2" },
-  { x: 3, y: 202.5, label: "Y3" },
+  { x: 1, y: 1.5, label: "Y1" },
+  { x: 2, y: 6.4, label: "Y2" },
+  { x: 3, y: 15, label: "Y3" },
 ];
 
 const AnimatedChart = () => {
@@ -38,14 +38,13 @@ const AnimatedChart = () => {
   }, []);
 
   const W = 600, H = 200, PX = 60, PY = 30;
-  const maxY = 220;
+  const maxY = 18;
   const toSvg = (x: number, y: number) => ({
     sx: PX + (x / 3) * (W - PX * 2),
     sy: H - PY - (y / maxY) * (H - PY * 2),
   });
 
   const pts = revenuePoints.map((p) => toSvg(p.x, p.y));
-  // Smooth curve through points
   const d = pts.reduce((acc, pt, i) => {
     if (i === 0) return `M ${pt.sx} ${pt.sy}`;
     const prev = pts[i - 1];
@@ -56,12 +55,12 @@ const AnimatedChart = () => {
   return (
     <svg ref={ref} viewBox={`0 0 ${W} ${H}`} className="w-full max-w-2xl mx-auto" style={{ overflow: "visible" }}>
       {/* Grid lines */}
-      {[0, 50, 100, 150, 200].map((v) => {
+      {[0, 5, 10, 15].map((v) => {
         const { sy } = toSvg(0, v);
         return (
           <g key={v}>
             <line x1={PX} y1={sy} x2={W - PX} y2={sy} className="stroke-border" strokeWidth={1} strokeDasharray="4 4" />
-            <text x={PX - 8} y={sy + 4} textAnchor="end" className="fill-muted-foreground" fontSize={10}>£{v}M</text>
+            <text x={PX - 8} y={sy + 4} textAnchor="end" className="fill-muted-foreground" fontSize={10}>{v} Mrd</text>
           </g>
         );
       })}
@@ -111,7 +110,7 @@ const AnimatedChart = () => {
             fontWeight={700}
             style={{ opacity: drawn ? 1 : 0, transition: `opacity 0.3s ease-out ${0.6 + i * 0.3}s` }}
           >
-            £{p.y}M
+            {p.y} Mrd Ft
           </text>
         );
       })}
@@ -127,7 +126,7 @@ const ProjectionSection = () => (
           Path to Scale
         </h2>
         <p className="text-muted-foreground text-center mb-14 max-w-xl mx-auto text-balance">
-          Base case: 50% savings share, UK market
+          Base case: 50% savings share, Hungarian market
         </p>
       </ScrollReveal>
 
@@ -145,6 +144,11 @@ const ProjectionSection = () => (
               {y.highlight && (
                 <div className="absolute -inset-px rounded-2xl bg-gradient-to-b from-primary/8 to-transparent pointer-events-none" />
               )}
+              {y.tag && (
+                <span className={`absolute -top-3 right-6 text-[10px] font-bold tracking-widest px-3 py-1 rounded-full ${y.tagColor}`}>
+                  {y.tag}
+                </span>
+              )}
               <p className={`text-xs font-bold tracking-widest uppercase mb-4 ${y.highlight ? "text-primary" : "text-muted-foreground"}`}>
                 {y.year}
               </p>
@@ -157,6 +161,7 @@ const ProjectionSection = () => (
                 <div>
                   <p className="text-[11px] text-muted-foreground uppercase tracking-wide">Revenue</p>
                   <p className={`text-2xl font-extrabold tabular-nums ${y.highlight ? "text-primary" : "text-foreground"}`}>{y.revenue}</p>
+                  <p className="text-xs text-muted-foreground">{y.revenueEur}</p>
                 </div>
                 <div>
                   <p className="text-[11px] text-muted-foreground uppercase tracking-wide">EBITDA</p>
@@ -168,7 +173,6 @@ const ProjectionSection = () => (
                 </div>
               </div>
 
-              {/* Progress bar */}
               <div className="mt-5 h-2 rounded-full bg-muted overflow-hidden relative z-10">
                 <div
                   className="h-full rounded-full bg-primary transition-all duration-1000 ease-out"
@@ -190,10 +194,13 @@ const ProjectionSection = () => (
       <ScrollReveal delay={350}>
         <div className="space-y-2 text-center mb-20">
           <p className="text-sm text-muted-foreground italic">
-            Conservative scenario: £64M revenue at Year 3 with 400K households
+            Conservative: 8 Mrd Ft revenue at Year 3 with 100K households
           </p>
           <p className="text-sm text-muted-foreground italic">
-            Breakeven: 20,000–40,000 households (achievable in 6–12 months)
+            Breakeven: 8 000–15 000 households (achievable in 6–9 months)
+          </p>
+          <p className="text-sm text-muted-foreground italic">
+            Multi-market potential: replicating across Netrisk Group's 6 markets = 5–8x the Hungarian figures
           </p>
         </div>
       </ScrollReveal>
@@ -219,8 +226,8 @@ const ProjectionSection = () => (
       </div>
 
       <ScrollReveal delay={400}>
-        <p className="text-sm text-muted-foreground text-center italic max-w-lg mx-auto">
-          At Year 3 base case: 5–8x revenue = £1–1.6B valuation
+        <p className="text-sm text-muted-foreground text-center italic max-w-xl mx-auto">
+          At Year 3 (€37.5M revenue): 8–12x revenue = €300–450M valuation for Hungary alone. With 6-market rollout potential, the platform could command €1B+
         </p>
       </ScrollReveal>
     </div>

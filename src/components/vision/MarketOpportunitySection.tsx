@@ -3,16 +3,17 @@ import { useEffect, useRef, useState } from "react";
 import { Globe } from "lucide-react";
 
 const categories = [
-  { name: "Energy", spend: [1800, 2200], savings: [100, 250], share: [50, 125], note: "Switching + negotiation" },
-  { name: "Broadband", spend: [350, 500], savings: [80, 200], share: [40, 100], note: "20–40% overpay rate" },
-  { name: "Car insurance", spend: [400, 700], savings: [50, 175], share: [25, 88], note: "Annual renewal savings" },
-  { name: "Home insurance", spend: [300, 500], savings: [60, 150], share: [30, 75], note: "Often never compared" },
-  { name: "Subscriptions", spend: [300, 600], savings: [100, 300], share: [50, 150], note: "100% on unused ones" },
-  { name: "Mobile", spend: [200, 400], savings: [40, 120], share: [20, 60], note: "Loyalty penalty" },
+  { name: "Energia (gas + electricity)", spend: [350000, 420000], savings: [25000, 60000], share: [12000, 30000], note: "Switching + negotiation" },
+  { name: "Internet / Broadband", spend: [48000, 72000], savings: [12000, 30000], share: [6000, 15000], note: "20–40% overpay rate" },
+  { name: "KGFB (car insurance)", spend: [50000, 70000], savings: [8000, 18000], share: [4000, 9000], note: "Annual renewal savings" },
+  { name: "Lakásbiztosítás (home insurance)", spend: [30000, 48000], savings: [6000, 15000], share: [3000, 7500], note: "Often never compared" },
+  { name: "TV/Streaming előfizetések", spend: [48000, 72000], savings: [15000, 36000], share: [7500, 18000], note: "100% on unused ones" },
+  { name: "Mobil (mobile)", spend: [36000, 60000], savings: [6000, 18000], share: [3000, 9000], note: "Loyalty penalty" },
+  { name: "Egyéb előfizetések (subscriptions)", spend: [24000, 48000], savings: [12000, 30000], share: [6000, 15000], note: "Cancel unused" },
 ];
 
-const maxSpend = 2200;
-const fmt = (n: number) => `£${n.toLocaleString("en-GB")}`;
+const maxSpend = 420000;
+const fmt = (n: number) => `${n.toLocaleString("hu-HU")} Ft`;
 const fmtRange = (r: number[]) => `${fmt(r[0])}–${fmt(r[1])}`;
 
 const MarketOpportunitySection = () => {
@@ -35,10 +36,10 @@ const MarketOpportunitySection = () => {
       <div className="max-w-6xl mx-auto px-6">
         <ScrollReveal>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-foreground text-center mb-3 tracking-tight">
-            The Size of the Prize
+            The Size of the Prize — Hungarian Market
           </h2>
           <p className="text-muted-foreground text-center mb-14 max-w-xl mx-auto text-balance">
-            UK household recurring spend — excluding mortgage and rent
+            Hungarian household recurring spend — excluding mortgage and rent
           </p>
         </ScrollReveal>
 
@@ -104,17 +105,17 @@ const MarketOpportunitySection = () => {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
             <div className="rounded-xl border border-border bg-card p-5 text-center">
               <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">Total addressable spend</p>
-              <p className="text-xl font-extrabold text-foreground tabular-nums">£3,550–5,300</p>
+              <p className="text-xl font-extrabold text-foreground tabular-nums">586 000–790 000 Ft</p>
               <p className="text-xs text-muted-foreground">per household / year</p>
             </div>
             <div className="rounded-xl border border-border bg-card p-5 text-center">
               <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">Achievable savings</p>
-              <p className="text-xl font-extrabold text-foreground tabular-nums" style={{ color: "hsl(var(--accent-warm))" }}>£430–1,195</p>
+              <p className="text-xl font-extrabold text-foreground tabular-nums" style={{ color: "hsl(var(--accent-warm))" }}>84 000–207 000 Ft</p>
               <p className="text-xs text-muted-foreground">per household / year</p>
             </div>
             <div className="rounded-xl border border-border bg-card p-5 text-center">
               <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">Company revenue (50%)</p>
-              <p className="text-xl font-extrabold text-primary tabular-nums">£215–598</p>
+              <p className="text-xl font-extrabold text-primary tabular-nums">42 000–103 000 Ft</p>
               <p className="text-xs text-muted-foreground">per household / year</p>
             </div>
           </div>
@@ -125,20 +126,23 @@ const MarketOpportunitySection = () => {
           <div className="rounded-2xl border-2 border-primary/40 bg-card p-6 sm:p-8 shadow-lg shadow-primary/5 mb-10 text-center">
             <p className="text-sm font-bold text-primary uppercase tracking-widest mb-4">Total Addressable Market</p>
             <p className="text-lg sm:text-xl font-bold text-foreground mb-2">
-              28M UK households × £350 avg company share = <span className="text-primary">£9.8B TAM</span>
+              4M Hungarian households × 75 000 Ft avg company share = <span className="text-primary">300 Mrd Ft TAM (~€750M)</span>
             </p>
             <p className="text-sm text-muted-foreground">
-              At 2.7% market penetration (750K households) = <span className="font-semibold text-foreground">£202.5M revenue</span>
+              At 5% penetration (200 000 households) = <span className="font-semibold text-foreground">15 Mrd Ft revenue (~€37.5M)</span>
             </p>
           </div>
         </ScrollReveal>
 
         {/* Adjacent markets */}
         <ScrollReveal delay={350}>
-          <div className="flex items-start gap-3 justify-center text-center">
-            <Globe className="w-5 h-5 text-muted-foreground shrink-0 mt-0.5" />
+          <div className="flex flex-col items-center gap-3 text-center">
+            <Globe className="w-5 h-5 text-muted-foreground shrink-0" />
             <p className="text-sm text-muted-foreground italic max-w-2xl">
-              Adjacent markets: EU (200M households via PSD2), US (130M households via Section 1033), SME/business bills
+              Netrisk Group operates in 6 CEE markets: Hungary, Czech Republic (Klik.cz), Poland (Rankomat), Austria (Durchblicker), Lithuania, Slovakia — combined 25M+ households
+            </p>
+            <p className="text-sm text-muted-foreground italic max-w-2xl">
+              EU-wide PSD2 enables the same model across all 27 member states
             </p>
           </div>
         </ScrollReveal>

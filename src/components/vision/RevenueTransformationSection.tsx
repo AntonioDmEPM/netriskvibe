@@ -2,25 +2,25 @@ import ScrollReveal from "@/components/homepage/ScrollReveal";
 import { ArrowRight } from "lucide-react";
 
 const todayMetrics = [
-  { label: "Revenue per household", value: "£30–80", highlight: false },
+  { label: "Revenue per household", value: "12 000–30 000 Ft" },
   { label: "Model", value: "One-time CPA commission" },
   { label: "Customer engagement", value: "Once/year at renewal" },
   { label: "Return rate", value: "~20%" },
-  { label: "Lifetime value", value: "£50–120" },
-  { label: "Defensibility", value: "Low (Google can disintermediate)" },
+  { label: "Lifetime value", value: "20 000–50 000 Ft" },
+  { label: "Defensibility", value: "Low" },
 ];
 
 const tomorrowMetrics = [
-  { label: "Revenue per household", value: "£200–400/year", highlight: true },
+  { label: "Revenue per household", value: "75 000–150 000 Ft/year", highlight: true },
   { label: "Model", value: "50% of verified savings — recurring" },
   { label: "Customer engagement", value: "Continuous (daily monitoring)" },
   { label: "Retention", value: "70–85% annual" },
-  { label: "Lifetime value", value: "£600–750" },
+  { label: "Lifetime value", value: "220 000–280 000 Ft" },
   { label: "Defensibility", value: "High (agent has full financial picture)" },
 ];
 
 const bottomStats = [
-  { big: "£277", sub: "Contribution margin per household (79%)" },
+  { big: "105 000 Ft", sub: "Contribution margin per household (79%)" },
   { big: "<2 months", sub: "CAC payback" },
   { big: "13–30x", sub: "LTV:CAC ratio" },
 ];
@@ -37,7 +37,6 @@ const RevenueTransformationSection = () => (
         </p>
       </ScrollReveal>
 
-      {/* Cards + arrow */}
       <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-4 md:gap-0 items-stretch mb-16">
         {/* TODAY card */}
         <ScrollReveal delay={80}>
@@ -47,7 +46,7 @@ const RevenueTransformationSection = () => (
             </span>
             <h3 className="text-lg font-bold text-foreground mb-1">Today: Price Comparison</h3>
             <p className="text-2xl sm:text-3xl font-extrabold text-foreground/70 tabular-nums mt-3 mb-5">
-              £30–80
+              12 000–30 000 Ft
             </p>
             <ul className="space-y-3">
               {todayMetrics.slice(1).map((m, i) => (
@@ -65,9 +64,9 @@ const RevenueTransformationSection = () => (
           <div className="flex md:flex-col items-center justify-center py-4 md:py-0 md:px-6">
             <div className="flex items-center gap-2 md:flex-col md:gap-3">
               <div className="w-12 h-12 rounded-full bg-primary/15 flex items-center justify-center">
-                <ArrowRight className="w-6 h-6 text-primary md:rotate-0 rotate-0" />
+                <ArrowRight className="w-6 h-6 text-primary" />
               </div>
-              <span className="text-2xl font-extrabold text-primary tabular-nums">4–8x</span>
+              <span className="text-2xl font-extrabold text-primary tabular-nums">5–8x</span>
             </div>
           </div>
         </ScrollReveal>
@@ -81,7 +80,7 @@ const RevenueTransformationSection = () => (
             </span>
             <h3 className="text-lg font-bold text-foreground mb-1 relative z-10">Tomorrow: Autonomous Agent</h3>
             <p className="text-2xl sm:text-3xl font-extrabold text-primary tabular-nums mt-3 mb-5 relative z-10">
-              £200–400<span className="text-lg font-bold text-primary/70">/year</span>
+              75 000–150 000 Ft<span className="text-lg font-bold text-primary/70">/year</span>
             </p>
             <ul className="space-y-3 relative z-10">
               {tomorrowMetrics.slice(1).map((m, i) => (
