@@ -58,7 +58,7 @@ const DashboardPage = ({ onSwitchTab }: DashboardPageProps) => {
             onClick={() => onSwitchTab("vision")}
             className="text-muted-foreground hover:text-foreground transition-colors"
           >
-            {lang === "hu" ? "Az architektúra megtekintése" : "View the architecture"} →
+            View the architecture →
           </button>
         </div>
       )}
