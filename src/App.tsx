@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -15,14 +15,27 @@ const queryClient = new QueryClient();
 
 const AppShell = () => {
   const [activeTab, setActiveTab] = useState<DemoTab>("netrisk");
+  const [fadeKey, setFadeKey] = useState(0);
+
+  const handleTabChange = (tab: DemoTab) => {
+    if (tab === activeTab) return;
+    setActiveTab(tab);
+    setFadeKey((k) => k + 1);
+    window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
+  };
 
   return (
     <>
-      <TopNavBar activeTab={activeTab} onTabChange={setActiveTab} />
+      <TopNavBar activeTab={activeTab} onTabChange={handleTabChange} />
       <div style={{ paddingTop: 36 }}>
-        {activeTab === "netrisk" && <Index />}
-        {activeTab === "dashboard" && <DashboardPage />}
-        {activeTab === "vision" && <VisionPage />}
+        <div
+          key={fadeKey}
+          className="animate-tab-fade-in"
+        >
+          {activeTab === "netrisk" && <Index onSwitchTab={handleTabChange} />}
+          {activeTab === "dashboard" && <DashboardPage onSwitchTab={handleTabChange} />}
+          {activeTab === "vision" && <VisionPage onSwitchTab={handleTabChange} />}
+        </div>
       </div>
     </>
   );
