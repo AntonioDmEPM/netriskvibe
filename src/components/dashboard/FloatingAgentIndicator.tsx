@@ -1,8 +1,6 @@
-import { useI18n } from "@/lib/i18n";
 import { useState } from "react";
 
 const FloatingAgentIndicator = () => {
-  const { lang } = useI18n();
   const [expanded, setExpanded] = useState(false);
 
   return (
@@ -16,18 +14,15 @@ const FloatingAgentIndicator = () => {
           expanded ? "pr-5" : ""
         }`}
       >
-        {/* Pulsing dot */}
         <span className="relative flex h-3 w-3 shrink-0">
           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
           <span className="relative inline-flex rounded-full h-3 w-3 bg-primary" />
         </span>
-
         <span className="text-xs font-semibold text-foreground whitespace-nowrap">
-          {lang === "hu" ? "AI ügynök aktív" : "AI agent active"}
+          AI agent active
         </span>
       </div>
 
-      {/* Expanded tooltip */}
       <div
         className={`absolute bottom-full right-0 mb-2 w-72 rounded-xl bg-card border border-border shadow-xl p-4 transition-all duration-200 origin-bottom-right ${
           expanded
@@ -37,16 +32,16 @@ const FloatingAgentIndicator = () => {
       >
         <div className="space-y-2.5 text-sm">
           <div className="flex justify-between">
-            <span className="text-muted-foreground">{lang === "hu" ? "Utolsó ellenőrzés" : "Last check"}</span>
-            <span className="font-medium text-foreground">{lang === "hu" ? "2 órája" : "2 hours ago"}</span>
+            <span className="text-muted-foreground">Last check</span>
+            <span className="font-medium text-foreground">2 hours ago</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-muted-foreground">{lang === "hu" ? "Következő" : "Next"}</span>
-            <span className="font-medium text-foreground">{lang === "hu" ? "4 óra múlva" : "In 4 hours"}</span>
+            <span className="text-muted-foreground">Next</span>
+            <span className="font-medium text-foreground">In 4 hours</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-muted-foreground">{lang === "hu" ? "Figyelés alatt" : "Monitoring"}</span>
-            <span className="font-medium text-foreground">{lang === "hu" ? "8 szerződés" : "8 contracts"}</span>
+            <span className="text-muted-foreground">Monitoring</span>
+            <span className="font-medium text-foreground">8 contracts</span>
           </div>
         </div>
       </div>

@@ -1,4 +1,3 @@
-import { useI18n } from "@/lib/i18n";
 import { contracts, statusConfig, type Contract } from "./contractData";
 
 interface ContractListProps {
@@ -8,20 +7,14 @@ interface ContractListProps {
 }
 
 const ContractList = ({ onSelect, kgfbApproved, highlightedContractId }: ContractListProps) => {
-  const { lang } = useI18n();
-
   return (
     <div>
-      <h2 className="text-lg font-semibold text-foreground mb-4">
-        {lang === "hu" ? "Szerződések" : "Contracts"}
-      </h2>
+      <h2 className="text-lg font-semibold text-foreground mb-4">Contracts</h2>
       <div className="space-y-2">
         {contracts.map((c, i) => {
-          // Override KGFB status if approved
           const isKgfbSwitching = kgfbApproved && c.id === "kobe-kgfb";
-          const effectiveStatus = isKgfbSwitching ? "switching" as const : c.status;
           const status = isKgfbSwitching
-            ? { label_hu: "✅ Váltás folyamatban", label_en: "✅ Switch in progress", className: "bg-primary/10 text-primary border-primary/20" }
+            ? { label: "✅ Switch in progress", className: "bg-primary/10 text-primary border-primary/20" }
             : statusConfig[c.status];
 
           const isHighlighted = highlightedContractId === c.id;
@@ -43,19 +36,15 @@ const ContractList = ({ onSelect, kgfbApproved, highlightedContractId }: Contrac
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-semibold text-foreground truncate">{c.provider}</p>
-                <p className="text-xs text-muted-foreground truncate">
-                  {lang === "hu" ? c.type_hu : c.type_en}
-                </p>
+                <p className="text-xs text-muted-foreground truncate">{c.type}</p>
               </div>
               <div className="text-right shrink-0">
                 <p className="text-sm font-bold text-foreground tabular-nums">
-                  {c.monthly.toLocaleString("hu-HU")} Ft
-                  <span className="text-muted-foreground font-normal text-xs">
-                    /{lang === "hu" ? "hó" : "mo"}
-                  </span>
+                  €{c.monthly}
+                  <span className="text-muted-foreground font-normal text-xs">/mo</span>
                 </p>
                 <span className={`inline-block mt-0.5 text-[10px] font-medium px-2 py-0.5 rounded-full border transition-colors duration-500 ${status.className}`}>
-                  {lang === "hu" ? status.label_hu : status.label_en}
+                  {status.label}
                 </span>
               </div>
             </div>
