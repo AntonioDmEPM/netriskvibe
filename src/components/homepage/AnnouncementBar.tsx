@@ -8,7 +8,7 @@ interface AnnouncementBarProps {
 }
 
 const AnnouncementBar = ({ isReturning, onToggle, style }: AnnouncementBarProps) => {
-  const { lang, setLang, t } = useI18n();
+  const { t } = useI18n();
 
   return (
     <div className="fixed top-0 left-0 right-0 z-[60] h-9 bg-secondary flex items-center justify-center" style={style}>
@@ -36,30 +36,6 @@ const AnnouncementBar = ({ isReturning, onToggle, style }: AnnouncementBarProps)
             }`}
           >
             {t("demo.returning")}
-          </button>
-        </div>
-
-        {/* Language toggle */}
-        <div className="flex rounded-full bg-secondary-foreground/10 p-0.5 ml-3">
-          <button
-            onClick={() => setLang("hu")}
-            className={`px-2 py-1 rounded-full text-xs font-semibold transition-all ${
-              lang === "hu"
-                ? "bg-secondary-foreground/20 text-secondary-foreground shadow-sm"
-                : "text-secondary-foreground/40 hover:text-secondary-foreground"
-            }`}
-          >
-            HU
-          </button>
-          <button
-            onClick={() => setLang("en")}
-            className={`px-2 py-1 rounded-full text-xs font-semibold transition-all ${
-              lang === "en"
-                ? "bg-secondary-foreground/20 text-secondary-foreground shadow-sm"
-                : "text-secondary-foreground/40 hover:text-secondary-foreground"
-            }`}
-          >
-            EN
           </button>
         </div>
       </div>
